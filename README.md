@@ -19,6 +19,7 @@ Ziel ist die Konzeption und Gestaltung einer Smartphone-App für einen fiktiven 
 - `docs/11_wireframe-refinements.md` – vertiefte Wireframe-Regeln, Zustände und Layout-Prioritäten
 - `assets/reference/briefing.pdf` – Originalbriefing
 - `prototype/` – Platzhalter für Figma-Export oder HTML/CSS/JS-Prototyp
+  - `prototype/wireframes/index.html` – visuelle Low-Fi-Wireframes im Browser
 
 ## Kernanforderungen aus dem Briefing
 
