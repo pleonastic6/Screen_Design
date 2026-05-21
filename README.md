@@ -16,6 +16,7 @@ Ziel ist die Konzeption und Gestaltung einer Smartphone-App für einen fiktiven 
 - `docs/08_screen-specs.md` – konkrete Screenbeschreibungen für Wireframes und Prototyp
 - `docs/09_wireframe-sketches.md` – Low-Fi-Wireframe-Skizzen mit Layout-Hierarchie
 - `docs/10_microcopy.md` – UI-Texte für zentrale Screens, Zustände und CTAs
+- `docs/11_wireframe-refinements.md` – vertiefte Wireframe-Regeln, Zustände und Layout-Prioritäten
 - `assets/reference/briefing.pdf` – Originalbriefing
 - `prototype/` – Platzhalter für Figma-Export oder HTML/CSS/JS-Prototyp
 
