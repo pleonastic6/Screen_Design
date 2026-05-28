@@ -16,24 +16,47 @@
           <div class="phone-top"></div>
           <div class="phone-body">
             <section class="app-screen active" data-screen="home">
-              <header class="screen-head">
-                <div>
-                  <p class="screen-kicker">Live Map</p>
-                  <h2>Amberg</h2>
-                  <p class="screen-sub">Scooter in deiner Naehe</p>
+              <header class="home-topbar">
+                <div class="topbar-pill">
+                  <span class="topbar-label">Standort</span>
+                  <strong>Amberg Mitte</strong>
                 </div>
-                <button class="icon-btn" type="button" aria-label="Standort zentrieren"></button>
+                <div class="topbar-availability">
+                  <span class="availability-dot"></span>
+                  <span data-bind="map-available">3 Scooter</span>
+                </div>
+                <div class="topbar-actions">
+                  <button class="icon-btn filter-btn" type="button" aria-label="Filter"></button>
+                  <button class="icon-btn locate-btn" type="button" aria-label="Standort zentrieren"></button>
+                </div>
               </header>
 
-              <div class="chip-row">
-                <span class="chip"><i class="dot available"></i>Verfuegbar</span>
-                <span class="chip"><i class="dot low"></i>Niedriger Akku</span>
-                <span class="chip"><i class="dot hub"></i>Ladehub</span>
+              <section class="home-hero">
+                <p class="screen-kicker">Live Map</p>
+                <h2>Finde den naechsten freien Scooter</h2>
+                <p class="screen-sub">Ein Tap auf der Karte, dann direkt entsperren oder reservieren.</p>
+              </section>
+
+              <div class="home-legend">
+                <span class="legend-item"><i class="dot available"></i>Frei</span>
+                <span class="legend-item"><i class="dot hub"></i>Hub</span>
+                <span class="legend-item muted"><i class="dot low"></i>Niedriger Akku</span>
               </div>
 
               <div class="map-card main-map" role="img" aria-label="Karte mit Scooter- und Hub-Markern">
-                <div class="map-grid"></div>
-                <div class="route-trace"></div>
+                <div class="map-base"></div>
+                <div class="map-vignette"></div>
+                <div class="map-artery artery-a"></div>
+                <div class="map-artery artery-b"></div>
+                <div class="map-artery artery-c"></div>
+                <div class="map-lane lane-a"></div>
+                <div class="map-lane lane-b"></div>
+                <div class="map-lane lane-c"></div>
+                <div class="map-focus-ring"></div>
+                <div class="map-selection-trace"></div>
+                <div class="map-label map-label-a">Bahnhof</div>
+                <div class="map-label map-label-b">Marktplatz</div>
+                <div class="map-label map-label-c">Campus OTH</div>
                 <button class="map-node hub-node" type="button" style="left:20%;top:28%" aria-label="Campus OTH Ladehub"></button>
                 <button class="map-node hub-node" type="button" style="left:54%;top:48%" aria-label="Marktplatz Ladehub"></button>
                 <button class="map-node hub-node" type="button" style="left:78%;top:22%" aria-label="Bahnhof Ladehub"></button>
@@ -42,23 +65,51 @@
                 <button class="map-node scooter-node" type="button" data-scooter="A-12" style="left:30%;top:56%" aria-label="Scooter A-12 waehlen"></button>
                 <button class="map-node scooter-node low" type="button" data-scooter="A-19" style="left:66%;top:44%" aria-label="Scooter A-19 waehlen"></button>
 
+                <div class="map-floating-card">
+                  <span class="map-floating-label">Empfohlener Scooter</span>
+                  <strong data-bind="home-id">SCOOTER A-07</strong>
+                  <p data-bind="home-range-note">18 km Reichweite fuer die naechste Strecke.</p>
+                </div>
+
                 <div class="map-fab-stack">
-                  <button class="fab" type="button" aria-label="Filter"></button>
-                  <button class="fab" type="button" aria-label="Standort"></button>
+                  <button class="fab route-btn" type="button" aria-label="Routenansicht"></button>
                 </div>
               </div>
 
-              <section class="bottom-sheet panel">
+              <section class="bottom-sheet panel home-sheet">
                 <div class="sheet-handle"></div>
-                <p class="meta mono" data-bind="home-id">SCOOTER A-07</p>
-                <h3 data-bind="home-headline">120 m entfernt · Akku 82 %</h3>
+                <div class="sheet-head">
+                  <div>
+                    <p class="meta mono" data-bind="home-id">SCOOTER A-07</p>
+                    <h3 data-bind="home-name">Sofort fahrbereit</h3>
+                  </div>
+                  <span class="status-chip" data-bind="home-status">Verfuegbar</span>
+                </div>
+                <p class="sheet-hero-line" data-bind="home-headline">120 m entfernt, Akku stark genug fuer den direkten Start.</p>
+                <div class="sheet-priority">
+                  <div class="sheet-distance">
+                    <span>Entfernung</span>
+                    <strong data-bind="home-distance">120 m</strong>
+                  </div>
+                  <div class="sheet-quickstats">
+                    <article class="sheet-quickstat">
+                      <span>Akku</span>
+                      <strong data-bind="home-battery">82 %</strong>
+                    </article>
+                    <article class="sheet-quickstat">
+                      <span>Reichweite</span>
+                      <strong data-bind="home-range">18 km</strong>
+                    </article>
+                  </div>
+                </div>
                 <p class="sheet-copy" data-bind="home-copy">Rueckgabe im Stadtgebiet moeglich. Ladehub-Bonus verfuegbar.</p>
-                <div class="chip-row compact">
-                  <span class="chip small" data-bind="home-status">Verfuegbar</span>
+                <div class="sheet-note">
+                  <span class="sheet-note-dot"></span>
+                  <span data-bind="home-note">Am Ladehub Marktplatz bekommst du 30 Freiminuten.</span>
                 </div>
                 <div class="button-row">
-                  <button class="secondary-btn" type="button" data-go="reserve">30 Min. reservieren</button>
                   <button class="primary-btn" type="button" data-go="detail">Jetzt entsperren</button>
+                  <button class="secondary-btn" type="button" data-go="reserve">30 Min. reservieren</button>
                 </div>
               </section>
             </section>

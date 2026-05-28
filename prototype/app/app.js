@@ -94,9 +94,16 @@ function bindText(key, value) {
 function renderScooter() {
   const scooter = scooters[selectedScooter];
   bindText("home-id", scooter.id);
-  bindText("home-headline", `${scooter.distance} entfernt · Akku ${scooter.battery}`);
+  bindText("home-name", scooter.status === "Verfuegbar" ? "Sofort fahrbereit" : scooter.status);
+  bindText("home-distance", scooter.distance);
+  bindText("home-battery", scooter.battery);
+  bindText("home-range", scooter.range);
   bindText("home-copy", scooter.copy);
   bindText("home-status", scooter.status);
+  bindText("map-available", scooter.status === "Niedriger Akku" ? "2 freie Scooter" : "3 Scooter");
+  bindText("home-note", scooter.returnRule === "Bitte nach der Fahrt am Ladehub zurueckgeben"
+    ? "Dieser Scooter sollte nach der Fahrt wieder an einen Ladehub."
+    : "Am Ladehub Marktplatz bekommst du 30 Freiminuten.");
   bindText("detail-id", scooter.id);
   bindText("detail-status", scooter.status);
   bindText("detail-battery", scooter.battery);
