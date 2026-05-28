@@ -23,56 +23,14 @@
     </section>
 
     <section class="workspace">
-      <aside class="rail shell">
-        <div class="rail-head">
-          <span class="eyebrow">Flow</span>
-          <h2>Hauptpfad</h2>
-        </div>
-        <ol class="flow-list">
-          <li class="flow-step active" data-step="home">
-            <strong>Karte</strong>
-            <span>Scooter waehlen, Status lesen, CTA setzen.</span>
-          </li>
-          <li class="flow-step" data-step="detail">
-            <strong>Detail</strong>
-            <span>Akku, Distanz, Preis und Rueckgabe-Regeln.</span>
-          </li>
-          <li class="flow-step" data-step="reserve">
-            <strong>Reservierung</strong>
-            <span>Countdown und Navigation zum Scooter.</span>
-          </li>
-          <li class="flow-step" data-step="pickup">
-            <strong>Vor Ort</strong>
-            <span>Den richtigen Scooter eindeutig zuordnen.</span>
-          </li>
-          <li class="flow-step" data-step="unlock">
-            <strong>Unlock</strong>
-            <span>Kurze, vertrauenswuerdige Bestaetigung.</span>
-          </li>
-          <li class="flow-step" data-step="ride">
-            <strong>Fahrt</strong>
-            <span>Laufende Kosten, Akku und End-Optionen.</span>
-          </li>
-          <li class="flow-step" data-step="return-ok">
-            <strong>Rueckgabe</strong>
-            <span>Erlaubt vs. blockiert sauber trennen.</span>
-          </li>
-        </ol>
-
-        <div class="scenario panel">
-          <span class="mini-label">Scenario</span>
-          <h3 data-bind="scenario-title">Spontane Fahrt ab Bahnhof</h3>
-          <p data-bind="scenario-copy">Waehle einen verfuegbaren Scooter auf der Karte und geh den kompletten Pfad bis zur Rueckgabe durch.</p>
+      <section class="stage shell">
+        <div class="stage-copy">
+          <span class="eyebrow">App View</span>
+          <h2>Handy mittig, Fokus auf dem Screen</h2>
+          <p>Erst die App lesen, dann den Flow erklaeren. Das ist als Praesentation deutlich sauberer.</p>
         </div>
 
-        <div class="scenario panel">
-          <span class="mini-label">Current Scooter</span>
-          <h3 data-bind="scooter-name">Scooter A-07</h3>
-          <p data-bind="scooter-copy">82 % Akku · 120 m entfernt · frei verfuegbar</p>
-        </div>
-      </aside>
-
-      <section class="phone-frame">
+        <section class="phone-frame">
         <div class="phone">
           <div class="phone-top"></div>
           <div class="phone-body">
@@ -447,7 +405,59 @@
             <button class="nav-item" type="button">Profil</button>
           </nav>
         </div>
+        </section>
       </section>
+
+      <aside class="rail shell">
+        <div class="rail-head">
+          <span class="eyebrow">Flow</span>
+          <h2>Hauptpfad</h2>
+        </div>
+        <ol class="flow-list">
+          <li class="flow-step active" data-step="home">
+            <strong>Karte</strong>
+            <span>Scooter waehlen, Status lesen, CTA setzen.</span>
+          </li>
+          <li class="flow-step" data-step="detail">
+            <strong>Detail</strong>
+            <span>Akku, Distanz, Preis und Rueckgabe-Regeln.</span>
+          </li>
+          <li class="flow-step" data-step="reserve">
+            <strong>Reservierung</strong>
+            <span>Countdown und Navigation zum Scooter.</span>
+          </li>
+          <li class="flow-step" data-step="pickup">
+            <strong>Vor Ort</strong>
+            <span>Den richtigen Scooter eindeutig zuordnen.</span>
+          </li>
+          <li class="flow-step" data-step="unlock">
+            <strong>Unlock</strong>
+            <span>Kurze, vertrauenswuerdige Bestaetigung.</span>
+          </li>
+          <li class="flow-step" data-step="ride">
+            <strong>Fahrt</strong>
+            <span>Laufende Kosten, Akku und End-Optionen.</span>
+          </li>
+          <li class="flow-step" data-step="return-ok">
+            <strong>Rueckgabe</strong>
+            <span>Erlaubt vs. blockiert sauber trennen.</span>
+          </li>
+        </ol>
+
+        <div class="rail-grid">
+          <div class="scenario panel">
+            <span class="mini-label">Scenario</span>
+            <h3 data-bind="scenario-title">Spontane Fahrt ab Bahnhof</h3>
+            <p data-bind="scenario-copy">Waehle einen verfuegbaren Scooter auf der Karte aus und geh den kompletten Pfad bis zur Rueckgabe durch.</p>
+          </div>
+
+          <div class="scenario panel">
+            <span class="mini-label">Current Scooter</span>
+            <h3 data-bind="scooter-name">Scooter A-07</h3>
+            <p data-bind="scooter-copy">82 % Akku · 120 m entfernt · frei verfuegbar</p>
+          </div>
+        </div>
+      </aside>
     </section>
   </main>
 

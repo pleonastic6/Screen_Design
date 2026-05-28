@@ -203,13 +203,36 @@ button {
 
 .workspace {
   display: grid;
-  grid-template-columns: minmax(300px, 360px) minmax(0, 1fr);
   gap: 24px;
-  align-items: start;
+}
+
+.stage {
+  padding: 28px;
+}
+
+.stage-copy {
+  max-width: 620px;
+  margin: 0 auto 28px;
+  text-align: center;
+}
+
+.stage-copy h2 {
+  margin: 12px 0 0;
+  font-size: clamp(28px, 4vw, 42px);
+  line-height: 0.98;
+  letter-spacing: -0.05em;
+}
+
+.stage-copy p {
+  margin: 14px 0 0;
+  color: var(--muted);
+  line-height: 1.6;
 }
 
 .rail {
   padding: 24px;
+  max-width: 1080px;
+  margin: 0 auto;
 }
 
 .rail-head h2 {
@@ -271,6 +294,12 @@ button {
   padding: 18px;
 }
 
+.rail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
 .scenario h3 {
   margin: 10px 0 0;
   font-size: 24px;
@@ -286,6 +315,7 @@ button {
 .phone-frame {
   display: flex;
   justify-content: center;
+  align-items: flex-start;
 }
 
 .phone {
@@ -297,6 +327,8 @@ button {
     linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
     #061015;
   overflow: hidden;
+  position: sticky;
+  top: 24px;
 }
 
 .phone-top {
@@ -880,16 +912,6 @@ button {
   }
 }
 
-@media (max-width: 1080px) {
-  .workspace {
-    grid-template-columns: 1fr;
-  }
-
-  .rail {
-    order: 2;
-  }
-}
-
 @media (max-width: 720px) {
   .page {
     padding: 16px 12px 40px;
@@ -901,12 +923,25 @@ button {
     padding: 22px 18px;
   }
 
+  .stage {
+    padding: 18px 12px 12px;
+  }
+
+  .stage-copy {
+    margin-bottom: 18px;
+  }
+
   .phone {
     width: min(100%, 390px);
+    position: static;
   }
 
   .phone-body {
     min-height: 680px;
+  }
+
+  .rail-grid {
+    grid-template-columns: 1fr;
   }
 
   .button-row,
