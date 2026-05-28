@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Share-A-Scooter Amberg - App Prototype</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="intro shell">
+      <div>
+        <span class="eyebrow">Interactive Prototype</span>
+        <h1>Share-A-Scooter Amberg</h1>
+        <p class="lead">Erster echter App-Prototyp statt Screen-Galerie: ein klickbarer Kernfluss vom Scooter-Fund bis zur Rueckgabe.</p>
+      </div>
+      <div class="intro-actions">
+        <button class="ghost-btn" type="button" data-action="reset">Flow neu starten</button>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <aside class="rail shell">
+        <div class="rail-head">
+          <span class="eyebrow">Flow</span>
+          <h2>Hauptpfad</h2>
+        </div>
+        <ol class="flow-list">
+          <li class="flow-step active" data-step="home">
+            <strong>Karte</strong>
+            <span>Scooter waehlen, Status lesen, CTA setzen.</span>
+          </li>
+          <li class="flow-step" data-step="detail">
+            <strong>Detail</strong>
+            <span>Akku, Distanz, Preis und Rueckgabe-Regeln.</span>
+          </li>
+          <li class="flow-step" data-step="reserve">
+            <strong>Reservierung</strong>
+            <span>Countdown und Navigation zum Scooter.</span>
+          </li>
+          <li class="flow-step" data-step="pickup">
+            <strong>Vor Ort</strong>
+            <span>Den richtigen Scooter eindeutig zuordnen.</span>
+          </li>
+          <li class="flow-step" data-step="unlock">
+            <strong>Unlock</strong>
+            <span>Kurze, vertrauenswuerdige Bestaetigung.</span>
+          </li>
+          <li class="flow-step" data-step="ride">
+            <strong>Fahrt</strong>
+            <span>Laufende Kosten, Akku und End-Optionen.</span>
+          </li>
+          <li class="flow-step" data-step="return-ok">
+            <strong>Rueckgabe</strong>
+            <span>Erlaubt vs. blockiert sauber trennen.</span>
+          </li>
+        </ol>
+
+        <div class="scenario panel">
+          <span class="mini-label">Scenario</span>
+          <h3 data-bind="scenario-title">Spontane Fahrt ab Bahnhof</h3>
+          <p data-bind="scenario-copy">Waehle einen verfuegbaren Scooter auf der Karte und geh den kompletten Pfad bis zur Rueckgabe durch.</p>
+        </div>
+
+        <div class="scenario panel">
+          <span class="mini-label">Current Scooter</span>
+          <h3 data-bind="scooter-name">Scooter A-07</h3>
+          <p data-bind="scooter-copy">82 % Akku · 120 m entfernt · frei verfuegbar</p>
+        </div>
+      </aside>
+
+      <section class="phone-frame">
+        <div class="phone">
+          <div class="phone-top"></div>
+          <div class="phone-body">
+            <section class="app-screen active" data-screen="home">
+              <header class="screen-head">
+                <div>
+                  <p class="screen-kicker">Live Map</p>
+                  <h2>Amberg</h2>
+                  <p class="screen-sub">Scooter in deiner Naehe</p>
+                </div>
+                <button class="icon-btn" type="button" aria-label="Standort zentrieren"></button>
+              </header>
+
+              <div class="chip-row">
+                <span class="chip"><i class="dot available"></i>Verfuegbar</span>
+                <span class="chip"><i class="dot low"></i>Niedriger Akku</span>
+                <span class="chip"><i class="dot hub"></i>Ladehub</span>
+              </div>
+
+              <div class="map-card main-map" role="img" aria-label="Karte mit Scooter- und Hub-Markern">
+                <div class="map-grid"></div>
+                <div class="route-trace"></div>
+                <button class="map-node hub-node" type="button" style="left:20%;top:28%" aria-label="Campus OTH Ladehub"></button>
+                <button class="map-node hub-node" type="button" style="left:54%;top:48%" aria-label="Marktplatz Ladehub"></button>
+                <button class="map-node hub-node" type="button" style="left:78%;top:22%" aria-label="Bahnhof Ladehub"></button>
+
+                <button class="map-node scooter-node active" type="button" data-scooter="A-07" style="left:47%;top:62%" aria-label="Scooter A-07 waehlen"></button>
+                <button class="map-node scooter-node" type="button" data-scooter="A-12" style="left:30%;top:56%" aria-label="Scooter A-12 waehlen"></button>
+                <button class="map-node scooter-node low" type="button" data-scooter="A-19" style="left:66%;top:44%" aria-label="Scooter A-19 waehlen"></button>
+
+                <div class="map-fab-stack">
+                  <button class="fab" type="button" aria-label="Filter"></button>
+                  <button class="fab" type="button" aria-label="Standort"></button>
+                </div>
+              </div>
+
+              <section class="bottom-sheet panel">
+                <div class="sheet-handle"></div>
+                <p class="meta mono" data-bind="home-id">SCOOTER A-07</p>
+                <h3 data-bind="home-headline">120 m entfernt · Akku 82 %</h3>
+                <p class="sheet-copy" data-bind="home-copy">Rueckgabe im Stadtgebiet moeglich. Ladehub-Bonus verfuegbar.</p>
+                <div class="chip-row compact">
+                  <span class="chip small" data-bind="home-status">Verfuegbar</span>
+                </div>
+                <div class="button-row">
+                  <button class="secondary-btn" type="button" data-go="reserve">30 Min. reservieren</button>
+                  <button class="primary-btn" type="button" data-go="detail">Jetzt entsperren</button>
+                </div>
+              </section>
+            </section>
+
+            <section class="app-screen" data-screen="detail">
+              <header class="screen-head with-back">
+                <button class="icon-btn back-btn" type="button" data-go="home" aria-label="Zurueck zur Karte"></button>
+                <div>
+                  <p class="screen-kicker">Detail</p>
+                  <h2>Scooter-Details</h2>
+                </div>
+                <div class="icon-spacer"></div>
+              </header>
+
+              <div class="panel stat-panel">
+                <p class="meta mono" data-bind="detail-id">SCOOTER A-07</p>
+                <h3 data-bind="detail-status">Verfuegbar</h3>
+                <div class="metric-grid">
+                  <article class="metric">
+                    <span>Akku</span>
+                    <strong data-bind="detail-battery">82 %</strong>
+                  </article>
+                  <article class="metric">
+                    <span>Reichweite</span>
+                    <strong data-bind="detail-range">18 km</strong>
+                  </article>
+                  <article class="metric">
+                    <span>Distanz</span>
+                    <strong data-bind="detail-distance">120 m</strong>
+                  </article>
+                </div>
+              </div>
+
+              <div class="map-card detail-map">
+                <div class="map-grid"></div>
+                <div class="detail-route"></div>
+                <div class="map-node hub-node static" style="left:74%;top:36%"></div>
+                <div class="map-node scooter-node active static" style="left:48%;top:54%"></div>
+              </div>
+
+              <div class="stack">
+                <article class="panel info-row">
+                  <strong>0,10 EUR pro 5 Minuten</strong>
+                  <span>Keine Aktivierungsgebuehr in diesem Szenario.</span>
+                </article>
+                <article class="panel info-row">
+                  <strong data-bind="detail-return">Rueckgabe im Stadtgebiet moeglich</strong>
+                  <span>Am Ladehub bekommst du 30 Freiminuten gutgeschrieben.</span>
+                </article>
+              </div>
+
+              <div class="sticky-actions">
+                <button class="secondary-btn" type="button" data-go="reserve">30 Min. reservieren</button>
+                <button class="primary-btn" type="button" data-go="unlock">Jetzt entsperren</button>
+              </div>
+            </section>
+
+            <section class="app-screen" data-screen="reserve">
+              <header class="screen-head with-back">
+                <button class="icon-btn back-btn" type="button" data-go="detail" aria-label="Zurueck zu Scooter-Details"></button>
+                <div>
+                  <p class="screen-kicker">Reservation</p>
+                  <h2>Reservierung aktiv</h2>
+                </div>
+                <div class="icon-spacer"></div>
+              </header>
+
+              <div class="panel countdown-panel">
+                <p class="meta mono" data-bind="reserve-id">SCOOTER A-07</p>
+                <div class="countdown">27:34</div>
+                <p>Dein Scooter ist fuer dich reserviert. Nach Ablauf wird er wieder freigegeben.</p>
+              </div>
+
+              <div class="map-card detail-map">
+                <div class="map-grid"></div>
+                <div class="route-trace reserve-trace"></div>
+                <div class="map-node scooter-node active static" style="left:58%;top:40%"></div>
+              </div>
+
+              <div class="stack">
+                <article class="panel info-row">
+                  <strong>120 m Fussweg</strong>
+                  <span>Navigation fuehrt dich direkt zum reservierten Scooter.</span>
+                </article>
+                <article class="panel info-row">
+                  <strong>Reservierung erfolgreich</strong>
+                  <span>Der Scooter bleibt fuer 30 Minuten exklusiv fuer dich sichtbar.</span>
+                </article>
+              </div>
+
+              <div class="sticky-actions single-column">
+                <button class="primary-btn" type="button" data-go="pickup">Navigation starten</button>
+                <button class="tertiary-btn" type="button" data-go="home">Reservierung aufheben</button>
+              </div>
+            </section>
+
+            <section class="app-screen" data-screen="pickup">
+              <header class="screen-head with-back">
+                <button class="icon-btn back-btn" type="button" data-go="reserve" aria-label="Zurueck zur Reservierung"></button>
+                <div>
+                  <p class="screen-kicker">On Site</p>
+                  <h2>Scooter auswaehlen</h2>
+                </div>
+                <div class="icon-spacer"></div>
+              </header>
+
+              <article class="panel info-row">
+                <strong>Pruefe die Nummer am Lenker oder Schloss.</strong>
+                <span>Mehrere Scooter gefunden. Waehle den richtigen, bevor du entsperrst.</span>
+              </article>
+
+              <div class="choice-list">
+                <button class="choice-card selected" type="button">
+                  <strong data-bind="pickup-name">Scooter A-07</strong>
+                  <span data-bind="pickup-copy">Akku 64 % · direkt vor dir</span>
+                </button>
+                <button class="choice-card" type="button">
+                  <strong>Scooter A-09</strong>
+                  <span>Akku 58 % · 8 m entfernt</span>
+                </button>
+                <button class="choice-card" type="button">
+                  <strong>Scooter A-11</strong>
+                  <span>Akku 31 % · 11 m entfernt</span>
+                </button>
+              </div>
+
+              <div class="sticky-actions single-column">
+                <button class="primary-btn" type="button" data-go="unlock">Diesen Scooter entsperren</button>
+              </div>
+            </section>
+
+            <section class="app-screen center-screen" data-screen="unlock">
+              <div class="unlock-badge">UNLOCK</div>
+              <h2>Scooter erfolgreich entsperrt</h2>
+              <p>Fahre vorsichtig und beachte die Verkehrsregeln.</p>
+              <button class="primary-btn wide" type="button" data-go="ride">Fahrt starten</button>
+            </section>
+
+            <section class="app-screen" data-screen="ride">
+              <header class="screen-head">
+                <div>
+                  <p class="screen-kicker">Ride Active</p>
+                  <h2>Fahrt aktiv</h2>
+                  <p class="screen-sub">Kosten und Rueckgabe immer im Blick</p>
+                </div>
+                <span class="live-pill">LIVE</span>
+              </header>
+
+              <div class="metric-grid ride-metrics">
+                <article class="metric">
+                  <span>Fahrtdauer</span>
+                  <strong>12:10</strong>
+                </article>
+                <article class="metric">
+                  <span>Kosten</span>
+                  <strong>0,30 EUR</strong>
+                </article>
+                <article class="metric">
+                  <span>Akku</span>
+                  <strong data-bind="ride-battery">71 %</strong>
+                </article>
+              </div>
+
+              <div class="map-card main-map short">
+                <div class="map-grid"></div>
+                <div class="ride-path"></div>
+                <div class="map-node hub-node static" style="left:74%;top:34%"></div>
+                <div class="map-node scooter-node active static" style="left:46%;top:60%"></div>
+              </div>
+
+              <article class="panel info-row">
+                <strong>Rueckgabe am Ladehub bringt 30 Freiminuten.</strong>
+                <span>Parken sichert kurz, Rueckgabe beendet final.</span>
+              </article>
+
+              <div class="sticky-actions">
+                <button class="secondary-btn" type="button" data-go="parked">Temporaer parken</button>
+                <button class="primary-btn" type="button" data-go="return-blocked">Fahrt beenden</button>
+              </div>
+            </section>
+
+            <section class="app-screen" data-screen="parked">
+              <header class="screen-head with-back">
+                <button class="icon-btn back-btn" type="button" data-go="ride" aria-label="Zurueck zur aktiven Fahrt"></button>
+                <div>
+                  <p class="screen-kicker">Pause</p>
+                  <h2>Scooter temporaer geparkt</h2>
+                </div>
+                <div class="icon-spacer"></div>
+              </header>
+
+              <div class="metric-grid ride-metrics">
+                <article class="metric">
+                  <span>Zeit</span>
+                  <strong>14:25</strong>
+                </article>
+                <article class="metric">
+                  <span>Kosten</span>
+                  <strong>0,40 EUR</strong>
+                </article>
+                <article class="metric">
+                  <span>Status</span>
+                  <strong>Pause</strong>
+                </article>
+              </div>
+
+              <article class="panel warning-panel">
+                <strong>Die Abrechnung laeuft weiter.</strong>
+                <p>Beende die Fahrt erst, wenn du den Scooter endgueltig zurueckgeben willst.</p>
+              </article>
+
+              <div class="sticky-actions">
+                <button class="primary-btn" type="button" data-go="ride">Weiterfahren</button>
+                <button class="secondary-btn" type="button" data-go="return-blocked">Jetzt zurueckgeben</button>
+              </div>
+            </section>
+
+            <section class="app-screen" data-screen="return-blocked">
+              <header class="screen-head with-back">
+                <button class="icon-btn back-btn" type="button" data-go="ride" aria-label="Zurueck zur Fahrt"></button>
+                <div>
+                  <p class="screen-kicker">Return Check</p>
+                  <h2>Rueckgabe pruefen</h2>
+                </div>
+                <div class="icon-spacer"></div>
+              </header>
+
+              <article class="panel alert-panel blocked">
+                <strong>Rueckgabe hier nicht moeglich</strong>
+                <p>Bitte nutze einen erlaubten Abstellort oder einen Ladehub.</p>
+              </article>
+
+              <div class="stack">
+                <article class="panel info-row">
+                  <strong>Standortregel nicht erfuellt</strong>
+                  <span>Naechster Ladehub: 240 m</span>
+                </article>
+                <article class="panel info-row">
+                  <strong>Akku 62 %</strong>
+                  <span>Bei diesem Akkustand gelten die Rueckgaberegeln streng.</span>
+                </article>
+              </div>
+
+              <div class="map-card detail-map">
+                <div class="map-grid"></div>
+                <div class="map-node hub-node static" style="left:72%;top:30%"></div>
+                <div class="map-node scooter-node active static" style="left:36%;top:60%"></div>
+                <div class="blocked-zone"></div>
+              </div>
+
+              <div class="sticky-actions single-column">
+                <button class="secondary-btn" type="button" data-go="ride">Zurueck zur Fahrt</button>
+                <button class="primary-btn" type="button" data-go="return-ok">Zum Ladehub fahren</button>
+              </div>
+            </section>
+
+            <section class="app-screen" data-screen="return-ok">
+              <header class="screen-head with-back">
+                <button class="icon-btn back-btn" type="button" data-go="return-blocked" aria-label="Zurueck zur blockierten Rueckgabe"></button>
+                <div>
+                  <p class="screen-kicker">Return Check</p>
+                  <h2>Rueckgabe pruefen</h2>
+                </div>
+                <div class="icon-spacer"></div>
+              </header>
+
+              <article class="panel alert-panel ok">
+                <strong>Rueckgabe hier moeglich</strong>
+                <p>Ladehub erkannt. 30 Freiminuten werden gutgeschrieben.</p>
+              </article>
+
+              <div class="stack">
+                <article class="panel info-row">
+                  <strong>Standortregel erfuellt</strong>
+                  <span>Freier Ladepunkt verfuegbar.</span>
+                </article>
+                <article class="panel info-row">
+                  <strong>Bonus aktiv</strong>
+                  <span>Rueckgabe an diesem Hub bringt dir 30 Freiminuten.</span>
+                </article>
+              </div>
+
+              <div class="map-card detail-map">
+                <div class="map-grid"></div>
+                <div class="map-node hub-node static" style="left:52%;top:52%"></div>
+                <div class="map-node scooter-node active static" style="left:48%;top:58%"></div>
+              </div>
+
+              <div class="sticky-actions single-column">
+                <button class="primary-btn" type="button" data-go="summary">Rueckgabe bestaetigen</button>
+              </div>
+            </section>
+
+            <section class="app-screen center-screen" data-screen="summary">
+              <div class="success-badge">DONE</div>
+              <h2>Fahrt erfolgreich beendet</h2>
+              <div class="panel summary-panel">
+                <div class="metric-grid">
+                  <article class="metric">
+                    <span>Dauer</span>
+                    <strong>18:25</strong>
+                  </article>
+                  <article class="metric">
+                    <span>Kosten</span>
+                    <strong>0,40 EUR</strong>
+                  </article>
+                  <article class="metric">
+                    <span>Bonus</span>
+                    <strong>30 Min</strong>
+                  </article>
+                </div>
+                <div class="summary-copy">
+                  <p>Rueckgabeort: Marktplatz Ladehub</p>
+                  <p>Keine weiteren Kosten offen.</p>
+                </div>
+              </div>
+              <button class="primary-btn wide" type="button" data-action="reset">Zur Karte</button>
+            </section>
+          </div>
+
+          <nav class="bottom-nav" aria-label="App-Navigation">
+            <button class="nav-item active" type="button">Karte</button>
+            <button class="nav-item" type="button">Fahrt</button>
+            <button class="nav-item" type="button">Buchungen</button>
+            <button class="nav-item" type="button">Profil</button>
+          </nav>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
