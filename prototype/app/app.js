@@ -494,7 +494,7 @@ function getPaneConfig() {
     buttonDestroy: false,
     backdrop: false,
     simulateTouch: false,
-    dragBy: ["#sheet-handle", ".mobile-nav"],
+    dragBy: ["#sheet-handle", "#sheet-reveal", ".mobile-nav"],
     bottomOffset: Math.max(0, getMobileNavHeight() - 6),
     breaks: {
       top: { enabled: true, height: topHeight, bounce: true },
@@ -564,6 +564,14 @@ async function syncSheetPane(options = {}) {
   }
 
   window.setTimeout(() => maps.main?.invalidateSize(), 0);
+}
+
+function updateSheetReveal(mode) {
+  const reveal = document.getElementById("sheet-reveal");
+  if (!reveal) return;
+  const shouldShow = isMobileViewport() && currentScreen !== "home";
+  reveal.hidden = !shouldShow;
+  reveal.dataset.mode = mode;
 }
 
 function markerIcon(type, extraClass = "") {
@@ -769,10 +777,12 @@ function renderPanel() {
       shell.dataset.paneActive = String(typeof window.CupertinoPane === "function");
       shell.dataset.sheetMode = mode;
       shell.dataset.sheetOpen = String(mode !== "hidden");
+      updateSheetReveal(mode);
     } else {
       shell.dataset.paneActive = "false";
       shell.dataset.sheetMode = !isCleanMapState ? "open" : "hidden";
       shell.dataset.sheetOpen = String(!isCleanMapState);
+      updateSheetReveal("hidden");
     }
   }
 
@@ -782,6 +792,7 @@ function renderPanel() {
       shell.dataset.sheetMode = "hidden";
       shell.dataset.sheetOpen = "false";
     }
+    updateSheetReveal("hidden");
   }
 
   const config = screenConfigs[currentScreen](scooter || scooters["A-07"]);
@@ -974,6 +985,12 @@ document.querySelectorAll("[data-mobile-nav]").forEach((button) => {
     }
     showScreen(target);
   });
+});
+
+document.getElementById("sheet-reveal")?.addEventListener("click", async () => {
+  if (!sheetPane || currentScreen === "home") return;
+  await sheetPane.moveToBreak("top");
+  syncSheetPane({ forceOpen: false });
 });
 
 window.addEventListener("resize", () => {
