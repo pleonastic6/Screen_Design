@@ -571,6 +571,7 @@ function updateSheetReveal(mode) {
   const shouldShow = isMobileViewport() && currentScreen !== "home" && mode === "hidden";
   reveal.hidden = !shouldShow;
   reveal.dataset.mode = mode;
+  reveal.setAttribute("aria-hidden", String(!shouldShow));
 }
 
 function markerIcon(type, extraClass = "") {
@@ -1000,6 +1001,15 @@ document.getElementById("sheet-reveal")?.addEventListener("click", async () => {
   if (!sheetPane || currentScreen === "home") return;
   await sheetPane.moveToBreak("top");
   syncSheetPane({ forceOpen: false });
+});
+
+document.getElementById("sheet-reveal")?.addEventListener("pointerdown", async (event) => {
+  if (!sheetPane || currentScreen === "home") return;
+  event.preventDefault();
+  if (sheetPane.isHidden?.() || sheetPane.currentBreak?.() === "bottom") {
+    await sheetPane.moveToBreak("top");
+    syncSheetPane({ forceOpen: false });
+  }
 });
 
 window.addEventListener("resize", () => {

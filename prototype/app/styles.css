@@ -972,22 +972,22 @@ input {
   .sheet-reveal {
     position: fixed;
     left: 50%;
-    bottom: calc(84px + env(safe-area-inset-bottom));
+    bottom: calc(78px + env(safe-area-inset-bottom));
     z-index: 55;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 84px;
-    height: 30px;
+    width: min(180px, calc(100vw - 96px));
+    height: 36px;
     padding: 0;
-    border-radius: 999px;
+    border-radius: 18px 18px 0 0;
     border: 1px solid rgba(22, 31, 24, 0.08);
     background: rgba(255, 255, 255, 0.92);
     box-shadow: 0 10px 24px rgba(32, 41, 34, 0.12);
     backdrop-filter: blur(14px);
     transform: translateX(-50%);
-    cursor: ns-resize;
-    touch-action: none;
+    cursor: pointer;
+    touch-action: manipulation;
   }
 
   .sheet-reveal[hidden] {
@@ -995,7 +995,7 @@ input {
   }
 
   .sheet-reveal-pill {
-    width: 40px;
+    width: 48px;
     height: 5px;
     border-radius: 999px;
     background: rgba(22, 31, 24, 0.22);
