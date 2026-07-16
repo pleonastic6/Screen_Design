@@ -66,6 +66,7 @@ let searchTerm = "";
 let countdownTimer = null;
 let toastTimer = null;
 let sheetPane = null;
+let paneSyncTimer = null;
 
 const maps = {
   main: null
@@ -560,9 +561,22 @@ async function syncSheetPane(options = {}) {
     shell.dataset.paneActive = "true";
     shell.dataset.sheetMode = mode;
     shell.dataset.sheetOpen = String(mode !== "hidden");
+    const paneWrapper = document.querySelector(".cupertino-pane-wrapper");
+    if (paneWrapper) {
+      paneWrapper.style.pointerEvents = mode === "hidden" ? "none" : "auto";
+    }
   }
 
   window.setTimeout(() => maps.main?.invalidateSize(), 0);
+}
+
+function schedulePaneStateSync(delay = 80) {
+  if (paneSyncTimer) {
+    window.clearTimeout(paneSyncTimer);
+  }
+  paneSyncTimer = window.setTimeout(() => {
+    syncSheetPane({ forceOpen: false });
+  }, delay);
 }
 
 function updateSheetReveal(mode) {
@@ -1024,6 +1038,15 @@ document.querySelectorAll("[data-mobile-nav]").forEach((button) => {
 
 document.getElementById("sheet-handle")?.addEventListener("click", async () => {
   goBack();
+});
+
+["pointerup", "touchend", "mouseup"].forEach((eventName) => {
+  document.getElementById("sheet-handle")?.addEventListener(eventName, () => {
+    schedulePaneStateSync();
+  });
+  document.getElementById("sheet-reveal")?.addEventListener(eventName, () => {
+    schedulePaneStateSync();
+  });
 });
 
 document.getElementById("sheet-reveal")?.addEventListener("click", async () => {
