@@ -894,6 +894,12 @@ function renderAll() {
   syncSheetPane({ forceOpen: false });
 }
 
+function goBack() {
+  const target = backTargets[currentScreen];
+  if (!target) return;
+  showScreen(target);
+}
+
 function showScreen(nextScreen) {
   if (nextScreen === "home") {
     selectedScooter = null;
@@ -988,13 +994,7 @@ document.querySelectorAll("[data-mobile-nav]").forEach((button) => {
 });
 
 document.getElementById("sheet-handle")?.addEventListener("click", async () => {
-  if (!sheetPane || currentScreen === "home") return;
-  if (sheetPane.isHidden?.() || sheetPane.currentBreak?.() === "bottom") {
-    await sheetPane.moveToBreak("top");
-  } else {
-    await sheetPane.moveToBreak("bottom");
-  }
-  syncSheetPane({ forceOpen: false });
+  goBack();
 });
 
 document.getElementById("sheet-reveal")?.addEventListener("click", async () => {
