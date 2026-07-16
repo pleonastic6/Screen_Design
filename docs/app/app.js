@@ -65,6 +65,9 @@ let activeFilter = "all";
 let searchTerm = "";
 let countdownTimer = null;
 let toastTimer = null;
+let mobileSheetMode = "hidden";
+let sheetDrag = null;
+let suppressSheetHandleClick = false;
 
 const maps = {
   main: null
@@ -450,6 +453,36 @@ function getMobileNavTarget(screen) {
   return "home";
 }
 
+function isMobileViewport() {
+  return window.matchMedia("(max-width: 980px)").matches;
+}
+
+function getDefaultSheetMode() {
+  return currentScreen === "home" ? "hidden" : "open";
+}
+
+function setSheetMode(nextMode) {
+  mobileSheetMode = nextMode;
+  const shell = document.querySelector(".app-shell");
+  if (!shell || !isMobileViewport()) return;
+  shell.dataset.sheetMode = nextMode;
+  shell.dataset.sheetOpen = String(nextMode !== "hidden");
+}
+
+function resetSheetOffset() {
+  const dock = document.getElementById("control-dock");
+  if (dock) {
+    dock.style.setProperty("--sheet-offset", "0px");
+  }
+}
+
+function snapSheetMode() {
+  if (!isMobileViewport()) return;
+  setSheetMode(mobileSheetMode);
+  resetSheetOffset();
+  window.setTimeout(() => maps.main?.invalidateSize(), 0);
+}
+
 function markerIcon(type, extraClass = "") {
   return L.divIcon({
     className: "",
@@ -648,12 +681,29 @@ function renderPanel() {
   const isCleanMapState = currentScreen === "home";
   const shell = document.querySelector(".app-shell");
   if (shell) {
-    shell.dataset.sheetOpen = String(!isCleanMapState);
+    if (isMobileViewport()) {
+      const defaultMode = getDefaultSheetMode();
+      if (mobileSheetMode === "hidden" && defaultMode === "open") {
+        mobileSheetMode = "open";
+      }
+      if (defaultMode === "hidden") {
+        mobileSheetMode = "hidden";
+      }
+      shell.dataset.sheetMode = mobileSheetMode;
+      shell.dataset.sheetOpen = String(mobileSheetMode !== "hidden");
+    } else {
+      shell.dataset.sheetMode = !isCleanMapState ? "open" : "hidden";
+      shell.dataset.sheetOpen = String(!isCleanMapState);
+    }
   }
 
   if (!scooter && !isCleanMapState) {
     currentScreen = "home";
     if (shell) {
+      if (isMobileViewport()) {
+        mobileSheetMode = "hidden";
+        shell.dataset.sheetMode = "hidden";
+      }
       shell.dataset.sheetOpen = "false";
     }
   }
@@ -761,6 +811,8 @@ function showScreen(nextScreen) {
     selectedScooter = null;
   }
   currentScreen = nextScreen;
+  mobileSheetMode = getDefaultSheetMode();
+  resetSheetOffset();
   renderAll();
 }
 
@@ -777,6 +829,75 @@ function startCountdown() {
 
 function initMap() {
   maps.main = createMap();
+}
+
+function initSheetDrag() {
+  const handle = document.getElementById("sheet-handle");
+  const dock = document.getElementById("control-dock");
+  if (!handle || !dock) return;
+
+  const onPointerMove = (event) => {
+    if (!sheetDrag || sheetDrag.pointerId !== event.pointerId) return;
+    const deltaY = Math.max(0, event.clientY - sheetDrag.startY);
+    sheetDrag.lastDeltaY = deltaY;
+    dock.style.setProperty("--sheet-offset", `${deltaY}px`);
+  };
+
+  const finishDrag = (pointerId, commit = true) => {
+    if (!sheetDrag || sheetDrag.pointerId !== pointerId) return;
+    const deltaY = sheetDrag.lastDeltaY || 0;
+    handle.releasePointerCapture?.(pointerId);
+    sheetDrag = null;
+    resetSheetOffset();
+
+    if (commit) {
+      if (mobileSheetMode === "open" && deltaY > 72) {
+        mobileSheetMode = "peek";
+      } else if (mobileSheetMode === "peek") {
+        mobileSheetMode = "open";
+      }
+    }
+
+    snapSheetMode();
+  };
+
+  handle.addEventListener("click", () => {
+    if (!isMobileViewport()) return;
+    if (suppressSheetHandleClick) {
+      suppressSheetHandleClick = false;
+      return;
+    }
+    if (mobileSheetMode === "hidden") {
+      if (!selectedScooter && currentScreen === "home") return;
+      mobileSheetMode = "peek";
+    } else if (mobileSheetMode === "peek") {
+      mobileSheetMode = "open";
+    } else {
+      mobileSheetMode = "peek";
+    }
+    snapSheetMode();
+  });
+
+  handle.addEventListener("pointerdown", (event) => {
+    if (!isMobileViewport()) return;
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    sheetDrag = {
+      pointerId: event.pointerId,
+      startY: event.clientY,
+      lastDeltaY: 0
+    };
+    suppressSheetHandleClick = false;
+    handle.setPointerCapture?.(event.pointerId);
+  });
+
+  handle.addEventListener("pointermove", (event) => {
+    if (sheetDrag && Math.abs(event.clientY - sheetDrag.startY) > 8) {
+      suppressSheetHandleClick = true;
+    }
+    onPointerMove(event);
+  });
+  handle.addEventListener("pointerup", (event) => finishDrag(event.pointerId, true));
+  handle.addEventListener("pointercancel", (event) => finishDrag(event.pointerId, false));
 }
 
 document.addEventListener("click", (event) => {
@@ -849,9 +970,16 @@ document.querySelectorAll("[data-mobile-nav]").forEach((button) => {
 });
 
 window.addEventListener("resize", () => {
+  if (!isMobileViewport()) {
+    mobileSheetMode = getDefaultSheetMode();
+    resetSheetOffset();
+  } else {
+    snapSheetMode();
+  }
   maps.main?.invalidateSize();
 });
 
 initMap();
+initSheetDrag();
 startCountdown();
 renderAll();
