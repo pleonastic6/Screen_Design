@@ -472,7 +472,7 @@ function getPaneMode() {
     return "hidden";
   }
 
-  return sheetPane.currentBreak?.() === "top" ? "open" : "peek";
+  return "open";
 }
 
 function getMobileNavHeight() {
@@ -489,16 +489,15 @@ function getPaneConfig() {
     bottomClose: true,
     fastSwipeClose: true,
     lowerThanBottom: false,
-    clickBottomOpen: true,
+    clickBottomOpen: false,
     showDraggable: false,
     buttonDestroy: false,
     backdrop: false,
     simulateTouch: false,
-    dragBy: ["#sheet-handle", "#sheet-reveal", ".mobile-nav"],
+    dragBy: ["#sheet-handle"],
     bottomOffset: Math.max(0, getMobileNavHeight() - 6),
     breaks: {
       top: { enabled: true, height: topHeight, bounce: true },
-      middle: { enabled: true, height: 18 },
       bottom: { enabled: true, height: 0 }
     }
   };
@@ -569,7 +568,7 @@ async function syncSheetPane(options = {}) {
 function updateSheetReveal(mode) {
   const reveal = document.getElementById("sheet-reveal");
   if (!reveal) return;
-  const shouldShow = isMobileViewport() && currentScreen !== "home";
+  const shouldShow = isMobileViewport() && currentScreen !== "home" && mode === "hidden";
   reveal.hidden = !shouldShow;
   reveal.dataset.mode = mode;
 }
@@ -985,6 +984,16 @@ document.querySelectorAll("[data-mobile-nav]").forEach((button) => {
     }
     showScreen(target);
   });
+});
+
+document.getElementById("sheet-handle")?.addEventListener("click", async () => {
+  if (!sheetPane || currentScreen === "home") return;
+  if (sheetPane.isHidden?.()) {
+    await sheetPane.moveToBreak("top");
+  } else {
+    await sheetPane.hide();
+  }
+  syncSheetPane({ forceOpen: false });
 });
 
 document.getElementById("sheet-reveal")?.addEventListener("click", async () => {

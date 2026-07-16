@@ -1003,16 +1003,11 @@ input {
     transform: translateY(calc(100% + 40px));
   }
 
-  .app-shell[data-sheet-mode="peek"] .control-dock {
-    transform: translateY(calc(100% - 14px + var(--sheet-offset, 0px)));
-  }
-
   .app-shell[data-sheet-mode="open"] .control-dock {
     transform: translateY(var(--sheet-offset, 0px));
   }
 
   .app-shell[data-pane-active="true"][data-sheet-open="false"] .control-dock,
-  .app-shell[data-pane-active="true"][data-sheet-mode="peek"] .control-dock,
   .app-shell[data-pane-active="true"][data-sheet-mode="open"] .control-dock {
     opacity: 1;
     transform: none !important;
