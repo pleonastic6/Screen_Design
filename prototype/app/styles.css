@@ -953,6 +953,18 @@ input {
     touch-action: none;
   }
 
+  .app-shell[data-pane-active="true"] .control-dock {
+    position: static;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    max-height: none;
+    z-index: auto;
+    box-shadow: none;
+    touch-action: auto;
+    transition: opacity 180ms ease;
+  }
+
   .app-shell[data-sheet-open="false"] .control-dock {
     transform: translateY(calc(100% + 40px));
   }
@@ -963,6 +975,14 @@ input {
 
   .app-shell[data-sheet-mode="open"] .control-dock {
     transform: translateY(var(--sheet-offset, 0px));
+  }
+
+  .app-shell[data-pane-active="true"][data-sheet-open="false"] .control-dock,
+  .app-shell[data-pane-active="true"][data-sheet-mode="peek"] .control-dock,
+  .app-shell[data-pane-active="true"][data-sheet-mode="open"] .control-dock {
+    opacity: 1;
+    transform: none !important;
+    pointer-events: auto;
   }
 
   .map-overlay.top {
@@ -1111,6 +1131,10 @@ input {
     right: 0;
     bottom: calc(68px + env(safe-area-inset-bottom));
     max-height: min(430px, 50dvh);
+  }
+
+  .app-shell[data-pane-active="true"] .control-dock {
+    bottom: auto;
   }
 
   .action-row {

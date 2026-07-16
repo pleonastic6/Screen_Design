@@ -65,12 +65,7 @@ let activeFilter = "all";
 let searchTerm = "";
 let countdownTimer = null;
 let toastTimer = null;
-let mobileSheetMode = "hidden";
-let sheetDrag = null;
-let suppressSheetHandleClick = false;
-
-const sheetModeOrder = ["hidden", "peek", "open"];
-const sheetDragThreshold = 36;
+let sheetPane = null;
 
 const maps = {
   main: null
@@ -464,29 +459,110 @@ function getDefaultSheetMode() {
   return currentScreen === "home" ? "hidden" : "open";
 }
 
-function getSheetModeIndex(mode) {
-  return Math.max(0, sheetModeOrder.indexOf(mode));
-}
-
-function setSheetMode(nextMode) {
-  mobileSheetMode = nextMode;
-  const shell = document.querySelector(".app-shell");
-  if (!shell || !isMobileViewport()) return;
-  shell.dataset.sheetMode = nextMode;
-  shell.dataset.sheetOpen = String(nextMode !== "hidden");
-}
-
-function resetSheetOffset() {
-  const dock = document.getElementById("control-dock");
-  if (dock) {
-    dock.style.setProperty("--sheet-offset", "0px");
+function getPaneMode() {
+  if (!isMobileViewport()) {
+    return getDefaultSheetMode();
   }
+
+  if (!sheetPane) {
+    return getDefaultSheetMode();
+  }
+
+  if (sheetPane.isHidden?.()) {
+    return "hidden";
+  }
+
+  return sheetPane.currentBreak?.() === "top" ? "open" : "peek";
 }
 
-function snapSheetMode() {
-  if (!isMobileViewport()) return;
-  setSheetMode(mobileSheetMode);
-  resetSheetOffset();
+function getMobileNavHeight() {
+  const nav = document.querySelector(".mobile-nav");
+  return nav ? Math.ceil(nav.getBoundingClientRect().height) : 78;
+}
+
+function getPaneConfig() {
+  const viewportHeight = window.innerHeight;
+  const topHeight = Math.min(430, Math.max(320, Math.round(viewportHeight * 0.5)));
+  return {
+    parentElement: "body",
+    initialBreak: "top",
+    bottomClose: true,
+    fastSwipeClose: true,
+    lowerThanBottom: false,
+    clickBottomOpen: true,
+    showDraggable: false,
+    buttonDestroy: false,
+    backdrop: false,
+    simulateTouch: false,
+    dragBy: ["#sheet-handle", ".mobile-nav"],
+    bottomOffset: Math.max(0, getMobileNavHeight() - 6),
+    breaks: {
+      top: { enabled: true, height: topHeight, bounce: true },
+      middle: { enabled: true, height: 18 },
+      bottom: { enabled: true, height: 0 }
+    }
+  };
+}
+
+async function ensureSheetPane() {
+  if (!isMobileViewport() || typeof window.CupertinoPane !== "function") {
+    return null;
+  }
+
+  if (sheetPane) {
+    return sheetPane;
+  }
+
+  sheetPane = new window.CupertinoPane("#control-dock", getPaneConfig());
+  await sheetPane.present({ animate: false });
+  return sheetPane;
+}
+
+function destroySheetPane() {
+  if (!sheetPane) return;
+  try {
+    sheetPane.destroy({ animate: false });
+  } catch (error) {
+    // Ignore teardown issues during viewport switches.
+  }
+  sheetPane = null;
+}
+
+async function syncSheetPane(options = {}) {
+  const { forceOpen = false } = options;
+  const shell = document.querySelector(".app-shell");
+
+  if (!isMobileViewport() || typeof window.CupertinoPane !== "function") {
+    if (shell) {
+      shell.dataset.paneActive = "false";
+      shell.dataset.sheetMode = getDefaultSheetMode();
+      shell.dataset.sheetOpen = String(currentScreen !== "home");
+    }
+    destroySheetPane();
+    return;
+  }
+
+  const pane = await ensureSheetPane();
+  if (!pane) return;
+
+  const config = getPaneConfig();
+  await pane.setBreakpoints(config.breaks, config.bottomOffset);
+
+  if (currentScreen === "home") {
+    if (!pane.isHidden?.()) {
+      await pane.hide();
+    }
+  } else if (forceOpen || pane.isHidden?.()) {
+    await pane.moveToBreak("top");
+  }
+
+  if (shell) {
+    const mode = getPaneMode();
+    shell.dataset.paneActive = "true";
+    shell.dataset.sheetMode = mode;
+    shell.dataset.sheetOpen = String(mode !== "hidden");
+  }
+
   window.setTimeout(() => maps.main?.invalidateSize(), 0);
 }
 
@@ -689,16 +765,12 @@ function renderPanel() {
   const shell = document.querySelector(".app-shell");
   if (shell) {
     if (isMobileViewport()) {
-      const defaultMode = getDefaultSheetMode();
-      if (mobileSheetMode === "hidden" && defaultMode === "open") {
-        mobileSheetMode = "open";
-      }
-      if (defaultMode === "hidden") {
-        mobileSheetMode = "hidden";
-      }
-      shell.dataset.sheetMode = mobileSheetMode;
-      shell.dataset.sheetOpen = String(mobileSheetMode !== "hidden");
+      const mode = getPaneMode();
+      shell.dataset.paneActive = String(typeof window.CupertinoPane === "function");
+      shell.dataset.sheetMode = mode;
+      shell.dataset.sheetOpen = String(mode !== "hidden");
     } else {
+      shell.dataset.paneActive = "false";
       shell.dataset.sheetMode = !isCleanMapState ? "open" : "hidden";
       shell.dataset.sheetOpen = String(!isCleanMapState);
     }
@@ -707,10 +779,7 @@ function renderPanel() {
   if (!scooter && !isCleanMapState) {
     currentScreen = "home";
     if (shell) {
-      if (isMobileViewport()) {
-        mobileSheetMode = "hidden";
-        shell.dataset.sheetMode = "hidden";
-      }
+      shell.dataset.sheetMode = "hidden";
       shell.dataset.sheetOpen = "false";
     }
   }
@@ -811,6 +880,7 @@ function renderAll() {
   renderMobileNav();
   renderMap();
   window.setTimeout(() => maps.main.invalidateSize(), 0);
+  syncSheetPane({ forceOpen: false });
 }
 
 function showScreen(nextScreen) {
@@ -818,9 +888,8 @@ function showScreen(nextScreen) {
     selectedScooter = null;
   }
   currentScreen = nextScreen;
-  mobileSheetMode = getDefaultSheetMode();
-  resetSheetOffset();
   renderAll();
+  syncSheetPane({ forceOpen: nextScreen !== "home" });
 }
 
 function startCountdown() {
@@ -836,86 +905,6 @@ function startCountdown() {
 
 function initMap() {
   maps.main = createMap();
-}
-
-function initSheetDrag() {
-  const handle = document.getElementById("sheet-handle");
-  const dock = document.getElementById("control-dock");
-  if (!handle || !dock) return;
-
-  const onPointerMove = (event) => {
-    if (!sheetDrag || sheetDrag.pointerId !== event.pointerId) return;
-    const deltaY = event.clientY - sheetDrag.startY;
-    sheetDrag.lastDeltaY = deltaY;
-    dock.style.setProperty("--sheet-offset", `${deltaY}px`);
-  };
-
-  const getSnapTarget = (startMode, deltaY) => {
-    const startIndex = getSheetModeIndex(startMode);
-    if (Math.abs(deltaY) < sheetDragThreshold) {
-      return startMode;
-    }
-
-    if (deltaY < 0) {
-      return sheetModeOrder[Math.min(startIndex + 1, sheetModeOrder.length - 1)];
-    }
-
-    return sheetModeOrder[Math.max(startIndex - 1, 0)];
-  };
-
-  const finishDrag = (pointerId, commit = true) => {
-    if (!sheetDrag || sheetDrag.pointerId !== pointerId) return;
-    const deltaY = sheetDrag.lastDeltaY || 0;
-    const startMode = sheetDrag.startMode;
-    handle.releasePointerCapture?.(pointerId);
-    sheetDrag = null;
-    resetSheetOffset();
-
-    if (commit) {
-      mobileSheetMode = getSnapTarget(startMode, deltaY);
-    }
-
-    snapSheetMode();
-  };
-
-  handle.addEventListener("click", () => {
-    if (!isMobileViewport()) return;
-    if (suppressSheetHandleClick) {
-      suppressSheetHandleClick = false;
-      return;
-    }
-    if (mobileSheetMode === "hidden") {
-      if (!selectedScooter && currentScreen === "home") return;
-      mobileSheetMode = "peek";
-    } else if (mobileSheetMode === "peek") {
-      mobileSheetMode = "open";
-    } else {
-      mobileSheetMode = "peek";
-    }
-    snapSheetMode();
-  });
-
-  handle.addEventListener("pointerdown", (event) => {
-    if (!isMobileViewport()) return;
-    if (event.pointerType === "mouse" && event.button !== 0) return;
-    sheetDrag = {
-      pointerId: event.pointerId,
-      startMode: mobileSheetMode,
-      startY: event.clientY,
-      lastDeltaY: 0
-    };
-    suppressSheetHandleClick = false;
-    handle.setPointerCapture?.(event.pointerId);
-  });
-
-  handle.addEventListener("pointermove", (event) => {
-    if (sheetDrag && Math.abs(event.clientY - sheetDrag.startY) > 8) {
-      suppressSheetHandleClick = true;
-    }
-    onPointerMove(event);
-  });
-  handle.addEventListener("pointerup", (event) => finishDrag(event.pointerId, true));
-  handle.addEventListener("pointercancel", (event) => finishDrag(event.pointerId, false));
 }
 
 document.addEventListener("click", (event) => {
@@ -988,16 +977,10 @@ document.querySelectorAll("[data-mobile-nav]").forEach((button) => {
 });
 
 window.addEventListener("resize", () => {
-  if (!isMobileViewport()) {
-    mobileSheetMode = getDefaultSheetMode();
-    resetSheetOffset();
-  } else {
-    snapSheetMode();
-  }
+  syncSheetPane({ forceOpen: false });
   maps.main?.invalidateSize();
 });
 
 initMap();
-initSheetDrag();
 startCountdown();
 renderAll();
