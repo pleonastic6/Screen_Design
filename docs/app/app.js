@@ -681,18 +681,6 @@ function getScreenFocusTarget() {
     return { point: scooters[selectedScooter].coords, zoom: 18 };
   }
 
-  if (currentScreen === "ride" || currentScreen === "parked") {
-    return { point: rideCheckpoint, zoom: 15 };
-  }
-
-  if (currentScreen === "return-blocked") {
-    return { point: blockedReturnPoint, zoom: 16 };
-  }
-
-  if (currentScreen === "return-ok" || currentScreen === "summary") {
-    return { point: returnOkPoint, zoom: 17 };
-  }
-
   return null;
 }
 
