@@ -694,7 +694,11 @@ function renderMap() {
   L.marker(userLocation, { icon: markerIcon("user") }).addTo(maps.main);
 
   if (currentScreen === "detail") {
-    L.marker(scooter.coords, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) }).addTo(maps.main);
+    const detailMarker = L.marker(scooter.coords, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) });
+    detailMarker.on("click", () => {
+      reopenCurrentSheet();
+    });
+    detailMarker.addTo(maps.main);
     L.marker(hubs[1].coords, { icon: markerIcon("hub") }).addTo(maps.main);
     L.circle(hubs[1].coords, { radius: 65, ...zoneStyle("success") }).addTo(maps.main);
     L.polyline([userLocation, scooter.coords], lineStyle("#8df7b2", "10 10")).addTo(maps.main);
@@ -704,7 +708,11 @@ function renderMap() {
   }
 
   if (currentScreen === "reserve") {
-    L.marker(scooter.coords, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) }).addTo(maps.main);
+    const reserveMarker = L.marker(scooter.coords, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) });
+    reserveMarker.on("click", () => {
+      reopenCurrentSheet();
+    });
+    reserveMarker.addTo(maps.main);
     L.circle(scooter.coords, { radius: 55, ...zoneStyle("warning") }).addTo(maps.main);
     L.polyline([userLocation, scooter.coords], lineStyle("#8df7b2")).addTo(maps.main);
     fitMapToPoints([userLocation, scooter.coords], 16);
@@ -729,14 +737,22 @@ function renderMap() {
   }
 
   if (currentScreen === "unlock") {
-    L.marker(scooter.coords, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) }).addTo(maps.main);
+    const unlockMarker = L.marker(scooter.coords, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) });
+    unlockMarker.on("click", () => {
+      reopenCurrentSheet();
+    });
+    unlockMarker.addTo(maps.main);
     L.circle(scooter.coords, { radius: 45, ...zoneStyle("success") }).addTo(maps.main);
     fitMapToPoints([scooter.coords], 18);
     return;
   }
 
   if (currentScreen === "ride" || currentScreen === "parked") {
-    L.marker(rideCheckpoint, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) }).addTo(maps.main);
+    const rideMarker = L.marker(rideCheckpoint, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) });
+    rideMarker.on("click", () => {
+      reopenCurrentSheet();
+    });
+    rideMarker.addTo(maps.main);
     L.marker(hubs[1].coords, { icon: markerIcon("hub") }).addTo(maps.main);
     L.circle(hubs[1].coords, { radius: 75, ...zoneStyle(currentScreen === "parked" ? "warning" : "success") }).addTo(maps.main);
     L.polyline([scooter.coords, rideCheckpoint, hubs[1].coords], lineStyle(currentScreen === "parked" ? "#ffbf73" : "#8df7b2")).addTo(maps.main);
@@ -745,7 +761,11 @@ function renderMap() {
   }
 
   if (currentScreen === "return-blocked") {
-    L.marker(blockedReturnPoint, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) }).addTo(maps.main);
+    const blockedMarker = L.marker(blockedReturnPoint, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) });
+    blockedMarker.on("click", () => {
+      reopenCurrentSheet();
+    });
+    blockedMarker.addTo(maps.main);
     L.marker(hubs[1].coords, { icon: markerIcon("hub") }).addTo(maps.main);
     L.circle(blockedReturnPoint, { radius: 80, ...zoneStyle("danger") }).addTo(maps.main);
     L.circle(hubs[1].coords, { radius: 65, ...zoneStyle("success") }).addTo(maps.main);
@@ -756,7 +776,11 @@ function renderMap() {
 
   if (currentScreen === "return-ok" || currentScreen === "summary") {
     L.marker(hubs[1].coords, { icon: markerIcon("hub") }).addTo(maps.main);
-    L.marker(returnOkPoint, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) }).addTo(maps.main);
+    const returnMarker = L.marker(returnOkPoint, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) });
+    returnMarker.on("click", () => {
+      reopenCurrentSheet();
+    });
+    returnMarker.addTo(maps.main);
     L.circle(hubs[1].coords, { radius: 60, ...zoneStyle("success") }).addTo(maps.main);
     L.polyline([returnOkPoint, hubs[1].coords], lineStyle("#8df7b2", "5 8")).addTo(maps.main);
     fitMapToPoints([hubs[1].coords, returnOkPoint], 17);
@@ -892,6 +916,11 @@ function renderAll() {
   renderMap();
   window.setTimeout(() => maps.main.invalidateSize(), 0);
   syncSheetPane({ forceOpen: false });
+}
+
+function reopenCurrentSheet() {
+  renderAll();
+  syncSheetPane({ forceOpen: true });
 }
 
 function goBack() {
