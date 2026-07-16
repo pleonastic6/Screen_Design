@@ -386,10 +386,17 @@ input {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(246, 248, 243, 0.94)),
     rgba(255, 255, 255, 0.96);
   transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.control-dock::-webkit-scrollbar {
+  display: none;
 }
 
 .sheet-handle {
@@ -521,29 +528,53 @@ input {
 .selection-pill {
   display: none;
   align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
+  gap: 10px;
+  padding: 10px 12px;
   border-radius: 18px;
   background: rgba(22, 31, 24, 0.04);
   border: 1px solid rgba(22, 31, 24, 0.05);
 }
 
-.selection-pill-id {
+.selection-pill-visual {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 52px;
-  min-height: 40px;
-  padding: 0 10px;
-  border-radius: 14px;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
   background: #ffffff;
   box-shadow: 0 8px 18px rgba(32, 41, 34, 0.08);
+  flex: 0 0 auto;
+}
+
+.scooter-glyph {
+  width: 30px;
+  height: 30px;
+  color: #172118;
+}
+
+.scooter-glyph svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .selection-pill-copy {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
+  min-width: 0;
+}
+
+.selection-pill-id {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.12em;
 }
 
 .selection-pill-copy strong {
@@ -888,11 +919,10 @@ input {
     left: 12px;
     right: 12px;
     bottom: calc(82px + env(safe-area-inset-bottom));
-    max-height: min(320px, 36dvh);
+    max-height: min(350px, 39dvh);
     z-index: 9;
     padding: 10px 10px 12px;
     border-radius: 28px;
-    overflow: hidden;
     box-shadow: 0 -22px 44px rgba(24, 34, 26, 0.14);
   }
 
@@ -919,7 +949,7 @@ input {
   }
 
   .panel-head h1 {
-    font-size: 1.08rem;
+    font-size: 1rem;
     margin-top: 0;
   }
 
@@ -935,36 +965,77 @@ input {
     display: flex;
   }
 
+  .panel-head {
+    gap: 8px;
+  }
+
+  .panel-head-actions {
+    gap: 8px;
+  }
+
+  .ghost-btn,
+  .status-chip {
+    min-height: 34px;
+    padding: 7px 10px;
+    font-size: 11px;
+  }
+
   .metric-grid {
     gap: 4px;
   }
 
   .metric-card {
-    padding: 9px 10px;
+    padding: 8px 9px;
     border-radius: 16px;
   }
 
   .metric-card span {
-    margin-bottom: 4px;
-    font-size: 11px;
+    margin-bottom: 3px;
+    font-size: 10px;
   }
 
   .metric-card strong {
-    font-size: 0.96rem;
+    font-size: 0.9rem;
+  }
+
+  .info-stack {
+    gap: 4px;
+  }
+
+  .info-card,
+  .info-card.compact {
+    padding: 9px 10px;
+    border-radius: 16px;
+  }
+
+  .info-card strong {
+    font-size: 0.92rem;
+  }
+
+  .info-card p {
+    font-size: 0.82rem;
+    line-height: 1.28;
   }
 
   .action-row {
     margin-top: 0;
+    gap: 6px;
   }
 
   .primary-btn,
   .secondary-btn {
-    min-height: 54px;
-    padding: 11px 14px;
+    min-height: 48px;
+    padding: 10px 13px;
+    border-radius: 16px;
   }
 
   .button-label {
-    font-size: 14px;
+    font-size: 13px;
+  }
+
+  .button-meta {
+    margin-top: 2px;
+    font-size: 10px;
   }
 }
 
@@ -977,17 +1048,17 @@ input {
     left: 12px;
     right: 12px;
     bottom: calc(82px + env(safe-area-inset-bottom));
-    max-height: 29dvh;
+    max-height: min(332px, 38dvh);
   }
 
   .action-row {
     grid-template-columns: 1fr;
-    gap: 8px;
+    gap: 6px;
   }
 
   .metric-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
+    gap: 5px;
   }
 
   .floating-card {
@@ -1008,7 +1079,7 @@ input {
     grid-template-columns: 1fr 1fr auto 1fr 1fr;
     align-items: center;
     gap: 4px;
-    padding: 8px 10px;
+    padding: 7px 10px;
     border-radius: 999px;
     background:
       linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(246, 248, 243, 0.95)),
@@ -1018,8 +1089,8 @@ input {
   }
 
   .mobile-nav-item {
-    min-height: 44px;
-    padding: 6px 4px;
+    min-height: 42px;
+    padding: 5px 4px;
     border-radius: 16px;
   }
 
