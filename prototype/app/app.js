@@ -69,6 +69,9 @@ let mobileSheetMode = "hidden";
 let sheetDrag = null;
 let suppressSheetHandleClick = false;
 
+const sheetModeOrder = ["hidden", "peek", "open"];
+const sheetDragThreshold = 36;
+
 const maps = {
   main: null
 };
@@ -461,6 +464,10 @@ function getDefaultSheetMode() {
   return currentScreen === "home" ? "hidden" : "open";
 }
 
+function getSheetModeIndex(mode) {
+  return Math.max(0, sheetModeOrder.indexOf(mode));
+}
+
 function setSheetMode(nextMode) {
   mobileSheetMode = nextMode;
   const shell = document.querySelector(".app-shell");
@@ -838,24 +845,34 @@ function initSheetDrag() {
 
   const onPointerMove = (event) => {
     if (!sheetDrag || sheetDrag.pointerId !== event.pointerId) return;
-    const deltaY = Math.max(0, event.clientY - sheetDrag.startY);
+    const deltaY = event.clientY - sheetDrag.startY;
     sheetDrag.lastDeltaY = deltaY;
     dock.style.setProperty("--sheet-offset", `${deltaY}px`);
+  };
+
+  const getSnapTarget = (startMode, deltaY) => {
+    const startIndex = getSheetModeIndex(startMode);
+    if (Math.abs(deltaY) < sheetDragThreshold) {
+      return startMode;
+    }
+
+    if (deltaY < 0) {
+      return sheetModeOrder[Math.min(startIndex + 1, sheetModeOrder.length - 1)];
+    }
+
+    return sheetModeOrder[Math.max(startIndex - 1, 0)];
   };
 
   const finishDrag = (pointerId, commit = true) => {
     if (!sheetDrag || sheetDrag.pointerId !== pointerId) return;
     const deltaY = sheetDrag.lastDeltaY || 0;
+    const startMode = sheetDrag.startMode;
     handle.releasePointerCapture?.(pointerId);
     sheetDrag = null;
     resetSheetOffset();
 
     if (commit) {
-      if (mobileSheetMode === "open" && deltaY > 72) {
-        mobileSheetMode = "peek";
-      } else if (mobileSheetMode === "peek") {
-        mobileSheetMode = "open";
-      }
+      mobileSheetMode = getSnapTarget(startMode, deltaY);
     }
 
     snapSheetMode();
@@ -883,6 +900,7 @@ function initSheetDrag() {
     if (event.pointerType === "mouse" && event.button !== 0) return;
     sheetDrag = {
       pointerId: event.pointerId,
+      startMode: mobileSheetMode,
       startY: event.clientY,
       lastDeltaY: 0
     };
