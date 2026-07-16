@@ -656,6 +656,18 @@ function fitMapToPoints(points, zoom = 15) {
   }
 }
 
+function focusPointInUpperThird(point, zoom = maps.main.getZoom()) {
+  if (!point) return;
+  maps.main.setView(point, zoom, { animate: false });
+
+  if (!isMobileViewport()) {
+    return;
+  }
+
+  const size = maps.main.getSize();
+  maps.main.panBy([0, Math.round(size.y * 0.18)], { animate: false });
+}
+
 function clearMap() {
   maps.main.eachLayer((layer) => {
     if (!(layer instanceof L.TileLayer)) {
@@ -708,6 +720,7 @@ function renderMap() {
     L.polyline([userLocation, scooter.coords], lineStyle("#8df7b2", "10 10")).addTo(maps.main);
     L.polyline([scooter.coords, hubs[1].coords], lineStyle("#77dbff", "8 10")).addTo(maps.main);
     fitMapToPoints([userLocation, scooter.coords, hubs[1].coords], 16);
+    focusPointInUpperThird(scooter.coords);
     return;
   }
 
@@ -720,6 +733,7 @@ function renderMap() {
     L.circle(scooter.coords, { radius: 55, ...zoneStyle("warning") }).addTo(maps.main);
     L.polyline([userLocation, scooter.coords], lineStyle("#8df7b2")).addTo(maps.main);
     fitMapToPoints([userLocation, scooter.coords], 16);
+    focusPointInUpperThird(scooter.coords);
     return;
   }
 
@@ -748,6 +762,7 @@ function renderMap() {
     unlockMarker.addTo(maps.main);
     L.circle(scooter.coords, { radius: 45, ...zoneStyle("success") }).addTo(maps.main);
     fitMapToPoints([scooter.coords], 18);
+    focusPointInUpperThird(scooter.coords, 18);
     return;
   }
 
@@ -761,6 +776,7 @@ function renderMap() {
     L.circle(hubs[1].coords, { radius: 75, ...zoneStyle(currentScreen === "parked" ? "warning" : "success") }).addTo(maps.main);
     L.polyline([scooter.coords, rideCheckpoint, hubs[1].coords], lineStyle(currentScreen === "parked" ? "#ffbf73" : "#8df7b2")).addTo(maps.main);
     fitMapToPoints([scooter.coords, rideCheckpoint, hubs[1].coords], 15);
+    focusPointInUpperThird(rideCheckpoint);
     return;
   }
 
@@ -775,6 +791,7 @@ function renderMap() {
     L.circle(hubs[1].coords, { radius: 65, ...zoneStyle("success") }).addTo(maps.main);
     L.polyline([blockedReturnPoint, hubs[1].coords], lineStyle("#ffbf73", "8 10")).addTo(maps.main);
     fitMapToPoints([blockedReturnPoint, hubs[1].coords], 16);
+    focusPointInUpperThird(blockedReturnPoint);
     return;
   }
 
@@ -788,6 +805,7 @@ function renderMap() {
     L.circle(hubs[1].coords, { radius: 60, ...zoneStyle("success") }).addTo(maps.main);
     L.polyline([returnOkPoint, hubs[1].coords], lineStyle("#8df7b2", "5 8")).addTo(maps.main);
     fitMapToPoints([hubs[1].coords, returnOkPoint], 17);
+    focusPointInUpperThird(returnOkPoint);
   }
 }
 
