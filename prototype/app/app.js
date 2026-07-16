@@ -60,7 +60,7 @@ const rideStartedAt = Date.now() - (12 * 60 + 10) * 1000;
 const parkedStartedAt = Date.now() - (14 * 60 + 25) * 1000;
 
 let currentScreen = "home";
-let selectedScooter = "A-07";
+let selectedScooter = null;
 let activeFilter = "all";
 let searchTerm = "";
 let countdownTimer = null;
@@ -397,9 +397,23 @@ function getVisibleHubs() {
 
 function ensureSelectedScooterVisible() {
   const visibleIds = new Set(getVisibleScooterEntries().map(([key]) => key));
+  if (!selectedScooter && visibleIds.size) {
+    return;
+  }
+
   if (visibleIds.size && !visibleIds.has(selectedScooter)) {
     [selectedScooter] = visibleIds;
   }
+}
+
+function getContextScooter(hasScooters) {
+  if (!hasScooters) return null;
+  if (selectedScooter && scooters[selectedScooter]) {
+    return scooters[selectedScooter];
+  }
+
+  const [firstVisibleKey] = getVisibleScooterEntries()[0] || [];
+  return firstVisibleKey ? scooters[firstVisibleKey] : null;
 }
 
 function getFlowMeta(screen) {
@@ -524,7 +538,7 @@ function clearMap() {
 
 function renderMap() {
   clearMap();
-  const scooter = scooters[selectedScooter];
+  const scooter = selectedScooter ? scooters[selectedScooter] : null;
   const visibleScooters = getVisibleScooterEntries();
   const visibleHubs = getVisibleHubs();
   const fitPoints = [userLocation];
@@ -537,21 +551,17 @@ function renderMap() {
 
     visibleScooters.forEach(([key, item]) => {
       const marker = L.marker(item.coords, {
-        icon: markerIcon("scooter", `${item.statusClass} ${key === selectedScooter ? "active" : ""}`)
+        icon: markerIcon("scooter", item.statusClass)
       });
       marker.on("click", () => {
         selectedScooter = key;
-        renderAll();
+        showScreen("detail");
       });
       marker.addTo(maps.main);
     });
 
     L.marker(userLocation, { icon: markerIcon("user") }).addTo(maps.main);
-    if (visibleScooters.length) {
-      L.polyline([userLocation, scooter.coords], lineStyle("#8df7b2", "10 10")).addTo(maps.main);
-      L.circle(scooter.coords, { radius: 55, ...zoneStyle("success") }).addTo(maps.main);
-      fitPoints.push(...visibleScooters.map(([, item]) => item.coords));
-    }
+    fitPoints.push(...visibleScooters.map(([, item]) => item.coords));
     fitPoints.push(...visibleHubs.map((hub) => hub.coords));
     fitMapToPoints(fitPoints, 15);
     return;
@@ -630,14 +640,25 @@ function renderMap() {
 }
 
 function renderPanel() {
-  const scooter = scooters[selectedScooter];
   const visibleScooters = getVisibleScooterEntries();
   const hasScooters = visibleScooters.length > 0;
-  if (currentScreen === "home" && hasScooters) {
-    ensureSelectedScooterVisible();
+  ensureSelectedScooterVisible();
+
+  const scooter = getContextScooter(hasScooters);
+  const isCleanMapState = currentScreen === "home";
+  const shell = document.querySelector(".app-shell");
+  if (shell) {
+    shell.dataset.sheetOpen = String(!isCleanMapState);
   }
 
-  const config = screenConfigs[currentScreen](scooter);
+  if (!scooter && !isCleanMapState) {
+    currentScreen = "home";
+    if (shell) {
+      shell.dataset.sheetOpen = "false";
+    }
+  }
+
+  const config = screenConfigs[currentScreen](scooter || scooters["A-07"]);
   bindText("screen-badge", config.badge);
   bindText("panel-kicker", config.kicker);
   bindText("panel-title", config.title);
@@ -713,12 +734,12 @@ function renderPanel() {
   }
 
   bindText("map-available", `${visibleScooters.filter(([, item]) => item.status === "Verfuegbar").length} frei`);
-  bindText("map-focus-id", hasScooters ? scooter.id : "KEIN SCOOTER");
-  bindText("map-focus-title", hasScooters ? config.focus[1] : "Keine Treffer in dieser Auswahl");
-  bindText("map-focus-copy", hasScooters ? config.focus[2] : "Suche oder Filter anpassen.");
-  bindText("selection-pill-id", hasScooters ? selectedScooter : "--");
-  bindText("selection-pill-title", hasScooters ? `${scooter.battery} Akku` : "Keine Auswahl");
-  bindText("selection-pill-meta", hasScooters ? scooter.distance : "Filter oder Suche anpassen");
+  bindText("map-focus-id", scooter ? scooter.id : "KEIN SCOOTER");
+  bindText("map-focus-title", scooter ? config.focus[1] : "Keine Treffer in dieser Auswahl");
+  bindText("map-focus-copy", scooter ? config.focus[2] : "Suche oder Filter anpassen.");
+  bindText("selection-pill-id", scooter && selectedScooter ? selectedScooter : "--");
+  bindText("selection-pill-title", scooter ? `${scooter.battery} Akku` : "Keine Auswahl");
+  bindText("selection-pill-meta", scooter ? scooter.distance : "Filter oder Suche anpassen");
 }
 
 function renderMobileNav() {
@@ -736,6 +757,9 @@ function renderAll() {
 }
 
 function showScreen(nextScreen) {
+  if (nextScreen === "home") {
+    selectedScooter = null;
+  }
   currentScreen = nextScreen;
   renderAll();
 }
@@ -783,6 +807,7 @@ document.addEventListener("click", (event) => {
     setActiveFilter(nextFilter);
     if (currentScreen !== "home") {
       currentScreen = "home";
+      selectedScooter = null;
     }
     renderAll();
     showToast(labels[nextFilter]);
@@ -794,6 +819,7 @@ document.querySelectorAll("[data-filter]").forEach((button) => {
     setActiveFilter(button.dataset.filter);
     if (currentScreen !== "home") {
       currentScreen = "home";
+      selectedScooter = null;
     }
     renderAll();
   });
@@ -804,6 +830,7 @@ document.querySelectorAll("[data-search='map']").forEach((input) => {
     searchTerm = input.value.trim().toLowerCase();
     if (currentScreen !== "home") {
       currentScreen = "home";
+      selectedScooter = null;
     }
     renderAll();
   });
@@ -813,6 +840,10 @@ document.querySelectorAll("[data-mobile-nav]").forEach((button) => {
   button.addEventListener("click", () => {
     const target = button.dataset.mobileNav;
     if (!target) return;
+    if (target !== "home" && !selectedScooter) {
+      showToast("Erst einen Scooter auf der Karte auswaehlen.");
+      return;
+    }
     showScreen(target);
   });
 });
