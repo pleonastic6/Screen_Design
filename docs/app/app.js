@@ -668,6 +668,34 @@ function focusPointInUpperThird(point, zoom = maps.main.getZoom()) {
   maps.main.panBy([0, Math.round(size.y * 0.18)], { animate: false });
 }
 
+function getScreenFocusTarget() {
+  if (!selectedScooter || !scooters[selectedScooter]) {
+    return null;
+  }
+
+  if (currentScreen === "detail" || currentScreen === "reserve") {
+    return { point: scooters[selectedScooter].coords, zoom: 16 };
+  }
+
+  if (currentScreen === "unlock") {
+    return { point: scooters[selectedScooter].coords, zoom: 18 };
+  }
+
+  if (currentScreen === "ride" || currentScreen === "parked") {
+    return { point: rideCheckpoint, zoom: 15 };
+  }
+
+  if (currentScreen === "return-blocked") {
+    return { point: blockedReturnPoint, zoom: 16 };
+  }
+
+  if (currentScreen === "return-ok" || currentScreen === "summary") {
+    return { point: returnOkPoint, zoom: 17 };
+  }
+
+  return null;
+}
+
 function clearMap() {
   maps.main.eachLayer((layer) => {
     if (!(layer instanceof L.TileLayer)) {
@@ -936,7 +964,13 @@ function renderAll() {
   renderPanel();
   renderMobileNav();
   renderMap();
-  window.setTimeout(() => maps.main.invalidateSize(), 0);
+  window.setTimeout(() => {
+    maps.main.invalidateSize();
+    const focusTarget = getScreenFocusTarget();
+    if (focusTarget) {
+      focusPointInUpperThird(focusTarget.point, focusTarget.zoom);
+    }
+  }, 80);
   syncSheetPane({ forceOpen: false });
 }
 
