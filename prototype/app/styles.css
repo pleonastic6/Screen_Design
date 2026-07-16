@@ -402,33 +402,28 @@ input {
 
 .sheet-handle {
   appearance: none;
-  border: 0;
-  position: relative;
-  width: min(100%, 160px);
-  height: 24px;
+  border: 1px solid rgba(22, 31, 24, 0.08);
+  width: 36px;
+  height: 36px;
   border-radius: 999px;
-  margin: -2px auto 2px;
-  background: transparent;
+  margin: -2px 0 4px;
+  background: rgba(255, 255, 255, 0.9);
   padding: 0;
   flex: 0 0 auto;
-  cursor: grab;
-  touch-action: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 24px rgba(28, 41, 33, 0.08);
+  cursor: pointer;
+  touch-action: manipulation;
 }
 
-.sheet-handle::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 54px;
-  height: 5px;
-  border-radius: 999px;
-  background: rgba(22, 31, 24, 0.14);
-  transform: translate(-50%, -50%);
-}
-
-.sheet-handle:active {
-  cursor: grabbing;
+.sheet-handle-icon {
+  font-size: 28px;
+  line-height: 1;
+  font-weight: 600;
+  color: rgba(22, 31, 24, 0.76);
+  transform: translateX(-1px);
 }
 
 .panel-head {
