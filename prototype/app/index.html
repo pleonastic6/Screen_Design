@@ -37,6 +37,7 @@
           <div class="map-strip glass">
             <span class="map-pill"><i class="dot available"></i><span data-bind="map-available">2 frei</span></span>
             <span class="map-pill"><i class="dot hub"></i>3 Hubs</span>
+            <span class="map-pill emphasis" data-bind="map-context">120 m entfernt</span>
           </div>
         </div>
         <div class="map-overlay bottom">
@@ -54,12 +55,31 @@
             <p class="eyebrow" data-bind="panel-kicker">Live Map</p>
             <h1 data-bind="panel-title">Finde deinen naechsten Ride</h1>
           </div>
-          <span class="status-chip available" data-bind="panel-status">Verfuegbar</span>
+          <div class="panel-head-actions">
+            <button class="ghost-btn" type="button" id="back-action" data-action="back" hidden>Zurueck</button>
+            <span class="status-chip available" data-bind="panel-status">Verfuegbar</span>
+          </div>
         </div>
 
         <p class="panel-copy" data-bind="panel-copy">
           Waehle einen Scooter auf der Karte oder nutze direkt den empfohlenen Ride.
         </p>
+
+        <section class="flow-meter" aria-label="Fortschritt im Flow">
+          <div class="flow-copy">
+            <span class="mono overline" data-bind="flow-step">Schritt 1 von 8</span>
+            <strong data-bind="flow-title">Karte und Auswahl</strong>
+          </div>
+          <div class="flow-bar" aria-hidden="true">
+            <span class="flow-bar-fill" id="flow-bar-fill"></span>
+          </div>
+        </section>
+
+        <section class="focus-banner glass" id="focus-banner" data-tone="calm">
+          <p class="mono overline" data-bind="focus-kicker">Empfohlen</p>
+          <strong data-bind="focus-title">Direkter Start mit Scooter A-07</strong>
+          <p data-bind="focus-copy">Ein Hauptpfad, kein UI-Drama: unlocken oder erst reservieren.</p>
+        </section>
 
         <section class="search-strip" id="search-strip">
           <label class="search-field" aria-label="Scooter oder Hub suchen">
@@ -106,16 +126,10 @@
         </section>
 
         <div class="action-row">
+          <p class="action-hint" data-bind="action-hint">Primaer: direkt zum naechsten sinnvollen Schritt.</p>
           <button class="secondary-btn" type="button" id="secondary-action">Reservieren</button>
           <button class="primary-btn" type="button" id="primary-action">Jetzt entsperren</button>
         </div>
-
-        <nav class="bottom-nav" aria-label="Navigation">
-          <button class="nav-item active" type="button" data-nav="map">Karte</button>
-          <button class="nav-item" type="button" data-nav="ride">Fahrt</button>
-          <button class="nav-item" type="button" data-nav="bookings">Buchungen</button>
-          <button class="nav-item" type="button" data-nav="profile">Profil</button>
-        </nav>
       </aside>
     </section>
   </main>

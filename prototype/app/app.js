@@ -56,6 +56,8 @@ const returnOkPoint = [49.4427, 11.86035];
 
 const reserveDurationSeconds = 30 * 60;
 const reserveStartedAt = Date.now() - (2 * 60 + 26) * 1000;
+const rideStartedAt = Date.now() - (12 * 60 + 10) * 1000;
+const parkedStartedAt = Date.now() - (14 * 60 + 25) * 1000;
 
 let currentScreen = "home";
 let selectedScooter = "A-07";
@@ -68,10 +70,35 @@ const maps = {
   main: null
 };
 
+const backTargets = {
+  home: null,
+  detail: "home",
+  reserve: "detail",
+  pickup: "reserve",
+  unlock: "pickup",
+  ride: "unlock",
+  parked: "ride",
+  "return-blocked": "ride",
+  "return-ok": "return-blocked",
+  summary: "return-ok"
+};
+
+const flowSteps = [
+  { id: "home", label: "Karte und Auswahl", count: 1 },
+  { id: "detail", label: "Scooter pruefen", count: 2 },
+  { id: "reserve", label: "Reservierung aktiv", count: 3 },
+  { id: "pickup", label: "Vor Ort bestaetigen", count: 4 },
+  { id: "unlock", label: "Unlock bestaetigen", count: 5 },
+  { id: "ride", label: "Fahrt aktiv", count: 6 },
+  { id: "return-blocked", label: "Rueckgabe pruefen", count: 7 },
+  { id: "return-ok", label: "Rueckgabe erlauben", count: 8 },
+  { id: "summary", label: "Abschluss", count: 8 }
+];
+
 const screenConfigs = {
   home: (scooter) => ({
     kicker: "Live Map",
-    badge: "Live Map",
+    badge: "01 Map",
     title: "Finde deinen naechsten Ride",
     status: scooter.status,
     statusClass: scooter.statusClass,
@@ -85,13 +112,16 @@ const screenConfigs = {
       ["Rueckgabe", scooter.returnRule],
       ["Hinweis", scooter.note]
     ],
+    focus: ["Empfohlen", `Direkter Start mit ${scooter.name}`, "Ein Hauptpfad, kein UI-Drama: unlocken oder erst reservieren.", "calm"],
+    mapContext: `${scooter.distance} entfernt`,
+    actionHint: "Primaer bringt dich direkt in den Flow, sekundaer kauft dir nur Zeit.",
     primary: ["Jetzt entsperren", "detail"],
     secondary: ["Reservieren", "reserve"],
     showSearch: true
   }),
   detail: (scooter) => ({
     kicker: "Scooter Detail",
-    badge: "Detail",
+    badge: "02 Detail",
     title: scooter.id,
     status: scooter.status,
     statusClass: scooter.statusClass,
@@ -105,12 +135,15 @@ const screenConfigs = {
       ["Tarif", "0,10 EUR pro 5 Min"],
       ["Rueckgabe", scooter.returnRule]
     ],
+    focus: ["Entscheidung", "Jetzt muss alles glasklar sein", "Akku, Preis und Rueckgaberegel muessen ohne Scrollen sitzen.", "calm"],
+    mapContext: "Route + Rueckgabehub",
+    actionHint: "Wenn die Infos reichen, nicht noch einen Extra-Screen erfinden.",
     primary: ["Jetzt entsperren", "unlock"],
     secondary: ["Reservieren", "reserve"]
   }),
   reserve: (scooter) => ({
     kicker: "Reservierung",
-    badge: "Countdown",
+    badge: "03 Reserve",
     title: "Reservierung aktiv",
     status: "Laeuft",
     statusClass: "available",
@@ -124,12 +157,15 @@ const screenConfigs = {
       ["Navigation", "Direkter Weg zum reservierten Scooter."],
       ["Status", "Nach Ablauf wird er wieder freigegeben."]
     ],
+    focus: ["Timer laeuft", `Noch ${formatCountdown(getReserveSecondsLeft())} exklusiv`, "Keine zweite Hauptaufgabe: jetzt hingehen und bestaetigen.", "warning"],
+    mapContext: formatCountdown(getReserveSecondsLeft()),
+    actionHint: "Hier zaehlt nur Geschwindigkeit: hingehen oder abbrechen.",
     primary: ["Vor Ort bestaetigen", "pickup"],
     secondary: ["Abbrechen", "home"]
   }),
   pickup: (scooter) => ({
     kicker: "Vor Ort",
-    badge: "Zuordnung",
+    badge: "04 Pickup",
     title: "Richtigen Scooter bestaetigen",
     status: scooter.status,
     statusClass: scooter.statusClass,
@@ -143,12 +179,15 @@ const screenConfigs = {
       ["Identifikation", scooter.pickup],
       ["Wichtig", "Falscher Unlock muss ausgeschlossen sein."]
     ],
+    focus: ["Vor Ort", "Nur der richtige Scooter darf aufgehen", "Marker antippen, Nummer pruefen, dann erst entsperren.", "warning"],
+    mapContext: "Mehrere Scooter vor Ort",
+    actionHint: "Primaer erst, wenn die Nummer wirklich stimmt.",
     primary: ["Diesen Scooter entsperren", "unlock"],
     secondary: ["Zur Reservierung", "reserve"]
   }),
   unlock: (scooter) => ({
     kicker: "Unlock",
-    badge: "Freigabe",
+    badge: "05 Unlock",
     title: "Scooter entsperrt",
     status: "Bereit",
     statusClass: "available",
@@ -162,50 +201,59 @@ const screenConfigs = {
       ["Hinweis", "Fahre vorsichtig und beachte die Verkehrsregeln."],
       ["Naechster Schritt", "Jetzt startet die aktive Fahrt."]
     ],
+    focus: ["Freigabe", "Keine Schwebe mehr", "Unlock bestaetigt, jetzt direkt in die aktive Fahrt.", "success"],
+    mapContext: "Fahrbereit",
+    actionHint: "Nach Freigabe darf der Screen nicht rumlabern.",
     primary: ["Fahrt starten", "ride"],
     secondary: ["Zur Karte", "home"]
   }),
   ride: (scooter) => ({
     kicker: "Ride Active",
-    badge: "LIVE",
+    badge: "06 Ride",
     title: "Fahrt aktiv",
     status: "Aktiv",
     statusClass: "available",
     copy: "Zeit, Kosten und Rueckgabe bleiben auf einen Blick erreichbar.",
     metrics: [
-      ["Dauer", "12:10"],
-      ["Kosten", "0,30 EUR"],
+      ["Dauer", formatElapsedTime(rideStartedAt)],
+      ["Kosten", formatRideCost(rideStartedAt, 0.06)],
       ["Akku", scooter.rideBattery]
     ],
     info: [
       ["Bonus", "Rueckgabe am Hub bringt 30 Freiminuten."],
       ["Optionen", "Parken sichert kurz, Rueckgabe beendet final."]
     ],
+    focus: ["Ride live", "Eine Hauptfrage: weiterfahren oder beenden?", "Die Route zum Hub bleibt sichtbar, damit Rueckgabe nie ein Ratespiel wird.", "calm"],
+    mapContext: "Ride live",
+    actionHint: "Primaer beendet die Fahrt, sekundaer haelt sie nur an.",
     primary: ["Fahrt beenden", "return-blocked"],
     secondary: ["Temporaer parken", "parked"]
   }),
   parked: () => ({
     kicker: "Pause",
-    badge: "Geparkt",
+    badge: "07 Pause",
     title: "Scooter temporaer geparkt",
     status: "Pause",
     statusClass: "low",
     copy: "Die Abrechnung laeuft weiter, bis du die Fahrt wirklich beendest.",
     metrics: [
-      ["Zeit", "14:25"],
-      ["Kosten", "0,40 EUR"],
+      ["Zeit", formatElapsedTime(parkedStartedAt)],
+      ["Kosten", formatRideCost(parkedStartedAt, 0.11)],
       ["Status", "Pause"]
     ],
     info: [
       ["Achtung", "Pause ist nicht gleich Rueckgabe."],
       ["Weiter", "Du kannst jederzeit wieder losfahren."]
     ],
+    focus: ["Pause", "Hier Geld zu verbrennen waere bitter", "Die Fahrt ist nicht vorbei. Entweder weiterfahren oder sauber zurueckgeben.", "warning"],
+    mapContext: "Abrechnung laeuft",
+    actionHint: "Pause ist Ausnahmezustand, nicht dein neues Zuhause.",
     primary: ["Weiterfahren", "ride"],
     secondary: ["Jetzt zurueckgeben", "return-blocked"]
   }),
   "return-blocked": () => ({
     kicker: "Return Check",
-    badge: "Blockiert",
+    badge: "08 Blocked",
     title: "Rueckgabe hier nicht moeglich",
     status: "Blockiert",
     statusClass: "low",
@@ -219,12 +267,15 @@ const screenConfigs = {
       ["Naechster Schritt", "Zum Marktplatz-Hub fahren."],
       ["Grund", "Hier ist keine regulaere Rueckgabe erlaubt."]
     ],
+    focus: ["Rueckgabe blockiert", "Hier endet die Fahrt nicht", "Rote Zone verlassen und zum naechsten Hub fahren.", "danger"],
+    mapContext: "240 m bis Hub",
+    actionHint: "Nicht bestaetigen koennen ist hier korrekt. Erst Hub erreichen.",
     primary: ["Zum Ladehub", "return-ok"],
     secondary: ["Zurueck zur Fahrt", "ride"]
   }),
   "return-ok": () => ({
     kicker: "Return Check",
-    badge: "Freigabe",
+    badge: "09 Return",
     title: "Rueckgabe moeglich",
     status: "Erlaubt",
     statusClass: "available",
@@ -238,12 +289,15 @@ const screenConfigs = {
       ["Rueckgabe", "Freier Ladepunkt verfuegbar."],
       ["Bonus", "Freiminuten werden direkt gebucht."]
     ],
+    focus: ["Rueckgabe erlaubt", "Gruene Zone erreicht", "Jetzt erst lohnt sich der finale Abschluss-Button.", "success"],
+    mapContext: "Hub erkannt",
+    actionHint: "Jetzt darf der Primaer-Button final werden.",
     primary: ["Rueckgabe bestaetigen", "summary"],
     secondary: ["Zurueck", "return-blocked"]
   }),
   summary: () => ({
     kicker: "Abschluss",
-    badge: "Done",
+    badge: "10 Done",
     title: "Fahrt beendet",
     status: "Erledigt",
     statusClass: "available",
@@ -257,6 +311,9 @@ const screenConfigs = {
       ["Rueckgabeort", "Marktplatz Ladehub"],
       ["Status", "Keine offenen Posten."]
     ],
+    focus: ["Abgeschlossen", "Sauber beendet", "Kosten klar, Bonus gebucht, Flow erfolgreich durchlaufen.", "success"],
+    mapContext: "Flow abgeschlossen",
+    actionHint: "Ab hier nur noch neu starten oder den Flow nochmal anschauen.",
     primary: ["Zur Karte", "home"],
     secondary: ["Erneut ansehen", "detail"]
   })
@@ -272,6 +329,19 @@ function formatCountdown(totalSeconds) {
 function getReserveSecondsLeft() {
   const elapsedSeconds = Math.floor((Date.now() - reserveStartedAt) / 1000);
   return Math.max(0, reserveDurationSeconds - elapsedSeconds);
+}
+
+function formatElapsedTime(startedAt) {
+  const elapsedSeconds = Math.max(0, Math.floor((Date.now() - startedAt) / 1000));
+  const minutes = Math.floor(elapsedSeconds / 60);
+  const seconds = elapsedSeconds % 60;
+  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
+
+function formatRideCost(startedAt, unlockFee = 0) {
+  const elapsedSeconds = Math.max(0, Math.floor((Date.now() - startedAt) / 1000));
+  const rideCost = unlockFee + elapsedSeconds * (0.1 / (5 * 60));
+  return `${rideCost.toFixed(2).replace(".", ",")} EUR`;
 }
 
 function bindText(key, value) {
@@ -325,6 +395,20 @@ function ensureSelectedScooterVisible() {
   }
 }
 
+function getFlowMeta(screen) {
+  if (screen === "parked") {
+    return { count: 6, total: 8, label: "Fahrt pausiert", progress: 75 };
+  }
+
+  const match = flowSteps.find((step) => step.id === screen) || flowSteps[0];
+  return {
+    count: match.count,
+    total: 8,
+    label: match.label,
+    progress: (match.count / 8) * 100
+  };
+}
+
 function markerIcon(type, extraClass = "") {
   return L.divIcon({
     className: "",
@@ -365,6 +449,33 @@ function createMap() {
 
 function lineStyle(color, dashArray = null) {
   return { color, weight: 5, opacity: 0.9, dashArray, lineCap: "round" };
+}
+
+function zoneStyle(tone) {
+  if (tone === "danger") {
+    return {
+      color: "#ff8f8f",
+      fillColor: "#8d1e2d",
+      fillOpacity: 0.2,
+      weight: 2
+    };
+  }
+
+  if (tone === "success") {
+    return {
+      color: "#8df7b2",
+      fillColor: "#4ddb84",
+      fillOpacity: 0.22,
+      weight: 2
+    };
+  }
+
+  return {
+    color: "#ffbf73",
+    fillColor: "#8a531e",
+    fillOpacity: 0.16,
+    weight: 2
+  };
 }
 
 function fitMapToPoints(points, zoom = 15) {
@@ -411,6 +522,7 @@ function renderMap() {
     L.marker(userLocation, { icon: markerIcon("user") }).addTo(maps.main);
     if (visibleScooters.length) {
       L.polyline([userLocation, scooter.coords], lineStyle("#8df7b2", "10 10")).addTo(maps.main);
+      L.circle(scooter.coords, { radius: 55, ...zoneStyle("success") }).addTo(maps.main);
       fitPoints.push(...visibleScooters.map(([, item]) => item.coords));
     }
     fitPoints.push(...visibleHubs.map((hub) => hub.coords));
@@ -423,6 +535,7 @@ function renderMap() {
   if (currentScreen === "detail") {
     L.marker(scooter.coords, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) }).addTo(maps.main);
     L.marker(hubs[1].coords, { icon: markerIcon("hub") }).addTo(maps.main);
+    L.circle(hubs[1].coords, { radius: 65, ...zoneStyle("success") }).addTo(maps.main);
     L.polyline([userLocation, scooter.coords], lineStyle("#8df7b2", "10 10")).addTo(maps.main);
     L.polyline([scooter.coords, hubs[1].coords], lineStyle("#77dbff", "8 10")).addTo(maps.main);
     fitMapToPoints([userLocation, scooter.coords, hubs[1].coords], 16);
@@ -431,6 +544,7 @@ function renderMap() {
 
   if (currentScreen === "reserve") {
     L.marker(scooter.coords, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) }).addTo(maps.main);
+    L.circle(scooter.coords, { radius: 55, ...zoneStyle("warning") }).addTo(maps.main);
     L.polyline([userLocation, scooter.coords], lineStyle("#8df7b2")).addTo(maps.main);
     fitMapToPoints([userLocation, scooter.coords], 16);
     return;
@@ -455,6 +569,7 @@ function renderMap() {
 
   if (currentScreen === "unlock") {
     L.marker(scooter.coords, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) }).addTo(maps.main);
+    L.circle(scooter.coords, { radius: 45, ...zoneStyle("success") }).addTo(maps.main);
     fitMapToPoints([scooter.coords], 18);
     return;
   }
@@ -462,6 +577,7 @@ function renderMap() {
   if (currentScreen === "ride" || currentScreen === "parked") {
     L.marker(rideCheckpoint, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) }).addTo(maps.main);
     L.marker(hubs[1].coords, { icon: markerIcon("hub") }).addTo(maps.main);
+    L.circle(hubs[1].coords, { radius: 75, ...zoneStyle(currentScreen === "parked" ? "warning" : "success") }).addTo(maps.main);
     L.polyline([scooter.coords, rideCheckpoint, hubs[1].coords], lineStyle(currentScreen === "parked" ? "#ffbf73" : "#8df7b2")).addTo(maps.main);
     fitMapToPoints([scooter.coords, rideCheckpoint, hubs[1].coords], 15);
     return;
@@ -470,13 +586,8 @@ function renderMap() {
   if (currentScreen === "return-blocked") {
     L.marker(blockedReturnPoint, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) }).addTo(maps.main);
     L.marker(hubs[1].coords, { icon: markerIcon("hub") }).addTo(maps.main);
-    L.circle(blockedReturnPoint, {
-      radius: 80,
-      color: "#ff8f8f",
-      fillColor: "#8d1e2d",
-      fillOpacity: 0.2,
-      weight: 2
-    }).addTo(maps.main);
+    L.circle(blockedReturnPoint, { radius: 80, ...zoneStyle("danger") }).addTo(maps.main);
+    L.circle(hubs[1].coords, { radius: 65, ...zoneStyle("success") }).addTo(maps.main);
     L.polyline([blockedReturnPoint, hubs[1].coords], lineStyle("#ffbf73", "8 10")).addTo(maps.main);
     fitMapToPoints([blockedReturnPoint, hubs[1].coords], 16);
     return;
@@ -485,13 +596,8 @@ function renderMap() {
   if (currentScreen === "return-ok" || currentScreen === "summary") {
     L.marker(hubs[1].coords, { icon: markerIcon("hub") }).addTo(maps.main);
     L.marker(returnOkPoint, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) }).addTo(maps.main);
-    L.circle(hubs[1].coords, {
-      radius: 60,
-      color: "#8df7b2",
-      fillColor: "#4ddb84",
-      fillOpacity: 0.22,
-      weight: 2
-    }).addTo(maps.main);
+    L.circle(hubs[1].coords, { radius: 60, ...zoneStyle("success") }).addTo(maps.main);
+    L.polyline([returnOkPoint, hubs[1].coords], lineStyle("#8df7b2", "5 8")).addTo(maps.main);
     fitMapToPoints([hubs[1].coords, returnOkPoint], 17);
   }
 }
@@ -519,11 +625,36 @@ function renderPanel() {
   bindText("info-1-copy", config.info[0][1]);
   bindText("info-2-title", config.info[1][0]);
   bindText("info-2-copy", config.info[1][1]);
+  bindText("focus-kicker", config.focus[0]);
+  bindText("focus-title", config.focus[1]);
+  bindText("focus-copy", config.focus[2]);
+  bindText("map-context", config.mapContext);
+  bindText("action-hint", config.actionHint);
 
   setStatusChip(config.status, config.statusClass);
 
+  const flowMeta = getFlowMeta(currentScreen);
+  bindText("flow-step", `Schritt ${flowMeta.count} von ${flowMeta.total}`);
+  bindText("flow-title", flowMeta.label);
+  const flowBar = document.getElementById("flow-bar-fill");
+  if (flowBar) {
+    flowBar.style.width = `${flowMeta.progress}%`;
+  }
+
   const searchStrip = document.getElementById("search-strip");
   if (searchStrip) searchStrip.hidden = !config.showSearch;
+
+  const focusBanner = document.getElementById("focus-banner");
+  if (focusBanner) {
+    focusBanner.dataset.tone = config.focus[3];
+  }
+
+  const backAction = document.getElementById("back-action");
+  if (backAction) {
+    const target = backTargets[currentScreen];
+    backAction.hidden = !target;
+    if (target) backAction.dataset.go = target;
+  }
 
   const primaryAction = document.getElementById("primary-action");
   const secondaryAction = document.getElementById("secondary-action");
@@ -534,26 +665,16 @@ function renderPanel() {
 
   primaryAction.disabled = currentScreen === "home" && !hasScooters;
   secondaryAction.disabled = false;
+  secondaryAction.hidden = !config.secondary;
 
   bindText("map-available", `${visibleScooters.filter(([, item]) => item.status === "Verfuegbar").length} frei`);
   bindText("map-focus-id", hasScooters ? scooter.id : "KEIN SCOOTER");
-  bindText("map-focus-title", hasScooters ? `${scooter.battery} Akku, ${scooter.distance} entfernt` : "Keine Treffer in dieser Auswahl");
-  bindText("map-focus-copy", hasScooters ? "Direkt verfuegbar und fuer die aktuelle Aktion am sinnvollsten." : "Suche oder Filter anpassen.");
-}
-
-function renderNav() {
-  const navTarget =
-    currentScreen === "ride" || currentScreen === "parked" || currentScreen.startsWith("return")
-      ? "ride"
-      : "map";
-  document.querySelectorAll(".nav-item").forEach((item) => {
-    item.classList.toggle("active", item.dataset.nav === navTarget);
-  });
+  bindText("map-focus-title", hasScooters ? config.focus[1] : "Keine Treffer in dieser Auswahl");
+  bindText("map-focus-copy", hasScooters ? config.focus[2] : "Suche oder Filter anpassen.");
 }
 
 function renderAll() {
   renderPanel();
-  renderNav();
   renderMap();
   window.setTimeout(() => maps.main.invalidateSize(), 0);
 }
@@ -566,7 +687,7 @@ function showScreen(nextScreen) {
 function startCountdown() {
   if (countdownTimer) window.clearInterval(countdownTimer);
   const tick = () => {
-    if (currentScreen === "reserve") {
+    if (currentScreen === "reserve" || currentScreen === "ride" || currentScreen === "parked") {
       renderPanel();
     }
   };
@@ -610,22 +731,6 @@ document.querySelectorAll("[data-search='map']").forEach((input) => {
       currentScreen = "home";
     }
     renderAll();
-  });
-});
-
-document.querySelectorAll(".nav-item").forEach((item) => {
-  item.addEventListener("click", () => {
-    if (item.dataset.nav === "map") {
-      showScreen("home");
-      return;
-    }
-
-    if (item.dataset.nav === "ride") {
-      showScreen("ride");
-      return;
-    }
-
-    showToast("Im Prototyp noch nicht ausgearbeitet.");
   });
 });
 
