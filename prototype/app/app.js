@@ -409,7 +409,7 @@ function renderScooter() {
   const scooter = scooters[selectedScooter];
   const availableCount = visibleScooters.filter(([, item]) => item.status === "Verfuegbar").length;
   const emptyState = document.getElementById("map-empty-state");
-  const actionButtons = document.querySelectorAll(".bottom-sheet .primary-btn, .bottom-sheet .secondary-btn");
+  const actionButtons = document.querySelectorAll(".selection-panel .primary-btn, .selection-panel .secondary-btn");
 
   bindText("map-available", `${availableCount} frei`);
   bindText("home-id", hasScooters ? scooter.id : "KEIN SCOOTER");
@@ -514,6 +514,7 @@ function showScreen(nextScreen) {
   renderFlow();
   renderScenario();
   renderNav();
+  document.querySelector(".app-surface")?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   Object.values(maps).forEach((map) => {
     window.setTimeout(() => map.invalidateSize(), 0);
