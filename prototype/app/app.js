@@ -111,13 +111,13 @@ const screenConfigs = {
     ],
     info: [
       ["Rueckgabe", scooter.returnRule],
-      ["Hinweis", "Preis steckt direkt im CTA."]
+      ["Hinweis", "Tippe direkt einen Scooter auf der Karte an."]
     ],
-    focus: ["Empfohlen", `${scooter.name} ist dein schnellster Start`, "Akku, Distanz, dann direkt buchen oder unlocken.", "calm"],
+    focus: ["Empfohlen", `${scooter.name} ist dein schnellster Start`, "Antippen, kurz pruefen, dann direkt unlocken.", "calm"],
     mapContext: `${scooter.distance} entfernt`,
-    actionHint: "Erst kurz ansehen, dann buchen oder direkt starten.",
+    actionHint: "Direkt auf der Karte auswaehlen und dann entsperren.",
     primary: ["Scooter ansehen", "detail", "Akku, Distanz, Rueckgabe"],
-    secondary: ["Reservieren", "reserve", "30 Minuten halten"],
+    secondary: null,
     showSearch: true
   }),
   detail: (scooter) => ({
@@ -137,10 +137,10 @@ const screenConfigs = {
       ["Rueckgabe", scooter.returnRule]
     ],
     focus: ["Entscheidung", "Kurz pruefen, dann los", "Keine Tarifboxen, kein Extra-Layer.", "calm"],
-    mapContext: "Route + Rueckgabehub",
+    mapContext: "Scooter im Fokus",
     actionHint: "Hier passiert die eigentliche Entscheidung.",
     primary: ["Jetzt entsperren", "unlock", "Unlock 1,00 EUR"],
-    secondary: ["Reservieren", "reserve", "30 Minuten halten"]
+    secondary: null
   }),
   reserve: (scooter) => ({
     kicker: "Reservierung",
@@ -432,22 +432,6 @@ function getFlowMeta(screen) {
 }
 
 function getMobileNavTarget(screen) {
-  if (screen === "home" || screen === "reserve" || screen === "pickup") {
-    return screen === "reserve" ? "reserve" : "home";
-  }
-
-  if (screen === "detail" || screen === "unlock") {
-    return "detail";
-  }
-
-  if (screen === "ride" || screen === "parked" || screen === "return-blocked") {
-    return "ride";
-  }
-
-  if (screen === "return-ok" || screen === "summary") {
-    return "return-ok";
-  }
-
   return "home";
 }
 
@@ -480,8 +464,8 @@ function getPaneMode() {
 }
 
 function getMobileNavHeight() {
-  const nav = document.querySelector(".mobile-nav");
-  return nav ? Math.ceil(nav.getBoundingClientRect().height) : 78;
+  const scanFab = document.getElementById("scan-action");
+  return scanFab ? Math.ceil(scanFab.getBoundingClientRect().height) : 78;
 }
 
 function getPaneConfig() {
@@ -937,10 +921,9 @@ function renderPanel() {
 }
 
 function renderMobileNav() {
-  const activeTarget = getMobileNavTarget(currentScreen);
-  document.querySelectorAll("[data-mobile-nav]").forEach((item) => {
-    item.classList.toggle("active", item.dataset.mobileNav === activeTarget);
-  });
+  const scanAction = document.getElementById("scan-action");
+  if (!scanAction) return;
+  scanAction.hidden = !isMobileViewport();
 }
 
 function renderAll() {
@@ -1049,16 +1032,8 @@ document.querySelectorAll("[data-search='map']").forEach((input) => {
   });
 });
 
-document.querySelectorAll("[data-mobile-nav]").forEach((button) => {
-  button.addEventListener("click", () => {
-    const target = button.dataset.mobileNav;
-    if (!target) return;
-    if (target !== "home" && !selectedScooter) {
-      showToast("Erst einen Scooter auf der Karte auswaehlen.");
-      return;
-    }
-    showScreen(target);
-  });
+document.getElementById("scan-action")?.addEventListener("click", () => {
+  showToast("Scan-Flow bauen wir als Naechstes.");
 });
 
 document.getElementById("sheet-handle")?.addEventListener("click", async () => {
