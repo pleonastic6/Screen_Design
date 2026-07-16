@@ -674,11 +674,11 @@ function getScreenFocusTarget() {
   }
 
   if (currentScreen === "detail" || currentScreen === "reserve") {
-    return { point: scooters[selectedScooter].coords, zoom: 16 };
+    return { point: scooters[selectedScooter].coords, zoom: 17 };
   }
 
   if (currentScreen === "unlock") {
-    return { point: scooters[selectedScooter].coords, zoom: 18 };
+    return { point: scooters[selectedScooter].coords, zoom: 17 };
   }
 
   return null;
@@ -731,12 +731,8 @@ function renderMap() {
       reopenCurrentSheet();
     });
     detailMarker.addTo(maps.main);
-    L.marker(hubs[1].coords, { icon: markerIcon("hub") }).addTo(maps.main);
-    L.circle(hubs[1].coords, { radius: 65, ...zoneStyle("success") }).addTo(maps.main);
-    L.polyline([userLocation, scooter.coords], lineStyle("#8df7b2", "10 10")).addTo(maps.main);
-    L.polyline([scooter.coords, hubs[1].coords], lineStyle("#77dbff", "8 10")).addTo(maps.main);
-    fitMapToPoints([userLocation, scooter.coords, hubs[1].coords], 16);
-    focusPointInUpperThird(scooter.coords);
+    fitMapToPoints([scooter.coords], 17);
+    focusPointInUpperThird(scooter.coords, 17);
     return;
   }
 
@@ -747,9 +743,8 @@ function renderMap() {
     });
     reserveMarker.addTo(maps.main);
     L.circle(scooter.coords, { radius: 55, ...zoneStyle("warning") }).addTo(maps.main);
-    L.polyline([userLocation, scooter.coords], lineStyle("#8df7b2")).addTo(maps.main);
-    fitMapToPoints([userLocation, scooter.coords], 16);
-    focusPointInUpperThird(scooter.coords);
+    fitMapToPoints([scooter.coords], 17);
+    focusPointInUpperThird(scooter.coords, 17);
     return;
   }
 
@@ -777,8 +772,8 @@ function renderMap() {
     });
     unlockMarker.addTo(maps.main);
     L.circle(scooter.coords, { radius: 45, ...zoneStyle("success") }).addTo(maps.main);
-    fitMapToPoints([scooter.coords], 18);
-    focusPointInUpperThird(scooter.coords, 18);
+    fitMapToPoints([scooter.coords], 17);
+    focusPointInUpperThird(scooter.coords, 17);
     return;
   }
 
