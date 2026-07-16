@@ -511,6 +511,10 @@ input {
   line-height: 1.45;
 }
 
+.mobile-nav {
+  display: none;
+}
+
 .primary-btn,
 .secondary-btn {
   min-height: 52px;
@@ -670,11 +674,12 @@ input {
 
   .app-shell {
     grid-template-columns: 1fr;
-    grid-template-rows: auto minmax(0, 1fr) auto;
+    grid-template-rows: auto minmax(0, 1fr) auto auto;
     grid-template-areas:
       "bar"
       "map"
-      "dock";
+      "dock"
+      "mobile-nav";
   }
 
   .map-stage {
@@ -687,14 +692,27 @@ input {
 }
 
 @media (max-width: 640px) {
+  .page {
+    padding: 8px 8px calc(88px + env(safe-area-inset-bottom));
+  }
+
   .app-bar {
     min-height: 64px;
     padding: 12px 14px;
   }
 
+  .app-shell {
+    gap: 10px;
+  }
+
+  .map-stage {
+    min-height: 56dvh;
+  }
+
   .control-dock {
-    padding: 14px;
-    max-height: 380px;
+    padding: 12px;
+    max-height: 290px;
+    gap: 10px;
   }
 
   .flow-copy {
@@ -707,12 +725,21 @@ input {
     font-size: 1.35rem;
   }
 
+  .panel-copy,
+  .focus-banner p:last-child,
+  .info-card p {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
   .action-row {
     grid-template-columns: 1fr;
+    gap: 8px;
   }
 
   .metric-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
   }
 
   .metric-card,
@@ -727,5 +754,80 @@ input {
 
   .info-stack {
     grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .search-strip {
+    gap: 8px;
+  }
+
+  .search-field {
+    min-height: 46px;
+  }
+
+  .filter-chips {
+    gap: 6px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+
+  .filter-chips::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-chip {
+    flex: 0 0 auto;
+  }
+
+  .floating-card {
+    max-width: 100%;
+  }
+
+  .map-overlay.bottom {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+  }
+
+  .mobile-nav {
+    grid-area: mobile-nav;
+    position: fixed;
+    left: 8px;
+    right: 8px;
+    bottom: calc(8px + env(safe-area-inset-bottom));
+    z-index: 50;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    padding: 8px;
+    border-radius: 22px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
+      rgba(6, 18, 25, 0.94);
+    backdrop-filter: blur(20px);
+  }
+
+  .mobile-nav-item {
+    min-height: 50px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--muted);
+    font: inherit;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .mobile-nav-item.active {
+    color: var(--text);
+    border-color: var(--line-strong);
+    background: rgba(141, 247, 178, 0.12);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+  }
+
+  .mobile-nav-label {
+    font-size: 13px;
   }
 }

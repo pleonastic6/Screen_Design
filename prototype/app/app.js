@@ -409,6 +409,26 @@ function getFlowMeta(screen) {
   };
 }
 
+function getMobileNavTarget(screen) {
+  if (screen === "home" || screen === "reserve" || screen === "pickup") {
+    return "home";
+  }
+
+  if (screen === "detail" || screen === "unlock") {
+    return "detail";
+  }
+
+  if (screen === "ride" || screen === "parked" || screen === "return-blocked") {
+    return "ride";
+  }
+
+  if (screen === "return-ok" || screen === "summary") {
+    return "return-ok";
+  }
+
+  return "home";
+}
+
 function markerIcon(type, extraClass = "") {
   return L.divIcon({
     className: "",
@@ -673,8 +693,16 @@ function renderPanel() {
   bindText("map-focus-copy", hasScooters ? config.focus[2] : "Suche oder Filter anpassen.");
 }
 
+function renderMobileNav() {
+  const activeTarget = getMobileNavTarget(currentScreen);
+  document.querySelectorAll("[data-mobile-nav]").forEach((item) => {
+    item.classList.toggle("active", item.dataset.mobileNav === activeTarget);
+  });
+}
+
 function renderAll() {
   renderPanel();
+  renderMobileNav();
   renderMap();
   window.setTimeout(() => maps.main.invalidateSize(), 0);
 }
@@ -731,6 +759,14 @@ document.querySelectorAll("[data-search='map']").forEach((input) => {
       currentScreen = "home";
     }
     renderAll();
+  });
+});
+
+document.querySelectorAll("[data-mobile-nav]").forEach((button) => {
+  button.addEventListener("click", () => {
+    const target = button.dataset.mobileNav;
+    if (!target) return;
+    showScreen(target);
   });
 });
 
