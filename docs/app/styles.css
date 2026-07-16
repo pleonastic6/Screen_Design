@@ -919,7 +919,7 @@ input {
     left: 12px;
     right: 12px;
     bottom: calc(82px + env(safe-area-inset-bottom));
-    max-height: min(350px, 39dvh);
+    max-height: min(420px, 46dvh);
     z-index: 9;
     padding: 10px 10px 12px;
     border-radius: 28px;
@@ -963,10 +963,32 @@ input {
 
   .selection-pill {
     display: flex;
+    padding: 8px 10px;
+    gap: 8px;
+  }
+
+  .selection-pill-visual {
+    width: 40px;
+    height: 40px;
+    border-radius: 14px;
+  }
+
+  .scooter-glyph {
+    width: 24px;
+    height: 24px;
+  }
+
+  .selection-pill-copy strong {
+    font-size: 0.92rem;
+  }
+
+  .selection-pill-copy span {
+    font-size: 0.8rem;
   }
 
   .panel-head {
     gap: 8px;
+    align-items: center;
   }
 
   .panel-head-actions {
@@ -999,27 +1021,32 @@ input {
   }
 
   .info-stack {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 4px;
   }
 
   .info-card,
   .info-card.compact {
-    padding: 9px 10px;
+    padding: 8px 9px;
     border-radius: 16px;
   }
 
   .info-card strong {
-    font-size: 0.92rem;
+    font-size: 0.84rem;
   }
 
   .info-card p {
-    font-size: 0.82rem;
-    line-height: 1.28;
+    font-size: 0.74rem;
+    line-height: 1.22;
   }
 
   .action-row {
     margin-top: 0;
     gap: 6px;
+    position: sticky;
+    bottom: -2px;
+    padding-top: 8px;
+    background: linear-gradient(180deg, rgba(248, 249, 244, 0), rgba(248, 249, 244, 0.94) 24%, rgba(248, 249, 244, 0.98) 100%);
   }
 
   .primary-btn,
@@ -1048,7 +1075,7 @@ input {
     left: 12px;
     right: 12px;
     bottom: calc(82px + env(safe-area-inset-bottom));
-    max-height: min(332px, 38dvh);
+    max-height: min(430px, 50dvh);
   }
 
   .action-row {
@@ -1059,6 +1086,15 @@ input {
   .metric-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 5px;
+  }
+
+  .panel-head h1 {
+    font-size: 0.94rem;
+  }
+
+  .status-chip,
+  .ghost-btn {
+    padding-inline: 9px;
   }
 
   .floating-card {
