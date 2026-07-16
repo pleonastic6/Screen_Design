@@ -390,9 +390,9 @@ input {
   overscroll-behavior: contain;
   scrollbar-width: none;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.48), rgba(246, 248, 243, 0.32)),
-    rgba(255, 255, 255, 0.28);
-  border: 1px solid rgba(255, 255, 255, 0.26);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(246, 248, 243, 0.84)),
+    rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.38);
   box-shadow: 0 14px 30px rgba(28, 41, 33, 0.05);
   backdrop-filter: blur(24px);
   transition: opacity 180ms ease, transform 180ms ease;
