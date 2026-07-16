@@ -114,8 +114,8 @@ const screenConfigs = {
     ],
     focus: ["Empfohlen", `${scooter.name} ist dein schnellster Start`, "Akku, Distanz, dann direkt buchen oder unlocken.", "calm"],
     mapContext: `${scooter.distance} entfernt`,
-    actionHint: "Ein Hauptweg, eine Nebenoption.",
-    primary: ["Jetzt entsperren", "detail", "Unlock 1,00 EUR"],
+    actionHint: "Erst kurz ansehen, dann buchen oder direkt starten.",
+    primary: ["Scooter ansehen", "detail", "Akku, Distanz, Rueckgabe"],
     secondary: ["Reservieren", "reserve", "30 Minuten halten"],
     showSearch: true
   }),
@@ -137,9 +137,9 @@ const screenConfigs = {
     ],
     focus: ["Entscheidung", "Kurz pruefen, dann los", "Keine Tarifboxen, kein Extra-Layer.", "calm"],
     mapContext: "Route + Rueckgabehub",
-    actionHint: "Wenn es passt: direkt entsperren.",
-    primary: ["Jetzt entsperren", "unlock", "Startet die Fahrt direkt"],
-    secondary: ["Reservieren", "reserve", "Kurz sichern"]
+    actionHint: "Hier passiert die eigentliche Entscheidung.",
+    primary: ["Jetzt entsperren", "unlock", "Unlock 1,00 EUR"],
+    secondary: ["Reservieren", "reserve", "30 Minuten halten"]
   }),
   reserve: (scooter) => ({
     kicker: "Reservierung",
@@ -159,8 +159,8 @@ const screenConfigs = {
     ],
     focus: ["Timer laeuft", `Noch ${formatCountdown(getReserveSecondsLeft())}`, "Jetzt nur noch hingehen und bestaetigen.", "warning"],
     mapContext: formatCountdown(getReserveSecondsLeft()),
-    actionHint: "Nicht nachdenken, sondern hingehen.",
-    primary: ["Vor Ort bestaetigen", "pickup", "Timer laeuft weiter"],
+    actionHint: "Erst am Scooter weitermachen, nicht vorher.",
+    primary: ["Ich bin am Scooter", "pickup", "QR oder Nummer pruefen"],
     secondary: ["Abbrechen", "home", "Scooter wieder freigeben"]
   }),
   pickup: (scooter) => ({
@@ -181,9 +181,9 @@ const screenConfigs = {
     ],
     focus: ["Vor Ort", "Nur der richtige Scooter", "Nummer checken, dann entsperren.", "warning"],
     mapContext: "Mehrere Scooter vor Ort",
-    actionHint: "Primaer erst, wenn die Nummer wirklich stimmt.",
-    primary: ["Diesen Scooter entsperren", "unlock", "Nur den markierten unlocken"],
-    secondary: ["Zur Reservierung", "reserve", "Nochmal auf Nummer gehen"]
+    actionHint: "Primaer erst druecken, wenn Nummer und Standort passen.",
+    primary: ["Diesen Scooter entsperren", "unlock", "Unlock 1,00 EUR"],
+    secondary: ["Nicht der richtige", "home", "Zurueck zur Karte"]
   }),
   unlock: (scooter) => ({
     kicker: "Unlock",
@@ -203,9 +203,9 @@ const screenConfigs = {
     ],
     focus: ["Freigabe", "Jetzt ist der Scooter offen", "Von hier aus direkt in die Fahrt.", "success"],
     mapContext: "Fahrbereit",
-    actionHint: "Nach Freigabe darf der Screen nicht rumlabern.",
+    actionHint: "Keine Extra-Optionen mehr. Jetzt faehrst du los.",
     primary: ["Fahrt starten", "ride", "Ab jetzt laeuft die Zeit"],
-    secondary: ["Zur Karte", "home", "Zurueck zur Uebersicht"]
+    secondary: null
   }),
   ride: (scooter) => ({
     kicker: "Ride Active",
@@ -293,7 +293,7 @@ const screenConfigs = {
     mapContext: "Hub erkannt",
     actionHint: "Jetzt darf der Primaer-Button final werden.",
     primary: ["Rueckgabe bestaetigen", "summary", "30 Freiminuten sichern"],
-    secondary: ["Zurueck", "return-blocked", "Zone nochmal pruefen"]
+    secondary: ["Weiterfahren", "ride", "Noch nicht beenden"]
   }),
   summary: () => ({
     kicker: "Abschluss",
@@ -313,9 +313,9 @@ const screenConfigs = {
     ],
     focus: ["Abgeschlossen", "Ride sauber beendet", "Kosten klar, Bonus gutgeschrieben.", "success"],
     mapContext: "Flow abgeschlossen",
-    actionHint: "Ab hier nur noch neu starten oder den Flow nochmal anschauen.",
+    actionHint: "Fahrt ist durch. Von hier aus beginnt nur ein neuer Ride.",
     primary: ["Zur Karte", "home", "Neuen Scooter finden"],
-    secondary: ["Erneut ansehen", "detail", "Flow nochmal anschauen"]
+    secondary: null
   })
 };
 
@@ -691,15 +691,26 @@ function renderPanel() {
   const secondaryActionMeta = document.getElementById("secondary-action-meta");
 
   primaryAction.dataset.go = config.primary[1];
-  secondaryAction.dataset.go = config.secondary[1];
   primaryActionLabel.textContent = config.primary[0];
   primaryActionMeta.textContent = config.primary[2];
-  secondaryActionLabel.textContent = config.secondary[0];
-  secondaryActionMeta.textContent = config.secondary[2];
+
+  if (config.secondary) {
+    secondaryAction.hidden = false;
+    secondaryAction.dataset.go = config.secondary[1];
+    secondaryActionLabel.textContent = config.secondary[0];
+    secondaryActionMeta.textContent = config.secondary[2];
+  } else {
+    secondaryAction.hidden = true;
+    delete secondaryAction.dataset.go;
+    secondaryActionLabel.textContent = "";
+    secondaryActionMeta.textContent = "";
+  }
 
   primaryAction.disabled = currentScreen === "home" && !hasScooters;
   secondaryAction.disabled = false;
-  secondaryAction.hidden = !config.secondary;
+  if (secondaryAction.hidden) {
+    secondaryAction.disabled = true;
+  }
 
   bindText("map-available", `${visibleScooters.filter(([, item]) => item.status === "Verfuegbar").length} frei`);
   bindText("map-focus-id", hasScooters ? scooter.id : "KEIN SCOOTER");
