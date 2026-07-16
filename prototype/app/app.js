@@ -9,8 +9,7 @@ const scooters = {
     status: "Verfuegbar",
     statusClass: "available",
     returnRule: "Rueckgabe im Stadtgebiet moeglich",
-    copy: "Rueckgabe im Stadtgebiet moeglich. Ladehub-Bonus verfuegbar.",
-    note: "Am Ladehub Marktplatz bekommst du 30 Freiminuten.",
+    note: "Ladehub-Bonus verfuegbar.",
     pickup: "Akku 64 % - direkt vor dir",
     coords: [49.44375, 11.8612]
   },
@@ -24,8 +23,7 @@ const scooters = {
     status: "Verfuegbar",
     statusClass: "available",
     returnRule: "Rueckgabe nur an erlaubten Flaechen",
-    copy: "Etwas weiter weg, aber stabiler Akkustand und freie Rueckgabe.",
-    note: "Marktplatz-Hub liegt auf dem Rueckweg und bringt den Bonus.",
+    note: "Stabiler Akkustand fuer die Innenstadt.",
     pickup: "Akku 58 % - 8 m entfernt",
     coords: [49.44195, 11.85865]
   },
@@ -39,76 +37,230 @@ const scooters = {
     status: "Niedriger Akku",
     statusClass: "low",
     returnRule: "Bitte nach der Fahrt am Ladehub zurueckgeben",
-    copy: "Niedriger Akku. Sinnvoll nur fuer kurze Strecken oder Hub-Naehe.",
-    note: "Dieser Scooter sollte nach der Fahrt wieder an einen Ladehub.",
+    note: "Nur fuer kurze Wege oder Hub-Naehe.",
     pickup: "Akku 24 % - 11 m entfernt",
     coords: [49.44495, 11.86385]
   }
 };
 
 const hubs = [
-  { id: "oth", name: "Campus OTH", coords: [49.43855, 11.86215] },
-  { id: "markt", name: "Marktplatz", coords: [49.44275, 11.86015] },
-  { id: "bahnhof", name: "Bahnhof", coords: [49.44615, 11.86655] }
+  { name: "Campus OTH", coords: [49.43855, 11.86215] },
+  { name: "Marktplatz", coords: [49.44275, 11.86015] },
+  { name: "Bahnhof", coords: [49.44615, 11.86655] }
 ];
 
 const userLocation = [49.4429, 11.86155];
 const rideCheckpoint = [49.4414, 11.8577];
 const blockedReturnPoint = [49.44065, 11.85665];
+const returnOkPoint = [49.4427, 11.86035];
 
-const scenarios = {
-  home: {
-    title: "Spontane Fahrt ab Bahnhof",
-    copy: "Waehle einen verfuegbaren Scooter auf der Karte und geh den kompletten Pfad bis zur Rueckgabe durch."
-  },
-  detail: {
-    title: "Entscheidung vor dem Unlock",
-    copy: "Hier muessen Akku, Preis und Rueckgaberegeln sofort lesbar sein."
-  },
-  reserve: {
-    title: "Reservierung vor dem Losgehen",
-    copy: "Countdown und Verbindlichkeit sind wichtiger als schicke Deko."
-  },
-  pickup: {
-    title: "Mehrere Scooter vor Ort",
-    copy: "Der richtige Scooter muss eindeutig identifizierbar sein, sonst wird der Flow peinlich."
-  },
-  unlock: {
-    title: "Kurze Vertrauensphase",
-    copy: "Entsperren darf keine bloede Schwebe erzeugen. Kurz, klar, fertig."
-  },
-  ride: {
-    title: "Aktive Fahrt",
-    copy: "Zeit, Kosten und Rueckgabeoptionen bleiben im Fokus. Keine Spielerei."
-  },
-  parked: {
-    title: "Zwischenstopp",
-    copy: "Parken darf nicht mit Rueckgabe verwechselt werden. Darum der harte Hinweis."
-  },
-  "return-blocked": {
-    title: "Rueckgabe blockiert",
-    copy: "Fehlermeldung plus naechste Aktion. Sonst frustriert der Nutzer sofort."
-  },
-  "return-ok": {
-    title: "Rueckgabe erlaubt",
-    copy: "Bonus und Regelkonformitaet werden direkt bestaetigt."
-  },
-  summary: {
-    title: "Ride Summary",
-    copy: "Der Abschluss muss sauber sagen: Fahrt vorbei, Kosten klar, Bonus gebucht."
-  }
-};
-
-const screenOrder = ["home", "detail", "reserve", "pickup", "unlock", "ride", "return-ok"];
-const maps = {};
 const reserveDurationSeconds = 30 * 60;
 const reserveStartedAt = Date.now() - (2 * 60 + 26) * 1000;
+
 let currentScreen = "home";
 let selectedScooter = "A-07";
 let activeFilter = "all";
 let searchTerm = "";
 let countdownTimer = null;
 let toastTimer = null;
+
+const maps = {
+  main: null
+};
+
+const screenConfigs = {
+  home: (scooter) => ({
+    kicker: "Live Map",
+    badge: "Live Map",
+    title: "Finde deinen naechsten Ride",
+    status: scooter.status,
+    statusClass: scooter.statusClass,
+    copy: "Waehle einen Scooter auf der Karte oder starte direkt mit dem empfohlenen Ride.",
+    metrics: [
+      ["Akku", scooter.battery],
+      ["Reichweite", scooter.range],
+      ["Distanz", scooter.distance]
+    ],
+    info: [
+      ["Rueckgabe", scooter.returnRule],
+      ["Hinweis", scooter.note]
+    ],
+    primary: ["Jetzt entsperren", "detail"],
+    secondary: ["Reservieren", "reserve"],
+    showSearch: true
+  }),
+  detail: (scooter) => ({
+    kicker: "Scooter Detail",
+    badge: "Detail",
+    title: scooter.id,
+    status: scooter.status,
+    statusClass: scooter.statusClass,
+    copy: "Alle Kerninfos fuer die Entscheidung vor dem Unlock.",
+    metrics: [
+      ["Akku", scooter.battery],
+      ["Reichweite", scooter.range],
+      ["Distanz", scooter.distance]
+    ],
+    info: [
+      ["Tarif", "0,10 EUR pro 5 Min"],
+      ["Rueckgabe", scooter.returnRule]
+    ],
+    primary: ["Jetzt entsperren", "unlock"],
+    secondary: ["Reservieren", "reserve"]
+  }),
+  reserve: (scooter) => ({
+    kicker: "Reservierung",
+    badge: "Countdown",
+    title: "Reservierung aktiv",
+    status: "Laeuft",
+    statusClass: "available",
+    copy: "Dein Scooter bleibt fuer 30 Minuten exklusiv fuer dich reserviert.",
+    metrics: [
+      ["Timer", formatCountdown(getReserveSecondsLeft())],
+      ["Fussweg", scooter.distance],
+      ["Scooter", scooter.id.replace("SCOOTER ", "")]
+    ],
+    info: [
+      ["Navigation", "Direkter Weg zum reservierten Scooter."],
+      ["Status", "Nach Ablauf wird er wieder freigegeben."]
+    ],
+    primary: ["Vor Ort bestaetigen", "pickup"],
+    secondary: ["Abbrechen", "home"]
+  }),
+  pickup: (scooter) => ({
+    kicker: "Vor Ort",
+    badge: "Zuordnung",
+    title: "Richtigen Scooter bestaetigen",
+    status: scooter.status,
+    statusClass: scooter.statusClass,
+    copy: "Pruefe Nummer am Lenker oder Schloss, bevor du entsperrst.",
+    metrics: [
+      ["Gewaehlt", scooter.name],
+      ["Naehe", scooter.distance],
+      ["Akku", scooter.battery]
+    ],
+    info: [
+      ["Identifikation", scooter.pickup],
+      ["Wichtig", "Falscher Unlock muss ausgeschlossen sein."]
+    ],
+    primary: ["Diesen Scooter entsperren", "unlock"],
+    secondary: ["Zur Reservierung", "reserve"]
+  }),
+  unlock: (scooter) => ({
+    kicker: "Unlock",
+    badge: "Freigabe",
+    title: "Scooter entsperrt",
+    status: "Bereit",
+    statusClass: "available",
+    copy: "Kurzer Uebergang, dann direkt in die aktive Fahrt.",
+    metrics: [
+      ["Scooter", scooter.name],
+      ["Akku", scooter.battery],
+      ["Status", "Bereit"]
+    ],
+    info: [
+      ["Hinweis", "Fahre vorsichtig und beachte die Verkehrsregeln."],
+      ["Naechster Schritt", "Jetzt startet die aktive Fahrt."]
+    ],
+    primary: ["Fahrt starten", "ride"],
+    secondary: ["Zur Karte", "home"]
+  }),
+  ride: (scooter) => ({
+    kicker: "Ride Active",
+    badge: "LIVE",
+    title: "Fahrt aktiv",
+    status: "Aktiv",
+    statusClass: "available",
+    copy: "Zeit, Kosten und Rueckgabe bleiben auf einen Blick erreichbar.",
+    metrics: [
+      ["Dauer", "12:10"],
+      ["Kosten", "0,30 EUR"],
+      ["Akku", scooter.rideBattery]
+    ],
+    info: [
+      ["Bonus", "Rueckgabe am Hub bringt 30 Freiminuten."],
+      ["Optionen", "Parken sichert kurz, Rueckgabe beendet final."]
+    ],
+    primary: ["Fahrt beenden", "return-blocked"],
+    secondary: ["Temporaer parken", "parked"]
+  }),
+  parked: () => ({
+    kicker: "Pause",
+    badge: "Geparkt",
+    title: "Scooter temporaer geparkt",
+    status: "Pause",
+    statusClass: "low",
+    copy: "Die Abrechnung laeuft weiter, bis du die Fahrt wirklich beendest.",
+    metrics: [
+      ["Zeit", "14:25"],
+      ["Kosten", "0,40 EUR"],
+      ["Status", "Pause"]
+    ],
+    info: [
+      ["Achtung", "Pause ist nicht gleich Rueckgabe."],
+      ["Weiter", "Du kannst jederzeit wieder losfahren."]
+    ],
+    primary: ["Weiterfahren", "ride"],
+    secondary: ["Jetzt zurueckgeben", "return-blocked"]
+  }),
+  "return-blocked": () => ({
+    kicker: "Return Check",
+    badge: "Blockiert",
+    title: "Rueckgabe hier nicht moeglich",
+    status: "Blockiert",
+    statusClass: "low",
+    copy: "Standortregel nicht erfuellt. Fahre zum naechsten Ladehub.",
+    metrics: [
+      ["Hub", "240 m"],
+      ["Akku", "62 %"],
+      ["Regel", "Nicht erlaubt"]
+    ],
+    info: [
+      ["Naechster Schritt", "Zum Marktplatz-Hub fahren."],
+      ["Grund", "Hier ist keine regulaere Rueckgabe erlaubt."]
+    ],
+    primary: ["Zum Ladehub", "return-ok"],
+    secondary: ["Zurueck zur Fahrt", "ride"]
+  }),
+  "return-ok": () => ({
+    kicker: "Return Check",
+    badge: "Freigabe",
+    title: "Rueckgabe moeglich",
+    status: "Erlaubt",
+    statusClass: "available",
+    copy: "Ladehub erkannt. Bonus wird bei der Rueckgabe gutgeschrieben.",
+    metrics: [
+      ["Hub", "Marktplatz"],
+      ["Bonus", "30 Min"],
+      ["Regel", "Erfuellt"]
+    ],
+    info: [
+      ["Rueckgabe", "Freier Ladepunkt verfuegbar."],
+      ["Bonus", "Freiminuten werden direkt gebucht."]
+    ],
+    primary: ["Rueckgabe bestaetigen", "summary"],
+    secondary: ["Zurueck", "return-blocked"]
+  }),
+  summary: () => ({
+    kicker: "Abschluss",
+    badge: "Done",
+    title: "Fahrt beendet",
+    status: "Erledigt",
+    statusClass: "available",
+    copy: "Sauber abgeschlossen, Bonus gebucht, keine weiteren Kosten offen.",
+    metrics: [
+      ["Dauer", "18:25"],
+      ["Kosten", "0,40 EUR"],
+      ["Bonus", "30 Min"]
+    ],
+    info: [
+      ["Rueckgabeort", "Marktplatz Ladehub"],
+      ["Status", "Keine offenen Posten."]
+    ],
+    primary: ["Zur Karte", "home"],
+    secondary: ["Erneut ansehen", "detail"]
+  })
+};
 
 function formatCountdown(totalSeconds) {
   const safeSeconds = Math.max(0, totalSeconds);
@@ -122,36 +274,55 @@ function getReserveSecondsLeft() {
   return Math.max(0, reserveDurationSeconds - elapsedSeconds);
 }
 
-function showToast(message) {
-  const toast = document.getElementById("app-toast");
-  if (!toast) {
-    return;
-  }
-
-  toast.textContent = message;
-  toast.classList.add("visible");
-
-  if (toastTimer) {
-    window.clearTimeout(toastTimer);
-  }
-
-  toastTimer = window.setTimeout(() => {
-    toast.classList.remove("visible");
-  }, 2200);
-}
-
 function bindText(key, value) {
   document.querySelectorAll(`[data-bind="${key}"]`).forEach((node) => {
     node.textContent = value;
   });
 }
 
-function setStatusChip(target, label, statusClass) {
-  document.querySelectorAll(`[data-bind="${target}"]`).forEach((node) => {
-    node.textContent = label;
-    node.classList.remove("available", "low");
-    node.classList.add(statusClass);
+function setStatusChip(label, statusClass) {
+  const chip = document.querySelector('[data-bind="panel-status"]');
+  if (!chip) return;
+  chip.textContent = label;
+  chip.classList.remove("available", "low");
+  chip.classList.add(statusClass);
+}
+
+function showToast(message) {
+  const toast = document.getElementById("app-toast");
+  if (!toast) return;
+  toast.textContent = message;
+  toast.classList.add("visible");
+  if (toastTimer) window.clearTimeout(toastTimer);
+  toastTimer = window.setTimeout(() => toast.classList.remove("visible"), 2200);
+}
+
+function matchesSearch(itemName) {
+  return !searchTerm || itemName.toLowerCase().includes(searchTerm);
+}
+
+function getVisibleScooterEntries() {
+  return Object.entries(scooters).filter(([, item]) => {
+    const filterMatch =
+      activeFilter === "all" ||
+      (activeFilter === "available" && item.statusClass === "available") ||
+      (activeFilter === "low" && item.statusClass === "low");
+    return filterMatch && matchesSearch(`${item.name} ${item.id}`);
   });
+}
+
+function getVisibleHubs() {
+  return hubs.filter((hub) => {
+    const filterMatch = activeFilter === "all" || activeFilter === "hub";
+    return filterMatch && matchesSearch(hub.name);
+  });
+}
+
+function ensureSelectedScooterVisible() {
+  const visibleIds = new Set(getVisibleScooterEntries().map(([key]) => key));
+  if (visibleIds.size && !visibleIds.has(selectedScooter)) {
+    [selectedScooter] = visibleIds;
+  }
 }
 
 function markerIcon(type, extraClass = "") {
@@ -172,8 +343,8 @@ function labelIcon(label) {
   });
 }
 
-function createMap(id) {
-  const map = L.map(id, {
+function createMap() {
+  const map = L.map("main-map", {
     zoomControl: false,
     attributionControl: false,
     dragging: true,
@@ -193,291 +364,181 @@ function createMap(id) {
 }
 
 function lineStyle(color, dashArray = null) {
-  return {
-    color,
-    weight: 5,
-    opacity: 0.9,
-    dashArray,
-    lineCap: "round"
-  };
+  return { color, weight: 5, opacity: 0.9, dashArray, lineCap: "round" };
 }
 
-function fitMapToPoints(map, points, zoom = 15) {
-  if (!points.length) {
-    return;
-  }
-
+function fitMapToPoints(points, zoom = 15) {
+  if (!points.length) return;
   const bounds = L.latLngBounds(points);
-  map.fitBounds(bounds, { padding: [36, 36] });
-  if (map.getZoom() > zoom) {
-    map.setZoom(zoom);
+  maps.main.fitBounds(bounds, { padding: [36, 36] });
+  if (maps.main.getZoom() > zoom) {
+    maps.main.setZoom(zoom);
   }
 }
 
-function matchesSearch(itemName) {
-  return !searchTerm || itemName.toLowerCase().includes(searchTerm);
-}
-
-function getVisibleScooterEntries() {
-  return Object.entries(scooters).filter(([, item]) => {
-    const filterMatch =
-      activeFilter === "all" ||
-      (activeFilter === "available" && item.statusClass === "available") ||
-      (activeFilter === "low" && item.statusClass === "low");
-
-    return filterMatch && matchesSearch(`${item.name} ${item.id}`);
+function clearMap() {
+  maps.main.eachLayer((layer) => {
+    if (!(layer instanceof L.TileLayer)) {
+      maps.main.removeLayer(layer);
+    }
   });
 }
 
-function getVisibleHubs() {
-  return hubs.filter((hub) => {
-    const filterMatch = activeFilter === "all" || activeFilter === "hub";
-    return filterMatch && matchesSearch(hub.name);
-  });
-}
-
-function ensureSelectedScooterVisible() {
-  const visibleIds = new Set(getVisibleScooterEntries().map(([key]) => key));
-  if (visibleIds.size && !visibleIds.has(selectedScooter)) {
-    [selectedScooter] = visibleIds;
-  }
-}
-
-function renderHomeMap() {
-  const map = maps.home;
-  ensureSelectedScooterVisible();
+function renderMap() {
+  clearMap();
   const scooter = scooters[selectedScooter];
   const visibleScooters = getVisibleScooterEntries();
   const visibleHubs = getVisibleHubs();
-
-  map.eachLayer((layer) => {
-    if (!(layer instanceof L.TileLayer)) {
-      map.removeLayer(layer);
-    }
-  });
-
-  visibleHubs.forEach((hub) => {
-    L.marker(hub.coords, { icon: markerIcon("hub") }).addTo(map);
-    L.marker(hub.coords, { icon: labelIcon(hub.name), interactive: false }).addTo(map);
-  });
-
-  visibleScooters.forEach(([key, item]) => {
-    const marker = L.marker(item.coords, {
-      icon: markerIcon("scooter", `${item.statusClass} ${key === selectedScooter ? "active" : ""}`)
-    });
-
-    marker.on("click", () => {
-      selectedScooter = key;
-      renderScooter();
-      renderMapScreens();
-    });
-
-    marker.addTo(map);
-  });
-
-  L.marker(userLocation, { icon: markerIcon("user") }).addTo(map);
-
   const fitPoints = [userLocation];
 
-  if (visibleScooters.length) {
-    L.polyline([userLocation, scooter.coords], lineStyle("#8df7b2", "10 10")).addTo(map);
-    fitPoints.push(...visibleScooters.map(([, item]) => item.coords));
+  if (currentScreen === "home") {
+    visibleHubs.forEach((hub) => {
+      L.marker(hub.coords, { icon: markerIcon("hub") }).addTo(maps.main);
+      L.marker(hub.coords, { icon: labelIcon(hub.name), interactive: false }).addTo(maps.main);
+    });
+
+    visibleScooters.forEach(([key, item]) => {
+      const marker = L.marker(item.coords, {
+        icon: markerIcon("scooter", `${item.statusClass} ${key === selectedScooter ? "active" : ""}`)
+      });
+      marker.on("click", () => {
+        selectedScooter = key;
+        renderAll();
+      });
+      marker.addTo(maps.main);
+    });
+
+    L.marker(userLocation, { icon: markerIcon("user") }).addTo(maps.main);
+    if (visibleScooters.length) {
+      L.polyline([userLocation, scooter.coords], lineStyle("#8df7b2", "10 10")).addTo(maps.main);
+      fitPoints.push(...visibleScooters.map(([, item]) => item.coords));
+    }
+    fitPoints.push(...visibleHubs.map((hub) => hub.coords));
+    fitMapToPoints(fitPoints, 15);
+    return;
   }
 
-  fitPoints.push(...visibleHubs.map((hub) => hub.coords));
-  fitMapToPoints(map, fitPoints, 15);
+  L.marker(userLocation, { icon: markerIcon("user") }).addTo(maps.main);
+
+  if (currentScreen === "detail") {
+    L.marker(scooter.coords, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) }).addTo(maps.main);
+    L.marker(hubs[1].coords, { icon: markerIcon("hub") }).addTo(maps.main);
+    L.polyline([userLocation, scooter.coords], lineStyle("#8df7b2", "10 10")).addTo(maps.main);
+    L.polyline([scooter.coords, hubs[1].coords], lineStyle("#77dbff", "8 10")).addTo(maps.main);
+    fitMapToPoints([userLocation, scooter.coords, hubs[1].coords], 16);
+    return;
+  }
+
+  if (currentScreen === "reserve") {
+    L.marker(scooter.coords, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) }).addTo(maps.main);
+    L.polyline([userLocation, scooter.coords], lineStyle("#8df7b2")).addTo(maps.main);
+    fitMapToPoints([userLocation, scooter.coords], 16);
+    return;
+  }
+
+  if (currentScreen === "pickup") {
+    [["A-07", [49.44375, 11.8612]], ["A-12", [49.44355, 11.86148]], ["A-19", [49.44402, 11.86162]]].forEach(([key, coords]) => {
+      const item = scooters[key];
+      const marker = L.marker(coords, {
+        icon: markerIcon("scooter", `${item.statusClass} ${key === selectedScooter ? "active" : ""}`)
+      });
+      marker.on("click", () => {
+        selectedScooter = key;
+        renderAll();
+      });
+      marker.addTo(maps.main);
+      fitPoints.push(coords);
+    });
+    fitMapToPoints(fitPoints, 18);
+    return;
+  }
+
+  if (currentScreen === "unlock") {
+    L.marker(scooter.coords, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) }).addTo(maps.main);
+    fitMapToPoints([scooter.coords], 18);
+    return;
+  }
+
+  if (currentScreen === "ride" || currentScreen === "parked") {
+    L.marker(rideCheckpoint, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) }).addTo(maps.main);
+    L.marker(hubs[1].coords, { icon: markerIcon("hub") }).addTo(maps.main);
+    L.polyline([scooter.coords, rideCheckpoint, hubs[1].coords], lineStyle(currentScreen === "parked" ? "#ffbf73" : "#8df7b2")).addTo(maps.main);
+    fitMapToPoints([scooter.coords, rideCheckpoint, hubs[1].coords], 15);
+    return;
+  }
+
+  if (currentScreen === "return-blocked") {
+    L.marker(blockedReturnPoint, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) }).addTo(maps.main);
+    L.marker(hubs[1].coords, { icon: markerIcon("hub") }).addTo(maps.main);
+    L.circle(blockedReturnPoint, {
+      radius: 80,
+      color: "#ff8f8f",
+      fillColor: "#8d1e2d",
+      fillOpacity: 0.2,
+      weight: 2
+    }).addTo(maps.main);
+    L.polyline([blockedReturnPoint, hubs[1].coords], lineStyle("#ffbf73", "8 10")).addTo(maps.main);
+    fitMapToPoints([blockedReturnPoint, hubs[1].coords], 16);
+    return;
+  }
+
+  if (currentScreen === "return-ok" || currentScreen === "summary") {
+    L.marker(hubs[1].coords, { icon: markerIcon("hub") }).addTo(maps.main);
+    L.marker(returnOkPoint, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) }).addTo(maps.main);
+    L.circle(hubs[1].coords, {
+      radius: 60,
+      color: "#8df7b2",
+      fillColor: "#4ddb84",
+      fillOpacity: 0.22,
+      weight: 2
+    }).addTo(maps.main);
+    fitMapToPoints([hubs[1].coords, returnOkPoint], 17);
+  }
 }
 
-function renderDetailMap() {
-  const map = maps.detail;
+function renderPanel() {
   const scooter = scooters[selectedScooter];
-  const nearestHub = hubs[1];
-
-  map.eachLayer((layer) => {
-    if (!(layer instanceof L.TileLayer)) {
-      map.removeLayer(layer);
-    }
-  });
-
-  L.marker(userLocation, { icon: markerIcon("user") }).addTo(map);
-  L.marker(scooter.coords, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) }).addTo(map);
-  L.marker(nearestHub.coords, { icon: markerIcon("hub") }).addTo(map);
-  L.polyline([userLocation, scooter.coords], lineStyle("#8df7b2", "10 10")).addTo(map);
-  L.polyline([scooter.coords, nearestHub.coords], lineStyle("#77dbff", "8 10")).addTo(map);
-  fitMapToPoints(map, [userLocation, scooter.coords, nearestHub.coords], 16);
-}
-
-function renderReserveMap() {
-  const map = maps.reserve;
-  const scooter = scooters[selectedScooter];
-
-  map.eachLayer((layer) => {
-    if (!(layer instanceof L.TileLayer)) {
-      map.removeLayer(layer);
-    }
-  });
-
-  L.marker(userLocation, { icon: markerIcon("user") }).addTo(map);
-  L.marker(scooter.coords, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) }).addTo(map);
-  L.polyline([userLocation, scooter.coords], lineStyle("#8df7b2")).addTo(map);
-  fitMapToPoints(map, [userLocation, scooter.coords], 16);
-}
-
-function renderRideMap() {
-  const map = maps.ride;
-  const scooter = scooters[selectedScooter];
-  const hub = hubs[1];
-
-  map.eachLayer((layer) => {
-    if (!(layer instanceof L.TileLayer)) {
-      map.removeLayer(layer);
-    }
-  });
-
-  L.marker(rideCheckpoint, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) }).addTo(map);
-  L.marker(hub.coords, { icon: markerIcon("hub") }).addTo(map);
-  L.polyline([scooter.coords, rideCheckpoint, hub.coords], lineStyle("#8df7b2")).addTo(map);
-  fitMapToPoints(map, [scooter.coords, rideCheckpoint, hub.coords], 15);
-}
-
-function renderBlockedReturnMap() {
-  const map = maps["return-blocked"];
-  const hub = hubs[1];
-  const scooter = scooters[selectedScooter];
-
-  map.eachLayer((layer) => {
-    if (!(layer instanceof L.TileLayer)) {
-      map.removeLayer(layer);
-    }
-  });
-
-  L.marker(blockedReturnPoint, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) }).addTo(map);
-  L.marker(hub.coords, { icon: markerIcon("hub") }).addTo(map);
-  L.circle(blockedReturnPoint, {
-    radius: 80,
-    color: "#ff8f8f",
-    fillColor: "#8d1e2d",
-    fillOpacity: 0.2,
-    weight: 2
-  }).addTo(map);
-  L.polyline([blockedReturnPoint, hub.coords], lineStyle("#ffbf73", "8 10")).addTo(map);
-  fitMapToPoints(map, [blockedReturnPoint, hub.coords], 16);
-}
-
-function renderOkReturnMap() {
-  const map = maps["return-ok"];
-  const hub = hubs[1];
-  const scooter = scooters[selectedScooter];
-
-  map.eachLayer((layer) => {
-    if (!(layer instanceof L.TileLayer)) {
-      map.removeLayer(layer);
-    }
-  });
-
-  L.marker(hub.coords, { icon: markerIcon("hub") }).addTo(map);
-  L.marker([49.4427, 11.86035], { icon: markerIcon("scooter", `active ${scooter.statusClass}`) }).addTo(map);
-  L.circle(hub.coords, {
-    radius: 60,
-    color: "#8df7b2",
-    fillColor: "#4ddb84",
-    fillOpacity: 0.22,
-    weight: 2
-  }).addTo(map);
-  fitMapToPoints(map, [hub.coords, [49.4427, 11.86035]], 17);
-}
-
-function renderMapScreens() {
-  renderHomeMap();
-  renderDetailMap();
-  renderReserveMap();
-  renderRideMap();
-  renderBlockedReturnMap();
-  renderOkReturnMap();
-
-  Object.values(maps).forEach((map) => {
-    window.setTimeout(() => map.invalidateSize(), 0);
-  });
-}
-
-function renderScooter() {
   const visibleScooters = getVisibleScooterEntries();
   const hasScooters = visibleScooters.length > 0;
-  if (hasScooters) {
+  if (currentScreen === "home" && hasScooters) {
     ensureSelectedScooterVisible();
   }
-  const scooter = scooters[selectedScooter];
-  const availableCount = visibleScooters.filter(([, item]) => item.status === "Verfuegbar").length;
-  const emptyState = document.getElementById("map-empty-state");
-  const actionButtons = document.querySelectorAll(".selection-panel .primary-btn, .selection-panel .secondary-btn");
 
-  bindText("map-available", `${availableCount} frei`);
-  bindText("home-id", hasScooters ? scooter.id : "KEIN SCOOTER");
-  bindText("home-name", hasScooters ? scooter.name : "Keine Auswahl");
-  bindText("home-headline", hasScooters ? `${scooter.battery} Akku, ${scooter.distance} entfernt` : "Nutze Suche oder Filter fuer neue Treffer.");
-  bindText("home-battery", hasScooters ? scooter.battery : "--");
-  bindText("home-range", hasScooters ? scooter.range : "--");
-  bindText("home-distance", hasScooters ? scooter.distance : "--");
-  bindText("home-copy", hasScooters ? scooter.copy : "Aktuell ist in dieser Auswahl nichts verfuegbar.");
-  bindText("home-note", hasScooters ? scooter.note : "Tipp: Zurueck auf 'Alle' oder nach Hub/Scooter-ID suchen.");
+  const config = screenConfigs[currentScreen](scooter);
+  bindText("screen-badge", config.badge);
+  bindText("panel-kicker", config.kicker);
+  bindText("panel-title", config.title);
+  bindText("panel-copy", config.copy);
+  bindText("metric-1-label", config.metrics[0][0]);
+  bindText("metric-1-value", config.metrics[0][1]);
+  bindText("metric-2-label", config.metrics[1][0]);
+  bindText("metric-2-value", config.metrics[1][1]);
+  bindText("metric-3-label", config.metrics[2][0]);
+  bindText("metric-3-value", config.metrics[2][1]);
+  bindText("info-1-title", config.info[0][0]);
+  bindText("info-1-copy", config.info[0][1]);
+  bindText("info-2-title", config.info[1][0]);
+  bindText("info-2-copy", config.info[1][1]);
 
-  bindText("detail-id", scooter.id);
-  bindText("detail-status", scooter.status);
-  bindText("detail-battery", scooter.battery);
-  bindText("detail-range", scooter.range);
-  bindText("detail-distance", scooter.distance);
-  bindText("detail-return", scooter.returnRule);
+  setStatusChip(config.status, config.statusClass);
 
-  bindText("reserve-id", scooter.id);
-  bindText("reserve-distance", `${scooter.distance} Fussweg`);
-  bindText("reserve-timer", formatCountdown(getReserveSecondsLeft()));
+  const searchStrip = document.getElementById("search-strip");
+  if (searchStrip) searchStrip.hidden = !config.showSearch;
 
-  bindText("ride-battery", scooter.rideBattery);
+  const primaryAction = document.getElementById("primary-action");
+  const secondaryAction = document.getElementById("secondary-action");
+  primaryAction.textContent = config.primary[0];
+  primaryAction.dataset.go = config.primary[1];
+  secondaryAction.textContent = config.secondary[0];
+  secondaryAction.dataset.go = config.secondary[1];
 
-  bindText("desktop-scooter-name", hasScooters ? scooter.name : "Keine Auswahl");
-  bindText("desktop-scooter-copy", hasScooters
-    ? `${scooter.battery} Akku, ${scooter.distance} entfernt, ${scooter.status.toLowerCase()}.`
-    : "Keine Treffer in der aktuellen Filterung.");
-  bindText("desktop-scooter-range", hasScooters ? `${scooter.range} Reichweite` : "--");
-  bindText("desktop-scooter-distance", hasScooters ? `${scooter.distance} Fussweg` : "--");
+  primaryAction.disabled = currentScreen === "home" && !hasScooters;
+  secondaryAction.disabled = false;
 
-  setStatusChip("home-status", scooter.status, scooter.statusClass);
-  setStatusChip("desktop-scooter-status", scooter.status, scooter.statusClass);
-
-  if (!hasScooters) {
-    setStatusChip("home-status", "Leer", "low");
-    setStatusChip("desktop-scooter-status", "Leer", "low");
-  }
-
-  document.querySelectorAll(".choice-card[data-pickup]").forEach((card) => {
-    card.classList.toggle("selected", card.dataset.pickup === selectedScooter);
-  });
-
-  actionButtons.forEach((button) => {
-    button.disabled = !hasScooters;
-  });
-
-  if (emptyState) {
-    emptyState.hidden = hasScooters;
-    emptyState.classList.toggle("visible", !hasScooters);
-  }
-}
-
-function renderScenario() {
-  const scenario = scenarios[currentScreen] || scenarios.home;
-  bindText("scenario-title", scenario.title);
-  bindText("scenario-copy", scenario.copy);
-}
-
-function renderFlow() {
-  const activeIndex = screenOrder.indexOf(currentScreen);
-
-  document.querySelectorAll(".flow-step").forEach((step, index) => {
-    const isActive = step.dataset.step === currentScreen;
-    const isPassed = activeIndex !== -1 && index < activeIndex;
-    step.classList.toggle("active", isActive);
-    step.classList.toggle("passed", isPassed);
-  });
+  bindText("map-available", `${visibleScooters.filter(([, item]) => item.status === "Verfuegbar").length} frei`);
+  bindText("map-focus-id", hasScooters ? scooter.id : "KEIN SCOOTER");
+  bindText("map-focus-title", hasScooters ? `${scooter.battery} Akku, ${scooter.distance} entfernt` : "Keine Treffer in dieser Auswahl");
+  bindText("map-focus-copy", hasScooters ? "Direkt verfuegbar und fuer die aktuelle Aktion am sinnvollsten." : "Suche oder Filter anpassen.");
 }
 
 function renderNav() {
@@ -485,103 +546,70 @@ function renderNav() {
     currentScreen === "ride" || currentScreen === "parked" || currentScreen.startsWith("return")
       ? "ride"
       : "map";
-
   document.querySelectorAll(".nav-item").forEach((item) => {
     item.classList.toggle("active", item.dataset.nav === navTarget);
   });
 }
 
-function startCountdown() {
-  if (countdownTimer) {
-    window.clearInterval(countdownTimer);
-  }
-
-  const tick = () => {
-    bindText("reserve-timer", formatCountdown(getReserveSecondsLeft()));
-  };
-
-  tick();
-  countdownTimer = window.setInterval(tick, 1000);
+function renderAll() {
+  renderPanel();
+  renderNav();
+  renderMap();
+  window.setTimeout(() => maps.main.invalidateSize(), 0);
 }
 
 function showScreen(nextScreen) {
   currentScreen = nextScreen;
-
-  document.querySelectorAll(".app-screen").forEach((screen) => {
-    screen.classList.toggle("active", screen.dataset.screen === nextScreen);
-  });
-
-  renderFlow();
-  renderScenario();
-  renderNav();
-  document.querySelector(".app-surface")?.scrollIntoView({ behavior: "smooth", block: "start" });
-
-  Object.values(maps).forEach((map) => {
-    window.setTimeout(() => map.invalidateSize(), 0);
-  });
+  renderAll();
 }
 
-function resetFlow() {
-  selectedScooter = "A-07";
-  renderScooter();
-  renderMapScreens();
-  showScreen("home");
-  showToast("Flow zurueckgesetzt.");
+function startCountdown() {
+  if (countdownTimer) window.clearInterval(countdownTimer);
+  const tick = () => {
+    if (currentScreen === "reserve") {
+      renderPanel();
+    }
+  };
+  tick();
+  countdownTimer = window.setInterval(tick, 1000);
 }
 
-function initMaps() {
-  maps.home = createMap("home-map");
-  maps.detail = createMap("detail-map");
-  maps.reserve = createMap("reserve-map");
-  maps.ride = createMap("ride-map");
-  maps["return-blocked"] = createMap("return-blocked-map");
-  maps["return-ok"] = createMap("return-ok-map");
-  renderMapScreens();
+function initMap() {
+  maps.main = createMap();
 }
 
-document.querySelectorAll("[data-go]").forEach((button) => {
-  button.addEventListener("click", () => {
+document.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-go]");
+  if (button) {
     showScreen(button.dataset.go);
-  });
-});
+    return;
+  }
 
-document.querySelectorAll("[data-action='reset']").forEach((button) => {
-  button.addEventListener("click", resetFlow);
-});
-
-document.querySelectorAll(".choice-card[data-pickup]").forEach((card) => {
-  card.addEventListener("click", () => {
-    selectedScooter = card.dataset.pickup;
-    renderScooter();
-    renderMapScreens();
-    showToast(`${scooters[selectedScooter].name} ausgewaehlt.`);
-  });
+  const locate = event.target.closest("[data-action='locate']");
+  if (locate) {
+    maps.main.flyTo(userLocation, 16, { duration: 0.8 });
+    showToast("Karte auf deinen Standort zentriert.");
+  }
 });
 
 document.querySelectorAll("[data-filter]").forEach((button) => {
   button.addEventListener("click", () => {
     activeFilter = button.dataset.filter;
-    document.querySelectorAll("[data-filter]").forEach((chip) => {
-      chip.classList.toggle("active", chip === button);
-    });
-    renderScooter();
-    renderMapScreens();
-    showToast(`Filter: ${button.textContent}`);
+    document.querySelectorAll("[data-filter]").forEach((chip) => chip.classList.toggle("active", chip === button));
+    if (currentScreen !== "home") {
+      currentScreen = "home";
+    }
+    renderAll();
   });
 });
 
 document.querySelectorAll("[data-search='map']").forEach((input) => {
   input.addEventListener("input", () => {
     searchTerm = input.value.trim().toLowerCase();
-    renderScooter();
-    renderMapScreens();
-  });
-});
-
-document.querySelectorAll("[data-action='locate']").forEach((button) => {
-  button.addEventListener("click", () => {
-    maps.home.flyTo(userLocation, 16, { duration: 0.8 });
-    showToast("Karte auf deinen Standort zentriert.");
+    if (currentScreen !== "home") {
+      currentScreen = "home";
+    }
+    renderAll();
   });
 });
 
@@ -593,19 +621,18 @@ document.querySelectorAll(".nav-item").forEach((item) => {
     }
 
     if (item.dataset.nav === "ride") {
-      showScreen(currentScreen === "parked" ? "parked" : "ride");
+      showScreen("ride");
       return;
     }
 
-    showToast("Dieser Bereich ist im Prototyp noch nicht ausgearbeitet.");
+    showToast("Im Prototyp noch nicht ausgearbeitet.");
   });
 });
 
 window.addEventListener("resize", () => {
-  Object.values(maps).forEach((map) => map.invalidateSize());
+  maps.main?.invalidateSize();
 });
 
-initMaps();
-renderScooter();
+initMap();
 startCountdown();
-showScreen("home");
+renderAll();
