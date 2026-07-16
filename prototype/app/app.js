@@ -459,7 +459,7 @@ function createMap() {
     tap: true
   });
 
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png", {
     subdomains: "abcd",
     maxZoom: 20
   }).addTo(map);

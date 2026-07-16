@@ -1,21 +1,22 @@
 :root {
-  --bg-1: #041018;
-  --bg-2: #0a1f2b;
-  --panel: rgba(8, 22, 30, 0.82);
-  --line: rgba(210, 241, 234, 0.12);
-  --line-strong: rgba(158, 245, 194, 0.34);
-  --text: #eef7f4;
-  --muted: #9eb5b0;
-  --muted-strong: #cfe4df;
-  --lime: #8df7b2;
-  --cyan: #77dbff;
-  --orange: #ffbf73;
-  --red: #ff8f8f;
-  --shadow-lg: 0 24px 70px rgba(0, 0, 0, 0.34);
-  --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.24);
-  --radius-xl: 28px;
-  --radius-lg: 22px;
-  --radius-md: 18px;
+  --bg-1: #eef2ec;
+  --bg-2: #dfe7de;
+  --panel: rgba(250, 251, 247, 0.94);
+  --panel-soft: rgba(255, 255, 255, 0.7);
+  --line: rgba(22, 31, 24, 0.08);
+  --line-strong: rgba(26, 40, 31, 0.2);
+  --text: #162019;
+  --muted: #6f7c73;
+  --muted-strong: #445148;
+  --lime: #7fd66a;
+  --cyan: #4f93ff;
+  --orange: #ffb648;
+  --red: #eb6e5f;
+  --shadow-lg: 0 32px 80px rgba(36, 48, 40, 0.12);
+  --shadow-md: 0 16px 38px rgba(36, 48, 40, 0.1);
+  --radius-xl: 30px;
+  --radius-lg: 24px;
+  --radius-md: 20px;
   --radius-sm: 14px;
 }
 
@@ -34,8 +35,8 @@ body {
   font-family: "Sora", system-ui, sans-serif;
   color: var(--text);
   background:
-    radial-gradient(circle at top left, rgba(119, 219, 255, 0.14), transparent 32%),
-    radial-gradient(circle at 80% 12%, rgba(141, 247, 178, 0.14), transparent 24%),
+    radial-gradient(circle at top left, rgba(127, 214, 106, 0.14), transparent 24%),
+    radial-gradient(circle at 86% 10%, rgba(79, 147, 255, 0.12), transparent 20%),
     linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
 }
 
@@ -44,11 +45,11 @@ body::before {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  opacity: 0.34;
+  opacity: 0.22;
   background:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 88px 88px;
+    linear-gradient(rgba(20, 28, 23, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20, 28, 23, 0.025) 1px, transparent 1px);
+  background-size: 96px 96px;
 }
 
 button,
@@ -63,12 +64,12 @@ input {
 
 .app-shell {
   height: 100%;
-  max-width: 1440px;
+  max-width: 1500px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 380px;
+  grid-template-columns: minmax(0, 1fr) 410px;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: 16px;
+  gap: 18px;
   grid-template-areas:
     "bar dock"
     "map dock";
@@ -77,16 +78,16 @@ input {
 .glass {
   border: 1px solid var(--line);
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 249, 244, 0.86)),
     var(--panel);
   box-shadow: var(--shadow-md);
-  backdrop-filter: blur(18px);
+  backdrop-filter: blur(14px);
 }
 
 .app-bar {
   grid-area: bar;
-  min-height: 72px;
-  padding: 14px 18px;
+  min-height: 74px;
+  padding: 14px 16px 14px 18px;
   border-radius: var(--radius-xl);
   display: flex;
   align-items: center;
@@ -97,7 +98,7 @@ input {
 .brand-lockup strong {
   display: block;
   margin-top: 6px;
-  font-size: 1.12rem;
+  font-size: 1.14rem;
   letter-spacing: -0.03em;
 }
 
@@ -113,7 +114,7 @@ input {
   margin: 0;
   font-size: 11px;
   font-weight: 700;
-  color: var(--lime);
+  color: #506054;
 }
 
 .bar-actions {
@@ -136,17 +137,17 @@ input {
 .live-pill,
 .status-chip {
   padding: 8px 12px;
-  border: 1px solid rgba(141, 247, 178, 0.36);
-  color: #dff9e8;
-  background: rgba(77, 219, 132, 0.18);
+  border: 1px solid rgba(18, 29, 22, 0.08);
+  color: var(--text);
+  background: rgba(127, 214, 106, 0.18);
   font-size: 12px;
   font-weight: 700;
 }
 
 .status-chip.low {
-  border-color: rgba(255, 191, 115, 0.3);
-  color: #ffdcbb;
-  background: rgba(255, 191, 115, 0.14);
+  border-color: rgba(255, 182, 72, 0.22);
+  color: #7a4a14;
+  background: rgba(255, 182, 72, 0.18);
 }
 
 .icon-btn,
@@ -161,7 +162,7 @@ input {
 
 .icon-btn,
 .ghost-btn {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.88);
   border-color: var(--line);
   color: var(--text);
 }
@@ -224,6 +225,7 @@ input {
   position: relative;
   overflow: hidden;
   border-radius: var(--radius-xl);
+  background: #dfe7df;
 }
 
 .map-frame {
@@ -253,9 +255,14 @@ input {
 
 .map-strip {
   display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 10px;
   padding: 10px 12px;
   border-radius: 999px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(250, 252, 248, 0.86)),
+    rgba(255, 255, 255, 0.9);
 }
 
 .map-pill {
@@ -265,18 +272,19 @@ input {
 
 .map-pill.emphasis {
   color: var(--text);
-  background: rgba(119, 219, 255, 0.12);
-  padding: 0 10px;
+  background: rgba(22, 32, 25, 0.06);
+  padding: 6px 10px;
 }
 
 .floating-card {
-  max-width: 320px;
+  max-width: 340px;
   margin-left: auto;
-  padding: 14px 16px;
+  padding: 16px 18px;
   border-radius: var(--radius-lg);
   background:
-    linear-gradient(135deg, rgba(141, 247, 178, 0.12), rgba(255, 255, 255, 0.04) 46%),
-    rgba(6, 18, 25, 0.84);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 249, 244, 0.92)),
+    rgba(255, 255, 255, 0.94);
+  box-shadow: 0 18px 40px rgba(28, 41, 33, 0.12);
 }
 
 .floating-card strong {
@@ -296,7 +304,18 @@ input {
   border-radius: var(--radius-xl);
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(246, 248, 243, 0.94)),
+    rgba(255, 255, 255, 0.96);
+}
+
+.sheet-handle {
+  width: 54px;
+  height: 5px;
+  border-radius: 999px;
+  margin: 0 auto 2px;
+  background: rgba(22, 31, 24, 0.14);
 }
 
 .panel-head {
@@ -313,9 +332,9 @@ input {
 }
 
 .panel-head h1 {
-  margin: 8px 0 0;
-  font-size: clamp(1.5rem, 2vw, 2rem);
-  line-height: 0.98;
+  margin: 6px 0 0;
+  font-size: clamp(1.5rem, 2vw, 2.08rem);
+  line-height: 1;
   letter-spacing: -0.05em;
 }
 
@@ -329,7 +348,11 @@ input {
 .flow-meter {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: 18px;
+  background: rgba(22, 31, 24, 0.035);
+  border: 1px solid rgba(22, 31, 24, 0.05);
 }
 
 .flow-copy {
@@ -345,11 +368,10 @@ input {
 }
 
 .flow-bar {
-  height: 8px;
+  height: 7px;
   border-radius: 999px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(22, 31, 24, 0.07);
 }
 
 .flow-bar-fill {
@@ -357,8 +379,8 @@ input {
   height: 100%;
   width: 12%;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--lime), var(--cyan));
-  box-shadow: 0 0 18px rgba(141, 247, 178, 0.24);
+  background: linear-gradient(90deg, #7fd66a, #9bea76);
+  box-shadow: 0 0 18px rgba(127, 214, 106, 0.26);
   transition: width 220ms ease;
 }
 
@@ -370,12 +392,12 @@ input {
 }
 
 .focus-banner {
-  padding: 14px;
+  padding: 16px;
   border-radius: var(--radius-md);
-  border-color: rgba(119, 219, 255, 0.22);
+  border-color: rgba(22, 31, 24, 0.06);
   background:
-    linear-gradient(135deg, rgba(119, 219, 255, 0.12), rgba(255, 255, 255, 0.03) 55%),
-    rgba(7, 19, 27, 0.88);
+    linear-gradient(180deg, rgba(127, 214, 106, 0.14), rgba(255, 255, 255, 0.82) 65%),
+    rgba(255, 255, 255, 0.94);
 }
 
 .focus-banner strong {
@@ -392,24 +414,47 @@ input {
 }
 
 .focus-banner[data-tone="danger"] {
-  border-color: rgba(255, 143, 143, 0.28);
+  border-color: rgba(235, 110, 95, 0.16);
   background:
-    linear-gradient(135deg, rgba(255, 143, 143, 0.16), rgba(255, 255, 255, 0.03) 55%),
-    rgba(35, 12, 16, 0.9);
+    linear-gradient(180deg, rgba(235, 110, 95, 0.14), rgba(255, 255, 255, 0.84) 65%),
+    rgba(255, 255, 255, 0.96);
 }
 
 .focus-banner[data-tone="success"] {
-  border-color: rgba(141, 247, 178, 0.28);
+  border-color: rgba(127, 214, 106, 0.16);
   background:
-    linear-gradient(135deg, rgba(141, 247, 178, 0.16), rgba(255, 255, 255, 0.03) 55%),
-    rgba(7, 22, 18, 0.9);
+    linear-gradient(180deg, rgba(127, 214, 106, 0.16), rgba(255, 255, 255, 0.84) 65%),
+    rgba(255, 255, 255, 0.96);
 }
 
 .focus-banner[data-tone="warning"] {
-  border-color: rgba(255, 191, 115, 0.28);
+  border-color: rgba(255, 182, 72, 0.16);
   background:
-    linear-gradient(135deg, rgba(255, 191, 115, 0.16), rgba(255, 255, 255, 0.03) 55%),
-    rgba(34, 18, 10, 0.9);
+    linear-gradient(180deg, rgba(255, 182, 72, 0.14), rgba(255, 255, 255, 0.84) 65%),
+    rgba(255, 255, 255, 0.96);
+}
+
+.dock-meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.meta-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(22, 31, 24, 0.055);
+  color: var(--muted-strong);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.meta-chip.strong {
+  background: rgba(127, 214, 106, 0.18);
+  color: var(--text);
 }
 
 .search-strip {
@@ -424,9 +469,9 @@ input {
   gap: 10px;
   min-height: 50px;
   padding: 0 14px;
-  border-radius: 16px;
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.05);
+  border-radius: 18px;
+  border: 1px solid rgba(22, 31, 24, 0.06);
+  background: rgba(22, 31, 24, 0.045);
 }
 
 .search-field input {
@@ -451,14 +496,14 @@ input {
   min-height: 38px;
   padding: 8px 12px;
   border-radius: 999px;
-  border-color: var(--line);
-  background: rgba(255, 255, 255, 0.045);
+  border-color: rgba(22, 31, 24, 0.06);
+  background: rgba(22, 31, 24, 0.04);
   color: var(--muted-strong);
 }
 
 .filter-chip.active {
-  border-color: var(--line-strong);
-  background: rgba(141, 247, 178, 0.12);
+  border-color: rgba(127, 214, 106, 0.28);
+  background: rgba(127, 214, 106, 0.16);
   color: var(--text);
 }
 
@@ -472,6 +517,9 @@ input {
 .info-card {
   padding: 14px;
   border-radius: var(--radius-md);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(246, 248, 244, 0.92)),
+    rgba(255, 255, 255, 0.94);
 }
 
 .metric-card span {
@@ -524,15 +572,15 @@ input {
 }
 
 .primary-btn {
-  color: #032013;
-  background: linear-gradient(135deg, var(--lime) 0%, #c7ffd8 100%);
-  box-shadow: 0 12px 28px rgba(141, 247, 178, 0.28);
+  color: #0e160f;
+  background: linear-gradient(135deg, #8fe06e 0%, #c5f394 100%);
+  box-shadow: 0 14px 28px rgba(127, 214, 106, 0.22);
 }
 
 .secondary-btn {
   color: var(--text);
-  background: rgba(255, 255, 255, 0.025);
-  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(22, 31, 24, 0.045);
+  border-color: rgba(22, 31, 24, 0.08);
   min-height: 42px;
   padding: 10px 14px;
   font-weight: 600;
@@ -570,22 +618,22 @@ input {
 
 .dot.available {
   background: var(--lime);
-  box-shadow: 0 0 16px rgba(141, 247, 178, 0.85);
+  box-shadow: 0 0 12px rgba(127, 214, 106, 0.4);
 }
 
 .dot.hub {
   background: var(--cyan);
-  box-shadow: 0 0 16px rgba(119, 219, 255, 0.75);
+  box-shadow: 0 0 12px rgba(79, 147, 255, 0.34);
 }
 
 .dot.low {
   background: var(--orange);
-  box-shadow: 0 0 16px rgba(255, 191, 115, 0.75);
+  box-shadow: 0 0 12px rgba(255, 182, 72, 0.35);
 }
 
 .leaflet-container {
   font-family: "Sora", system-ui, sans-serif;
-  background: #08131b;
+  background: #dfe7df;
 }
 
 .leaflet-control-container {
@@ -598,8 +646,8 @@ input {
   width: 18px;
   height: 18px;
   border-radius: 999px;
-  border: 2px solid rgba(255, 255, 255, 0.86);
-  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.06), 0 16px 28px rgba(0, 0, 0, 0.26);
+  border: 3px solid rgba(255, 255, 255, 0.96);
+  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.32), 0 10px 18px rgba(37, 47, 39, 0.16);
 }
 
 .map-marker.scooter {
@@ -609,7 +657,7 @@ input {
 .map-marker.scooter.active {
   width: 22px;
   height: 22px;
-  box-shadow: 0 0 0 8px rgba(141, 247, 178, 0.18), 0 0 24px rgba(141, 247, 178, 0.48);
+  box-shadow: 0 0 0 8px rgba(127, 214, 106, 0.2), 0 0 0 16px rgba(127, 214, 106, 0.08);
 }
 
 .map-marker.scooter.low {
@@ -620,28 +668,28 @@ input {
   width: 16px;
   height: 16px;
   background: var(--cyan);
-  border-radius: 6px;
+  border-radius: 5px;
   transform: rotate(45deg);
 }
 
 .map-marker.user {
   width: 16px;
   height: 16px;
-  background: #f6fffb;
+  background: #ffffff;
   border: 3px solid var(--cyan);
-  box-shadow: 0 0 0 9px rgba(119, 219, 255, 0.16);
+  box-shadow: 0 0 0 10px rgba(79, 147, 255, 0.14);
 }
 
 .map-label {
   padding: 6px 10px;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(7, 16, 23, 0.88);
+  border: 1px solid rgba(22, 31, 24, 0.06);
+  background: rgba(255, 255, 255, 0.92);
   color: var(--muted-strong);
   font-size: 11px;
   font-weight: 600;
   white-space: nowrap;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
+  box-shadow: 0 10px 24px rgba(32, 41, 34, 0.1);
 }
 
 .app-toast {
@@ -651,10 +699,10 @@ input {
   z-index: 9999;
   padding: 12px 16px;
   border-radius: 999px;
-  border: 1px solid rgba(141, 247, 178, 0.24);
-  background: rgba(7, 18, 26, 0.88);
-  color: var(--muted-strong);
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.34);
+  border: 1px solid rgba(22, 31, 24, 0.08);
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--text);
+  box-shadow: 0 14px 34px rgba(32, 41, 34, 0.12);
   transform: translate(-50%, 20px);
   opacity: 0;
   pointer-events: none;
@@ -687,7 +735,7 @@ input {
   }
 
   .control-dock {
-    max-height: 360px;
+    max-height: 380px;
   }
 }
 
@@ -706,13 +754,15 @@ input {
   }
 
   .map-stage {
-    min-height: 56dvh;
+    min-height: 58dvh;
+    border-radius: 28px;
   }
 
   .control-dock {
     padding: 12px;
-    max-height: 290px;
+    max-height: 316px;
     gap: 10px;
+    border-radius: 26px;
   }
 
   .flow-copy {
@@ -804,16 +854,17 @@ input {
     padding: 8px;
     border-radius: 22px;
     background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
-      rgba(6, 18, 25, 0.94);
-    backdrop-filter: blur(20px);
+      linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(245, 247, 242, 0.94)),
+      rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 18px 36px rgba(32, 41, 34, 0.12);
   }
 
   .mobile-nav-item {
     min-height: 50px;
     border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(22, 31, 24, 0.05);
+    background: rgba(22, 31, 24, 0.035);
     color: var(--muted);
     font: inherit;
     font-weight: 700;
@@ -822,9 +873,9 @@ input {
 
   .mobile-nav-item.active {
     color: var(--text);
-    border-color: var(--line-strong);
-    background: rgba(141, 247, 178, 0.12);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+    border-color: rgba(127, 214, 106, 0.28);
+    background: rgba(127, 214, 106, 0.18);
+    box-shadow: 0 10px 20px rgba(127, 214, 106, 0.14);
   }
 
   .mobile-nav-label {
