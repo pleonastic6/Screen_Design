@@ -986,6 +986,8 @@ input {
     box-shadow: 0 10px 24px rgba(32, 41, 34, 0.12);
     backdrop-filter: blur(14px);
     transform: translateX(-50%);
+    cursor: ns-resize;
+    touch-action: none;
   }
 
   .sheet-reveal[hidden] {

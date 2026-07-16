@@ -468,7 +468,7 @@ function getPaneMode() {
     return getDefaultSheetMode();
   }
 
-  if (sheetPane.isHidden?.()) {
+  if (sheetPane.isHidden?.() || sheetPane.currentBreak?.() === "bottom") {
     return "hidden";
   }
 
@@ -489,12 +489,12 @@ function getPaneConfig() {
     bottomClose: true,
     fastSwipeClose: true,
     lowerThanBottom: false,
-    clickBottomOpen: false,
+    clickBottomOpen: true,
     showDraggable: false,
     buttonDestroy: false,
     backdrop: false,
     simulateTouch: false,
-    dragBy: ["#sheet-handle"],
+    dragBy: ["#sheet-handle", "#sheet-reveal"],
     bottomOffset: Math.max(0, getMobileNavHeight() - 6),
     breaks: {
       top: { enabled: true, height: topHeight, bounce: true },
@@ -551,7 +551,7 @@ async function syncSheetPane(options = {}) {
     if (!pane.isHidden?.()) {
       await pane.hide();
     }
-  } else if (forceOpen || pane.isHidden?.()) {
+  } else if (forceOpen || pane.isHidden?.() || pane.currentBreak?.() === "bottom") {
     await pane.moveToBreak("top");
   }
 
@@ -988,10 +988,10 @@ document.querySelectorAll("[data-mobile-nav]").forEach((button) => {
 
 document.getElementById("sheet-handle")?.addEventListener("click", async () => {
   if (!sheetPane || currentScreen === "home") return;
-  if (sheetPane.isHidden?.()) {
+  if (sheetPane.isHidden?.() || sheetPane.currentBreak?.() === "bottom") {
     await sheetPane.moveToBreak("top");
   } else {
-    await sheetPane.hide();
+    await sheetPane.moveToBreak("bottom");
   }
   syncSheetPane({ forceOpen: false });
 });
