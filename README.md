@@ -21,6 +21,26 @@ Ziel ist die Konzeption und Gestaltung einer Smartphone-App für einen fiktiven 
 - `prototype/` – Platzhalter für Figma-Export oder HTML/CSS/JS-Prototyp
   - `prototype/wireframes/index.html` – visuelle Low-Fi-Wireframes im Browser
 
+## GitHub Pages
+
+Für GitHub Pages ist das Repo jetzt so angeordnet, dass du direkt den `docs/`-Ordner publishen kannst.
+
+- In GitHub unter `Settings -> Pages`
+- `Source`: `Deploy from a branch`
+- Branch: `main`
+- Folder: `/docs`
+
+Wichtige Pfade:
+
+- `docs/index.html` – Startseite / Projekt-Landing-Page
+- `docs/app/index.html` – aktueller klickbarer HTML-Prototyp
+
+Arbeitslogik:
+
+- Du entwickelst weiter in `prototype/app/`
+- Für den Publish-Stand wird `prototype/app/` nach `docs/app/` gespiegelt
+- GitHub Pages zieht dann automatisch den Stand aus `docs/`
+
 ## Kernanforderungen aus dem Briefing
 
 - Übersicht aller Scooter mit Position, Ladezustand und Verfügbarkeit
