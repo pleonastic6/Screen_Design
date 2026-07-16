@@ -18,14 +18,15 @@
 <body>
   <main class="page">
     <section class="app-shell">
-      <header class="app-bar glass">
-        <div class="brand-lockup">
-          <p class="eyebrow">Share-A-Scooter</p>
-          <strong>Amberg</strong>
-        </div>
+      <header class="app-bar">
+        <button class="icon-btn elevated round" type="button" aria-label="Profil">
+          <span class="icon icon-profile"></span>
+        </button>
         <div class="bar-actions">
-          <span class="live-pill" data-bind="screen-badge">Live Map</span>
-          <button class="icon-btn" type="button" data-action="locate" aria-label="Standort zentrieren">
+          <button class="icon-btn elevated round" type="button" data-action="filter-cycle" aria-label="Filter wechseln">
+            <span class="icon icon-sliders"></span>
+          </button>
+          <button class="icon-btn elevated round" type="button" data-action="locate" aria-label="Standort zentrieren">
             <span class="icon icon-locate"></span>
           </button>
         </div>
@@ -34,10 +35,9 @@
       <section class="map-stage glass">
         <div class="map-frame" id="main-map" aria-label="Interaktive Karte mit Scootern und Ladehubs"></div>
         <div class="map-overlay top">
-          <div class="map-strip glass">
+          <div class="map-strip glass compact">
+            <span class="map-pill soft" data-bind="map-context">120 m entfernt</span>
             <span class="map-pill"><i class="dot available"></i><span data-bind="map-available">2 frei</span></span>
-            <span class="map-pill"><i class="dot hub"></i>3 Hubs</span>
-            <span class="map-pill emphasis" data-bind="map-context">120 m entfernt</span>
           </div>
         </div>
         <div class="map-overlay bottom">
@@ -63,16 +63,6 @@
           </div>
         </div>
 
-        <p class="panel-copy" data-bind="panel-copy">
-          Waehle einen Scooter auf der Karte oder nutze direkt den empfohlenen Ride.
-        </p>
-
-        <div class="dock-meta" aria-label="Tarif und Vorteile">
-          <span class="meta-chip strong">Unlock 1,00 EUR</span>
-          <span class="meta-chip">0,10 EUR / 5 Min</span>
-          <span class="meta-chip">Hub Bonus 30 Min</span>
-        </div>
-
         <section class="flow-meter" aria-label="Fortschritt im Flow">
           <div class="flow-copy">
             <span class="mono overline" data-bind="flow-step">Schritt 1 von 8</span>
@@ -87,6 +77,14 @@
           <p class="mono overline" data-bind="focus-kicker">Empfohlen</p>
           <strong data-bind="focus-title">Direkter Start mit Scooter A-07</strong>
           <p data-bind="focus-copy">Ein Hauptpfad, kein UI-Drama: unlocken oder erst reservieren.</p>
+        </section>
+
+        <section class="selection-pill" id="selection-pill">
+          <span class="selection-pill-id mono" data-bind="selection-pill-id">A-07</span>
+          <div class="selection-pill-copy">
+            <strong data-bind="selection-pill-title">82 % Akku</strong>
+            <span data-bind="selection-pill-meta">120 m entfernt</span>
+          </div>
         </section>
 
         <section class="search-strip" id="search-strip">
@@ -127,7 +125,7 @@
             <strong data-bind="info-1-title">Rueckgabe im Stadtgebiet moeglich</strong>
             <p data-bind="info-1-copy">Am Ladehub Marktplatz bekommst du 30 Freiminuten.</p>
           </article>
-          <article class="info-card glass" data-info="secondary">
+          <article class="info-card glass compact" data-info="secondary">
             <strong data-bind="info-2-title">Schnellster Start</strong>
             <p data-bind="info-2-copy">Der Scooter ist nah genug fuer einen direkten Unlock ohne Umwege.</p>
           </article>
@@ -135,8 +133,14 @@
 
         <div class="action-row">
           <p class="action-hint" data-bind="action-hint">Primaer: direkt zum naechsten sinnvollen Schritt.</p>
-          <button class="secondary-btn" type="button" id="secondary-action">Reservieren</button>
-          <button class="primary-btn" type="button" id="primary-action">Jetzt entsperren</button>
+          <button class="secondary-btn" type="button" id="secondary-action">
+            <span class="button-label" id="secondary-action-label">Reservieren</span>
+            <span class="button-meta" id="secondary-action-meta">30 Minuten halten</span>
+          </button>
+          <button class="primary-btn" type="button" id="primary-action">
+            <span class="button-label" id="primary-action-label">Jetzt entsperren</span>
+            <span class="button-meta" id="primary-action-meta">Unlock 1,00 EUR</span>
+          </button>
         </div>
       </aside>
 
@@ -145,13 +149,16 @@
           <span class="mobile-nav-label">Map</span>
         </button>
         <button class="mobile-nav-item" type="button" data-mobile-nav="detail">
-          <span class="mobile-nav-label">Detail</span>
+          <span class="mobile-nav-label">Buchen</span>
+        </button>
+        <button class="mobile-nav-item mobile-nav-scan" type="button" data-mobile-nav="reserve">
+          <span class="mobile-nav-label">Scannen</span>
         </button>
         <button class="mobile-nav-item" type="button" data-mobile-nav="ride">
-          <span class="mobile-nav-label">Ride</span>
+          <span class="mobile-nav-label">Aktiv</span>
         </button>
         <button class="mobile-nav-item" type="button" data-mobile-nav="return-ok">
-          <span class="mobile-nav-label">Return</span>
+          <span class="mobile-nav-label">Parken</span>
         </button>
       </nav>
     </section>
