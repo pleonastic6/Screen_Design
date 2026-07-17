@@ -45,9 +45,12 @@ const bookingScreenName = document.getElementById("booking-screen-name");
 const bookingScreenType = document.getElementById("booking-screen-type");
 const bookingScreenRange = document.getElementById("booking-screen-range");
 const bookingScreenPrice = document.getElementById("booking-screen-price");
+const bookingScreenTimer = document.getElementById("booking-screen-timer");
 
 let activeScooterMarker = null;
 let activeScooter = null;
+let bookingCountdownId = null;
+let bookingEndsAt = null;
 
 function markerIcon(type) {
   return L.divIcon({
@@ -125,6 +128,7 @@ function openBookingScreen() {
   vehicleCard.setAttribute("aria-hidden", "true");
   bookingScreen.dataset.open = "true";
   bookingScreen.setAttribute("aria-hidden", "false");
+  startBookingCountdown();
 }
 
 function closeBookingScreen() {
@@ -134,6 +138,38 @@ function closeBookingScreen() {
     vehicleCard.dataset.open = "true";
     vehicleCard.setAttribute("aria-hidden", "false");
     keepMarkerVisible(activeScooterMarker);
+  }
+}
+
+function startBookingCountdown() {
+  bookingEndsAt = Date.now() + 10 * 60 * 1000;
+  stopBookingCountdown();
+  updateBookingCountdown();
+  bookingCountdownId = window.setInterval(updateBookingCountdown, 1000);
+}
+
+function stopBookingCountdown() {
+  if (bookingCountdownId) {
+    window.clearInterval(bookingCountdownId);
+    bookingCountdownId = null;
+  }
+}
+
+function updateBookingCountdown() {
+  if (!bookingEndsAt) {
+    bookingScreenTimer.textContent = "10:00 Min";
+    return;
+  }
+
+  const remainingMs = Math.max(bookingEndsAt - Date.now(), 0);
+  const remainingSeconds = Math.ceil(remainingMs / 1000);
+  const minutes = Math.floor(remainingSeconds / 60);
+  const seconds = remainingSeconds % 60;
+
+  bookingScreenTimer.textContent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")} Min`;
+
+  if (remainingSeconds === 0) {
+    stopBookingCountdown();
   }
 }
 
@@ -156,10 +192,16 @@ function clearActiveScooterMarker() {
 
 function keepMarkerVisible(marker) {
   const cardHeight = vehicleCard.getBoundingClientRect().height;
+  const mapWidth = map.getSize().x;
   const mapHeight = map.getSize().y;
   const markerPoint = map.latLngToContainerPoint(marker.getLatLng());
-  const maxVisibleY = mapHeight - cardHeight - 36;
-  if (markerPoint.y > maxVisibleY) {
-    map.panBy([0, markerPoint.y - maxVisibleY], { animate: true, duration: 0.25 });
-  }
+  const visibleMapHeight = Math.max(mapHeight - cardHeight, 0);
+  const targetPoint = {
+    x: mapWidth / 2,
+    y: Math.max(visibleMapHeight * 0.46, 120)
+  };
+  const panOffsetX = markerPoint.x - targetPoint.x;
+  const panOffsetY = markerPoint.y - targetPoint.y;
+
+  map.panBy([panOffsetX, panOffsetY], { animate: true, duration: 0.3 });
 }
