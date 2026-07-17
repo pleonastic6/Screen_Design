@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Share-A-Scooter Amberg - Single Screen Prototype</title>
+  <title>Share-A-Scooter Amberg - Map Screen</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -16,159 +16,20 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main class="page">
-    <section class="app-shell">
-      <header class="app-bar">
-        <button class="icon-btn elevated round" type="button" aria-label="Profil">
-          <span class="icon icon-profile"></span>
-        </button>
-        <div class="bar-actions">
-          <button class="icon-btn elevated round" type="button" data-action="filter-cycle" aria-label="Filter wechseln">
-            <span class="icon icon-sliders"></span>
-          </button>
-          <button class="icon-btn elevated round" type="button" data-action="locate" aria-label="Standort zentrieren">
-            <span class="icon icon-locate"></span>
-          </button>
-        </div>
-      </header>
+  <main class="map-screen">
+    <div class="map-frame" id="main-map" aria-label="Karte mit Scootern und Ladehubs"></div>
 
-      <section class="map-stage glass">
-        <div class="map-frame" id="main-map" aria-label="Interaktive Karte mit Scootern und Ladehubs"></div>
-        <div class="map-overlay top">
-          <div class="map-strip glass compact">
-            <span class="map-pill soft" data-bind="map-context">120 m entfernt</span>
-            <span class="map-pill"><i class="dot available"></i><span data-bind="map-available">2 frei</span></span>
-          </div>
-        </div>
-        <div class="map-overlay bottom">
-          <article class="floating-card glass" id="map-spotlight">
-            <p class="mono overline" data-bind="map-focus-id">SCOOTER A-07</p>
-            <strong data-bind="map-focus-title">82 % Akku, 120 m entfernt</strong>
-            <p data-bind="map-focus-copy">Direkt verfuegbar und fuer die spontane Fahrt am sinnvollsten.</p>
-          </article>
-        </div>
-      </section>
+    <div class="map-topbar">
+      <div class="map-chip">Amberg</div>
+      <div class="map-chip map-chip-strong">3 Scooter in der Naehe</div>
+    </div>
 
-      <aside class="control-dock glass" id="control-dock">
-        <button class="sheet-handle" id="sheet-handle" type="button" aria-label="Zum vorherigen Schritt zurueck">
-          <span class="sheet-handle-icon" aria-hidden="true">‹</span>
-        </button>
-
-        <div class="panel-head">
-          <div>
-            <p class="eyebrow" data-bind="panel-kicker">Live Map</p>
-            <h1 data-bind="panel-title">Finde deinen naechsten Ride</h1>
-          </div>
-          <div class="panel-head-actions">
-            <button class="ghost-btn" type="button" id="back-action" data-action="back" hidden>Zurueck</button>
-            <span class="status-chip available" data-bind="panel-status">Verfuegbar</span>
-          </div>
-        </div>
-
-        <section class="flow-meter" aria-label="Fortschritt im Flow">
-          <div class="flow-copy">
-            <span class="mono overline" data-bind="flow-step">Schritt 1 von 8</span>
-            <strong data-bind="flow-title">Karte und Auswahl</strong>
-          </div>
-          <div class="flow-bar" aria-hidden="true">
-            <span class="flow-bar-fill" id="flow-bar-fill"></span>
-          </div>
-        </section>
-
-        <section class="focus-banner glass" id="focus-banner" data-tone="calm">
-          <p class="mono overline" data-bind="focus-kicker">Empfohlen</p>
-          <strong data-bind="focus-title">Direkter Start mit Scooter A-07</strong>
-          <p data-bind="focus-copy">Ein Hauptpfad, kein UI-Drama: unlocken oder erst reservieren.</p>
-        </section>
-
-        <section class="selection-pill" id="selection-pill">
-          <span class="selection-pill-visual" aria-hidden="true">
-            <span class="scooter-glyph">
-              <svg viewBox="0 0 64 64" role="presentation" focusable="false">
-                <circle cx="18" cy="48" r="6"></circle>
-                <circle cx="47" cy="48" r="6"></circle>
-                <path d="M18 48h16c6 0 10-2 13-7l4-6"></path>
-                <path d="M30 20h8l-4 15"></path>
-                <path d="M23 33h18"></path>
-                <path d="M39 18h10"></path>
-              </svg>
-            </span>
-          </span>
-          <div class="selection-pill-copy">
-            <p class="selection-pill-id mono" data-bind="selection-pill-id">A-07</p>
-            <strong data-bind="selection-pill-title">82 % Akku</strong>
-            <span data-bind="selection-pill-meta">120 m entfernt</span>
-          </div>
-        </section>
-
-        <section class="search-strip" id="search-strip">
-          <label class="search-field" aria-label="Scooter oder Hub suchen">
-            <span class="icon icon-search"></span>
-            <input
-              type="search"
-              data-search="map"
-              placeholder="Scooter oder Hub suchen"
-              autocomplete="off"
-            />
-          </label>
-          <div class="filter-chips" aria-label="Kartenfilter">
-            <button class="filter-chip active" type="button" data-filter="all">Alle</button>
-            <button class="filter-chip" type="button" data-filter="available">Frei</button>
-            <button class="filter-chip" type="button" data-filter="low">Niedriger Akku</button>
-            <button class="filter-chip" type="button" data-filter="hub">Hubs</button>
-          </div>
-        </section>
-
-        <section class="metric-grid" id="metric-grid">
-          <article class="metric-card glass">
-            <span data-bind="metric-1-label">Akku</span>
-            <strong data-bind="metric-1-value">82 %</strong>
-          </article>
-          <article class="metric-card glass">
-            <span data-bind="metric-2-label">Reichweite</span>
-            <strong data-bind="metric-2-value">18 km</strong>
-          </article>
-          <article class="metric-card glass">
-            <span data-bind="metric-3-label">Distanz</span>
-            <strong data-bind="metric-3-value">120 m</strong>
-          </article>
-        </section>
-
-        <section class="info-stack">
-          <article class="info-card glass" data-info="primary">
-            <strong data-bind="info-1-title">Rueckgabe im Stadtgebiet moeglich</strong>
-            <p data-bind="info-1-copy">Am Ladehub Marktplatz bekommst du 30 Freiminuten.</p>
-          </article>
-          <article class="info-card glass compact" data-info="secondary">
-            <strong data-bind="info-2-title">Schnellster Start</strong>
-            <p data-bind="info-2-copy">Der Scooter ist nah genug fuer einen direkten Unlock ohne Umwege.</p>
-          </article>
-        </section>
-
-        <div class="action-row">
-          <p class="action-hint" data-bind="action-hint">Primaer: direkt zum naechsten sinnvollen Schritt.</p>
-          <button class="secondary-btn" type="button" id="secondary-action">
-            <span class="button-label" id="secondary-action-label">Reservieren</span>
-            <span class="button-meta" id="secondary-action-meta">30 Minuten halten</span>
-          </button>
-          <button class="primary-btn" type="button" id="primary-action">
-            <span class="button-label" id="primary-action-label">Jetzt entsperren</span>
-            <span class="button-meta" id="primary-action-meta">Unlock 1,00 EUR</span>
-          </button>
-        </div>
-      </aside>
-
-      <button class="scan-fab" id="scan-action" type="button" aria-label="Scooter scannen">
-        <span class="scan-fab-label">Scannen</span>
-      </button>
-
-      <button class="sheet-reveal" id="sheet-reveal" type="button" aria-label="Info-Bereich einblenden">
-        <span class="sheet-reveal-pill" aria-hidden="true"></span>
-      </button>
-    </section>
+    <div class="map-legend">
+      <span class="legend-item"><i class="legend-dot scooter"></i>Scooter</span>
+      <span class="legend-item"><i class="legend-dot hub"></i>Ladehub</span>
+      <span class="legend-item"><i class="legend-dot user"></i>Standort</span>
+    </div>
   </main>
-
-  <div class="app-toast" id="app-toast" aria-live="polite"></div>
 
   <script
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
