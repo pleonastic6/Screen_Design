@@ -77,22 +77,6 @@ input {
   transition: grid-template-columns 220ms ease;
 }
 
-.app-shell[data-sheet-open="false"] {
-  grid-template-columns: minmax(0, 1fr) 0;
-}
-
-.app-shell[data-sheet-open="false"] .map-overlay {
-  opacity: 0;
-  transform: translateY(8px);
-  pointer-events: none;
-}
-
-.app-shell[data-sheet-open="false"] .control-dock {
-  opacity: 0;
-  transform: translateX(18px);
-  pointer-events: none;
-}
-
 .glass {
   border: 1px solid var(--line);
   background:
@@ -735,10 +719,6 @@ input {
   display: none;
 }
 
-.sheet-reveal {
-  display: none;
-}
-
 .scan-fab {
   display: none;
   position: fixed;
@@ -953,66 +933,28 @@ input {
     box-shadow: 0 -12px 28px rgba(24, 34, 26, 0.05);
     transform: translateY(var(--sheet-offset, 0px));
     transition: transform 220ms ease, opacity 180ms ease;
-    touch-action: none;
-  }
-
-  .app-shell[data-pane-active="true"] .control-dock {
-    position: static;
-    left: auto;
-    right: auto;
-    bottom: auto;
-    max-height: none;
-    z-index: auto;
-    box-shadow: none;
     touch-action: auto;
-    transition: opacity 180ms ease;
   }
 
-  .sheet-reveal {
-    position: fixed;
-    left: 50%;
-    bottom: calc(82px + env(safe-area-inset-bottom));
-    z-index: 55;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: min(180px, calc(100vw - 96px));
-    height: 36px;
-    padding: 0;
-    border-radius: 18px 18px 0 0;
-    border: 1px solid rgba(22, 31, 24, 0.08);
-    background: rgba(255, 255, 255, 0.92);
-    box-shadow: 0 10px 24px rgba(32, 41, 34, 0.12);
-    backdrop-filter: blur(14px);
-    transform: translateX(-50%);
-    cursor: pointer;
-    touch-action: manipulation;
+  .app-shell[data-immersive="true"] .control-dock {
+    top: 0;
+    bottom: 0;
+    max-height: none;
+    padding: calc(34px + env(safe-area-inset-top)) 16px calc(104px + env(safe-area-inset-bottom));
+    border-radius: 0;
+    background:
+      radial-gradient(circle at top right, rgba(127, 214, 106, 0.12), transparent 28%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(246, 248, 243, 0.96)),
+      rgba(255, 255, 255, 0.96);
+    box-shadow: none;
+    backdrop-filter: blur(24px);
+    gap: 14px;
   }
 
-  .sheet-reveal[hidden] {
+  .app-shell[data-immersive="true"] .map-overlay.bottom,
+  .app-shell[data-immersive="true"] .scan-fab,
+  .app-shell[data-immersive="true"] .app-bar {
     display: none;
-  }
-
-  .sheet-reveal-pill {
-    width: 48px;
-    height: 5px;
-    border-radius: 999px;
-    background: rgba(22, 31, 24, 0.22);
-  }
-
-  .app-shell[data-sheet-open="false"] .control-dock {
-    transform: translateY(calc(100% + 40px));
-  }
-
-  .app-shell[data-sheet-mode="open"] .control-dock {
-    transform: translateY(var(--sheet-offset, 0px));
-  }
-
-  .app-shell[data-pane-active="true"][data-sheet-open="false"] .control-dock,
-  .app-shell[data-pane-active="true"][data-sheet-mode="open"] .control-dock {
-    opacity: 1;
-    transform: none !important;
-    pointer-events: auto;
   }
 
   .map-overlay.top {
@@ -1046,10 +988,204 @@ input {
 
   .flow-meter,
   .focus-banner,
-  .search-strip,
   .info-stack,
   .action-hint {
     display: none;
+  }
+
+  .app-shell[data-immersive="true"] .flow-meter,
+  .app-shell[data-immersive="true"] .focus-banner,
+  .app-shell[data-immersive="true"] .info-stack,
+  .app-shell[data-immersive="true"] .action-hint {
+    display: grid;
+  }
+
+  .app-shell[data-immersive="true"] .flow-meter,
+  .app-shell[data-immersive="true"] .focus-banner,
+  .app-shell[data-immersive="true"] .action-hint {
+    display: block;
+  }
+
+  .app-shell[data-immersive="true"] .selection-pill {
+    padding: 12px 14px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 10px 22px rgba(28, 41, 33, 0.06);
+  }
+
+  .app-shell[data-immersive="true"] .metric-grid {
+    gap: 8px;
+  }
+
+  .app-shell[data-immersive="true"] .metric-card {
+    padding: 14px 12px;
+    border-radius: 20px;
+    box-shadow: 0 10px 24px rgba(28, 41, 33, 0.05);
+  }
+
+  .app-shell[data-immersive="true"] .metric-card span {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .app-shell[data-immersive="true"] .metric-card strong {
+    font-size: 1.08rem;
+  }
+
+  .app-shell[data-immersive="true"] .search-strip {
+    display: none;
+  }
+
+  .app-shell[data-immersive="true"] .sheet-handle {
+    width: 42px;
+    height: 42px;
+    margin: 0;
+    background: rgba(255, 255, 255, 0.96);
+  }
+
+  .app-shell[data-immersive="true"] .panel-head {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .app-shell[data-immersive="true"] .panel-head .eyebrow {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .app-shell[data-immersive="true"] .panel-head h1 {
+    font-size: 1.26rem;
+    line-height: 1.02;
+    letter-spacing: -0.045em;
+  }
+
+  .app-shell[data-immersive="true"] .panel-head-actions {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+  }
+
+  .app-shell[data-immersive="true"] .ghost-btn,
+  .app-shell[data-immersive="true"] .status-chip {
+    min-height: 38px;
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .app-shell[data-immersive="true"] .flow-meter {
+    padding: 0;
+  }
+
+  .app-shell[data-immersive="true"] .flow-copy strong {
+    font-size: 1rem;
+  }
+
+  .app-shell[data-immersive="true"] .focus-banner {
+    padding: 14px 15px;
+    border-radius: 22px;
+    box-shadow: 0 10px 26px rgba(28, 41, 33, 0.06);
+  }
+
+  .app-shell[data-immersive="true"] .focus-banner strong {
+    font-size: 1.12rem;
+  }
+
+  .app-shell[data-immersive="true"] .info-stack {
+    gap: 8px;
+  }
+
+  .app-shell[data-immersive="true"] .info-card,
+  .app-shell[data-immersive="true"] .info-card.compact {
+    padding: 12px 13px;
+    border-radius: 18px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(246, 248, 244, 0.74)),
+      rgba(255, 255, 255, 0.78);
+  }
+
+  .app-shell[data-immersive="true"] .info-card strong {
+    font-size: 0.9rem;
+  }
+
+  .app-shell[data-immersive="true"] .info-card p {
+    font-size: 0.8rem;
+    line-height: 1.34;
+  }
+
+  .app-shell[data-immersive="true"] .action-row {
+    gap: 8px;
+    padding-top: 12px;
+    background: linear-gradient(180deg, rgba(248, 249, 244, 0), rgba(248, 249, 244, 0.96) 20%, rgba(248, 249, 244, 1) 100%);
+  }
+
+  .app-shell[data-immersive="true"] .action-hint {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .app-shell[data-immersive="true"] .primary-btn,
+  .app-shell[data-immersive="true"] .secondary-btn {
+    min-height: 54px;
+    padding: 12px 14px;
+    border-radius: 18px;
+  }
+
+  .app-shell[data-immersive="true"] .button-label {
+    font-size: 14px;
+  }
+
+  .app-shell[data-immersive="true"] .button-meta {
+    font-size: 10px;
+    opacity: 0.72;
+  }
+
+  .app-shell[data-screen="return-blocked"] .control-dock {
+    background:
+      radial-gradient(circle at top right, rgba(235, 110, 95, 0.16), transparent 26%),
+      linear-gradient(180deg, rgba(255, 251, 250, 0.94), rgba(249, 244, 242, 0.98)),
+      rgba(255, 255, 255, 0.96);
+  }
+
+  .app-shell[data-screen="return-blocked"] .primary-btn {
+    background: linear-gradient(135deg, #ffbf73 0%, #ffd9a7 100%);
+    box-shadow: 0 14px 28px rgba(255, 182, 72, 0.22);
+  }
+
+  .app-shell[data-screen="return-ok"] .control-dock,
+  .app-shell[data-screen="summary"] .control-dock {
+    background:
+      radial-gradient(circle at top right, rgba(127, 214, 106, 0.18), transparent 28%),
+      linear-gradient(180deg, rgba(250, 255, 249, 0.94), rgba(243, 249, 241, 0.98)),
+      rgba(255, 255, 255, 0.96);
+  }
+
+  .app-shell[data-screen="summary"] .primary-btn {
+    background: linear-gradient(135deg, #9ddf89 0%, #d2f0b5 100%);
+  }
+
+  .search-strip {
+    display: flex;
+    gap: 8px;
+  }
+
+  .search-field {
+    display: none;
+  }
+
+  .filter-chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+
+  .filter-chips::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-chip {
+    flex: 0 0 auto;
   }
 
   .selection-pill {
@@ -1200,7 +1336,4 @@ input {
     display: none;
   }
 
-  .sheet-reveal {
-    bottom: calc(82px + env(safe-area-inset-bottom));
-  }
 }

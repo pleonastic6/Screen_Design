@@ -54,6 +54,8 @@ const rideCheckpoint = [49.4414, 11.8577];
 const blockedReturnPoint = [49.44065, 11.85665];
 const returnOkPoint = [49.4427, 11.86035];
 
+const unlockFee = 1.0;
+const ratePerFiveMinutes = 0.1;
 const reserveDurationSeconds = 30 * 60;
 const reserveStartedAt = Date.now() - (2 * 60 + 26) * 1000;
 const rideStartedAt = Date.now() - (12 * 60 + 10) * 1000;
@@ -65,7 +67,6 @@ let activeFilter = "all";
 let searchTerm = "";
 let countdownTimer = null;
 let toastTimer = null;
-let sheetPane = null;
 
 const maps = {
   main: null
@@ -76,8 +77,7 @@ const backTargets = {
   detail: "home",
   reserve: "detail",
   pickup: "reserve",
-  unlock: "pickup",
-  ride: "unlock",
+  ride: "pickup",
   parked: "ride",
   "return-blocked": "ride",
   "return-ok": "return-blocked",
@@ -89,11 +89,10 @@ const flowSteps = [
   { id: "detail", label: "Scooter pruefen", count: 2 },
   { id: "reserve", label: "Reservierung aktiv", count: 3 },
   { id: "pickup", label: "Vor Ort bestaetigen", count: 4 },
-  { id: "unlock", label: "Unlock bestaetigen", count: 5 },
-  { id: "ride", label: "Fahrt aktiv", count: 6 },
-  { id: "return-blocked", label: "Rueckgabe pruefen", count: 7 },
-  { id: "return-ok", label: "Rueckgabe erlauben", count: 8 },
-  { id: "summary", label: "Abschluss", count: 8 }
+  { id: "ride", label: "Fahrt aktiv", count: 5 },
+  { id: "return-blocked", label: "Rueckgabe pruefen", count: 6 },
+  { id: "return-ok", label: "Rueckgabe erlauben", count: 7 },
+  { id: "summary", label: "Abschluss", count: 7 }
 ];
 
 const screenConfigs = {
@@ -139,7 +138,7 @@ const screenConfigs = {
     focus: ["Entscheidung", "Kurz pruefen, dann los", "Keine Tarifboxen, kein Extra-Layer.", "calm"],
     mapContext: "Scooter im Fokus",
     actionHint: "Hier passiert die eigentliche Entscheidung.",
-    primary: ["Jetzt entsperren", "unlock", "Unlock 1,00 EUR"],
+    primary: ["Jetzt entsperren", "ride", "Unlock 1,00 EUR"],
     secondary: null
   }),
   reserve: (scooter) => ({
@@ -183,48 +182,26 @@ const screenConfigs = {
     focus: ["Vor Ort", "Nur der richtige Scooter", "Nummer checken, dann entsperren.", "warning"],
     mapContext: "Mehrere Scooter vor Ort",
     actionHint: "Primaer erst druecken, wenn Nummer und Standort passen.",
-    primary: ["Diesen Scooter entsperren", "unlock", "Unlock 1,00 EUR"],
+    primary: ["Diesen Scooter entsperren", "ride", "Unlock 1,00 EUR"],
     secondary: ["Nicht der richtige", "home", "Zurueck zur Karte"]
-  }),
-  unlock: (scooter) => ({
-    kicker: "Unlock",
-    badge: "05 Unlock",
-    title: "Scooter entsperrt",
-    status: "Bereit",
-    statusClass: "available",
-    copy: "Unlock bestaetigt, jetzt los.",
-    metrics: [
-      ["Scooter", scooter.name],
-      ["Akku", scooter.battery],
-      ["Status", "Bereit"]
-    ],
-    info: [
-      ["Hinweis", "Fahre vorsichtig und beachte die Verkehrsregeln."],
-      ["Naechster Schritt", "Jetzt startet die aktive Fahrt."]
-    ],
-    focus: ["Freigabe", "Jetzt ist der Scooter offen", "Von hier aus direkt in die Fahrt.", "success"],
-    mapContext: "Fahrbereit",
-    actionHint: "Keine Extra-Optionen mehr. Jetzt faehrst du los.",
-    primary: ["Fahrt starten", "ride", "Ab jetzt laeuft die Zeit"],
-    secondary: null
   }),
   ride: (scooter) => ({
     kicker: "Ride Active",
-    badge: "06 Ride",
+    badge: "05 Ride",
     title: "Fahrt aktiv",
     status: "Aktiv",
     statusClass: "available",
-    copy: "Zeit und Kosten laufen live mit.",
+    copy: "Scooter entsperrt, Zeit und Kosten laufen live mit.",
     metrics: [
       ["Dauer", formatElapsedTime(rideStartedAt)],
-      ["Kosten", formatRideCost(rideStartedAt, 0.06)],
+      ["Kosten", formatRideCost(rideStartedAt, unlockFee)],
       ["Akku", scooter.rideBattery]
     ],
     info: [
       ["Bonus", "Rueckgabe am Hub bringt 30 Freiminuten."],
       ["Optionen", "Parken sichert kurz, Rueckgabe beendet final."]
     ],
-    focus: ["Ride live", "Weiterfahren oder beenden", "Die Rueckgabezone bleibt klar sichtbar.", "calm"],
+    focus: ["Ride live", "Unlock erledigt, Fahrt laeuft", "Die Rueckgabezone bleibt klar sichtbar.", "success"],
     mapContext: "Ride live",
     actionHint: "Primaer beendet die Fahrt, sekundaer haelt sie nur an.",
     primary: ["Fahrt beenden", "return-blocked", "Rueckgabezone pruefen"],
@@ -232,14 +209,14 @@ const screenConfigs = {
   }),
   parked: () => ({
     kicker: "Pause",
-    badge: "07 Pause",
+    badge: "06 Pause",
     title: "Scooter temporaer geparkt",
     status: "Pause",
     statusClass: "low",
     copy: "Pause ist nicht kostenlos.",
     metrics: [
       ["Zeit", formatElapsedTime(parkedStartedAt)],
-      ["Kosten", formatRideCost(parkedStartedAt, 0.11)],
+      ["Kosten", formatRideCost(parkedStartedAt, unlockFee)],
       ["Status", "Pause"]
     ],
     info: [
@@ -254,7 +231,7 @@ const screenConfigs = {
   }),
   "return-blocked": () => ({
     kicker: "Return Check",
-    badge: "08 Blocked",
+    badge: "07 Blocked",
     title: "Rueckgabe hier nicht moeglich",
     status: "Blockiert",
     statusClass: "low",
@@ -276,7 +253,7 @@ const screenConfigs = {
   }),
   "return-ok": () => ({
     kicker: "Return Check",
-    badge: "09 Return",
+    badge: "08 Return",
     title: "Rueckgabe moeglich",
     status: "Erlaubt",
     statusClass: "available",
@@ -298,14 +275,14 @@ const screenConfigs = {
   }),
   summary: () => ({
     kicker: "Abschluss",
-    badge: "10 Done",
+    badge: "09 Done",
     title: "Fahrt beendet",
     status: "Erledigt",
     statusClass: "available",
     copy: "Fahrt fertig, alles erledigt.",
     metrics: [
       ["Dauer", "18:25"],
-      ["Kosten", "0,40 EUR"],
+      ["Kosten", "1,37 EUR"],
       ["Bonus", "30 Min"]
     ],
     info: [
@@ -341,7 +318,7 @@ function formatElapsedTime(startedAt) {
 
 function formatRideCost(startedAt, unlockFee = 0) {
   const elapsedSeconds = Math.max(0, Math.floor((Date.now() - startedAt) / 1000));
-  const rideCost = unlockFee + elapsedSeconds * (0.1 / (5 * 60));
+  const rideCost = unlockFee + elapsedSeconds * (ratePerFiveMinutes / (5 * 60));
   return `${rideCost.toFixed(2).replace(".", ",")} EUR`;
 }
 
@@ -419,147 +396,34 @@ function getContextScooter(hasScooters) {
 
 function getFlowMeta(screen) {
   if (screen === "parked") {
-    return { count: 6, total: 8, label: "Fahrt pausiert", progress: 75 };
+    return { count: 5, total: 7, label: "Fahrt pausiert", progress: (5 / 7) * 100 };
   }
 
   const match = flowSteps.find((step) => step.id === screen) || flowSteps[0];
   return {
     count: match.count,
-    total: 8,
+    total: 7,
     label: match.label,
-    progress: (match.count / 8) * 100
+    progress: (match.count / 7) * 100
   };
-}
-
-function getMobileNavTarget(screen) {
-  return "home";
 }
 
 function isMobileViewport() {
   return window.matchMedia("(max-width: 980px)").matches;
 }
 
-function getDefaultSheetMode() {
-  return currentScreen === "home" ? "hidden" : "open";
+function isImmersiveRideScreen(screen = currentScreen) {
+  return ["ride", "parked", "return-blocked", "return-ok", "summary"].includes(screen);
 }
 
-function shouldUsePaneLibrary() {
-  return false;
-}
-
-function getPaneMode() {
-  if (!shouldUsePaneLibrary()) {
-    return getDefaultSheetMode();
-  }
-
-  if (!sheetPane) {
-    return getDefaultSheetMode();
-  }
-
-  if (sheetPane.isHidden?.() || sheetPane.currentBreak?.() === "bottom") {
-    return "hidden";
-  }
-
-  return "open";
-}
-
-function getMobileNavHeight() {
-  const scanFab = document.getElementById("scan-action");
-  return scanFab ? Math.ceil(scanFab.getBoundingClientRect().height) : 78;
-}
-
-function getPaneConfig() {
-  const viewportHeight = window.innerHeight;
-  const topHeight = Math.min(430, Math.max(320, Math.round(viewportHeight * 0.5)));
-  return {
-    parentElement: "body",
-    initialBreak: "top",
-    bottomClose: true,
-    fastSwipeClose: true,
-    lowerThanBottom: false,
-    clickBottomOpen: true,
-    showDraggable: false,
-    buttonDestroy: false,
-    backdrop: false,
-    simulateTouch: false,
-    dragBy: ["#sheet-handle", "#sheet-reveal"],
-    bottomOffset: Math.max(0, getMobileNavHeight() - 6),
-    breaks: {
-      top: { enabled: true, height: topHeight, bounce: true },
-      bottom: { enabled: true, height: 0 }
-    }
-  };
-}
-
-async function ensureSheetPane() {
-  if (!shouldUsePaneLibrary()) {
-    return null;
-  }
-
-  if (sheetPane) {
-    return sheetPane;
-  }
-
-  sheetPane = new window.CupertinoPane("#control-dock", getPaneConfig());
-  await sheetPane.present({ animate: false });
-  return sheetPane;
-}
-
-function destroySheetPane() {
-  if (!sheetPane) return;
-  try {
-    sheetPane.destroy({ animate: false });
-  } catch (error) {
-    // Ignore teardown issues during viewport switches.
-  }
-  sheetPane = null;
-}
-
-async function syncSheetPane(options = {}) {
-  const { forceOpen = false } = options;
+function syncDockState() {
   const shell = document.querySelector(".app-shell");
-
-  if (!shouldUsePaneLibrary()) {
-    if (shell) {
-      shell.dataset.paneActive = "false";
-      shell.dataset.sheetMode = getDefaultSheetMode();
-      shell.dataset.sheetOpen = String(currentScreen !== "home");
-    }
-    destroySheetPane();
-    return;
-  }
-
-  const pane = await ensureSheetPane();
-  if (!pane) return;
-
-  const config = getPaneConfig();
-  await pane.setBreakpoints(config.breaks, config.bottomOffset);
-
-  if (currentScreen === "home") {
-    if (!pane.isHidden?.()) {
-      await pane.hide();
-    }
-  } else if (forceOpen || pane.isHidden?.() || pane.currentBreak?.() === "bottom") {
-    await pane.moveToBreak("top");
-  }
-
-  if (shell) {
-    const mode = getPaneMode();
-    shell.dataset.paneActive = "true";
-    shell.dataset.sheetMode = mode;
-    shell.dataset.sheetOpen = String(mode !== "hidden");
-  }
-
-  window.setTimeout(() => maps.main?.invalidateSize(), 0);
-}
-
-function updateSheetReveal(mode) {
-  const reveal = document.getElementById("sheet-reveal");
-  if (!reveal) return;
-  const shouldShow = isMobileViewport() && currentScreen !== "home" && mode === "hidden";
-  reveal.hidden = !shouldShow;
-  reveal.dataset.mode = mode;
-  reveal.setAttribute("aria-hidden", String(!shouldShow));
+  if (!shell) return;
+  shell.dataset.screen = currentScreen;
+  shell.dataset.immersive = String(isImmersiveRideScreen());
+  shell.dataset.paneActive = "false";
+  shell.dataset.sheetMode = "open";
+  shell.dataset.sheetOpen = "true";
 }
 
 function markerIcon(type, extraClass = "") {
@@ -661,10 +525,6 @@ function getScreenFocusTarget() {
     return { point: scooters[selectedScooter].coords, zoom: 17 };
   }
 
-  if (currentScreen === "unlock") {
-    return { point: scooters[selectedScooter].coords, zoom: 17 };
-  }
-
   return null;
 }
 
@@ -749,18 +609,6 @@ function renderMap() {
     return;
   }
 
-  if (currentScreen === "unlock") {
-    const unlockMarker = L.marker(scooter.coords, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) });
-    unlockMarker.on("click", () => {
-      reopenCurrentSheet();
-    });
-    unlockMarker.addTo(maps.main);
-    L.circle(scooter.coords, { radius: 45, ...zoneStyle("success") }).addTo(maps.main);
-    fitMapToPoints([scooter.coords], 17);
-    focusPointInUpperThird(scooter.coords, 17);
-    return;
-  }
-
   if (currentScreen === "ride" || currentScreen === "parked") {
     const rideMarker = L.marker(rideCheckpoint, { icon: markerIcon("scooter", `active ${scooter.statusClass}`) });
     rideMarker.on("click", () => {
@@ -810,34 +658,13 @@ function renderPanel() {
   ensureSelectedScooterVisible();
 
   const scooter = getContextScooter(hasScooters);
-  const isCleanMapState = currentScreen === "home";
-  const shell = document.querySelector(".app-shell");
-  if (shell) {
-    if (isMobileViewport()) {
-      const mode = getPaneMode();
-      shell.dataset.paneActive = String(typeof window.CupertinoPane === "function");
-      shell.dataset.sheetMode = mode;
-      shell.dataset.sheetOpen = String(mode !== "hidden");
-      updateSheetReveal(mode);
-    } else {
-      shell.dataset.paneActive = "false";
-      shell.dataset.sheetMode = !isCleanMapState ? "open" : "hidden";
-      shell.dataset.sheetOpen = String(!isCleanMapState);
-      updateSheetReveal("hidden");
-    }
+  if (!scooter && currentScreen !== "home") {
+    currentScreen = "home";
   }
 
-  if (!scooter && !isCleanMapState) {
-    currentScreen = "home";
-    if (shell) {
-      shell.dataset.sheetMode = "hidden";
-      shell.dataset.sheetOpen = "false";
-    }
-    updateSheetReveal("hidden");
-  }
+  syncDockState();
 
   const config = screenConfigs[currentScreen](scooter || scooters["A-07"]);
-  bindText("screen-badge", config.badge);
   bindText("panel-kicker", config.kicker);
   bindText("panel-title", config.title);
   bindText("panel-copy", config.copy);
@@ -876,10 +703,14 @@ function renderPanel() {
   }
 
   const backAction = document.getElementById("back-action");
+  const sheetHandle = document.getElementById("sheet-handle");
   if (backAction) {
     const target = backTargets[currentScreen];
     backAction.hidden = !target;
     if (target) backAction.dataset.go = target;
+  }
+  if (sheetHandle) {
+    sheetHandle.hidden = !backTargets[currentScreen];
   }
 
   const primaryAction = document.getElementById("primary-action");
@@ -937,12 +768,10 @@ function renderAll() {
       focusPointInUpperThird(focusTarget.point, focusTarget.zoom);
     }
   }, 80);
-  syncSheetPane({ forceOpen: false });
 }
 
 function reopenCurrentSheet() {
   renderAll();
-  syncSheetPane({ forceOpen: true });
 }
 
 function goBack() {
@@ -957,7 +786,6 @@ function showScreen(nextScreen) {
   }
   currentScreen = nextScreen;
   renderAll();
-  syncSheetPane({ forceOpen: nextScreen !== "home" });
 }
 
 function startCountdown() {
@@ -1040,23 +868,7 @@ document.getElementById("sheet-handle")?.addEventListener("click", async () => {
   goBack();
 });
 
-document.getElementById("sheet-reveal")?.addEventListener("click", async () => {
-  if (!sheetPane || currentScreen === "home") return;
-  await sheetPane.moveToBreak("top");
-  syncSheetPane({ forceOpen: false });
-});
-
-document.getElementById("sheet-reveal")?.addEventListener("pointerdown", async (event) => {
-  if (!sheetPane || currentScreen === "home") return;
-  event.preventDefault();
-  if (sheetPane.isHidden?.() || sheetPane.currentBreak?.() === "bottom") {
-    await sheetPane.moveToBreak("top");
-    syncSheetPane({ forceOpen: false });
-  }
-});
-
 window.addEventListener("resize", () => {
-  syncSheetPane({ forceOpen: false });
   maps.main?.invalidateSize();
 });
 
