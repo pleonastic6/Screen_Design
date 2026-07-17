@@ -93,8 +93,8 @@ body {
   bottom: 0;
   display: grid;
   gap: 12px;
-  height: 28dvh;
-  max-height: 28dvh;
+  height: 30dvh;
+  max-height: 30dvh;
   padding: 16px 18px calc(16px + env(safe-area-inset-bottom, 0px));
   background: rgba(255, 255, 255, 0.97);
   border-top-left-radius: 26px;
@@ -325,8 +325,8 @@ body {
 @media (max-height: 820px) {
   .vehicle-card {
     gap: 10px;
-    height: 27dvh;
-    max-height: 27dvh;
+    height: 29dvh;
+    max-height: 29dvh;
     padding-top: 14px;
   }
 
