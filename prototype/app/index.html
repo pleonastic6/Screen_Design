@@ -18,17 +18,44 @@
 <body>
   <main class="map-screen">
     <div class="map-frame" id="main-map" aria-label="Karte mit Scootern und Ladehubs"></div>
-
-    <div class="map-topbar">
-      <div class="map-chip">Amberg</div>
-      <div class="map-chip map-chip-strong">3 Scooter in der Naehe</div>
-    </div>
-
-    <div class="map-legend">
-      <span class="legend-item"><i class="legend-dot scooter"></i>Scooter</span>
-      <span class="legend-item"><i class="legend-dot hub"></i>Ladehub</span>
-      <span class="legend-item"><i class="legend-dot user"></i>Standort</span>
-    </div>
+    <aside class="vehicle-card" id="vehicle-card" aria-hidden="true">
+      <button class="vehicle-card__close" id="vehicle-card-close" type="button" aria-label="Infocard schliessen">
+        <span aria-hidden="true">×</span>
+      </button>
+      <div class="vehicle-card__body">
+        <div class="vehicle-card__content">
+          <p class="vehicle-card__eyebrow" id="vehicle-card-type">E-Scooter in der Naehe</p>
+          <h2 class="vehicle-card__title" id="vehicle-card-name">E-Scooter XXX-JWM</h2>
+          <div class="vehicle-card__meta">
+            <div class="vehicle-card__meta-item">
+              <span class="vehicle-card__meta-icon vehicle-card__meta-icon--battery" aria-hidden="true"></span>
+              <span id="vehicle-card-range">54 km Reichweite</span>
+            </div>
+            <div class="vehicle-card__meta-item vehicle-card__meta-item--price">
+              <span class="vehicle-card__meta-icon vehicle-card__meta-icon--price" aria-hidden="true"></span>
+              <span id="vehicle-card-price">1,00 EUR entsperren, 0,19 EUR/Min</span>
+            </div>
+          </div>
+        </div>
+        <div class="vehicle-card__visual" aria-hidden="true">
+          <div class="vehicle-card__vehicle">
+            <span class="vehicle-card__wheel vehicle-card__wheel--front"></span>
+            <span class="vehicle-card__wheel vehicle-card__wheel--rear"></span>
+            <span class="vehicle-card__deck"></span>
+            <span class="vehicle-card__stem"></span>
+            <span class="vehicle-card__handle"></span>
+          </div>
+        </div>
+      </div>
+      <div class="vehicle-card__actions">
+        <button class="vehicle-card__pill" type="button">Klingeln</button>
+        <button class="vehicle-card__pill" type="button">Problem melden</button>
+      </div>
+      <button class="vehicle-card__reserve" type="button">
+        <span class="vehicle-card__reserve-title">Reservieren</span>
+        <span class="vehicle-card__reserve-subtitle">Kostenlos fuer 10 Minuten</span>
+      </button>
+    </aside>
   </main>
 
   <script

@@ -1,7 +1,25 @@
 const scooters = [
-  { name: "A-07", coords: [49.44375, 11.8612] },
-  { name: "A-12", coords: [49.44195, 11.85865] },
-  { name: "A-19", coords: [49.44495, 11.86385] }
+  {
+    name: "E-Scooter AM-207",
+    type: "E-Scooter am Marktplatz",
+    range: "41 km Reichweite",
+    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    coords: [49.44375, 11.8612]
+  },
+  {
+    name: "E-Scooter AM-184",
+    type: "E-Scooter am Bahnhof",
+    range: "32 km Reichweite",
+    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    coords: [49.44195, 11.85865]
+  },
+  {
+    name: "E-Scooter AM-311",
+    type: "E-Scooter nahe OTH",
+    range: "54 km Reichweite",
+    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    coords: [49.44495, 11.86385]
+  }
 ];
 
 const hubs = [
@@ -11,6 +29,16 @@ const hubs = [
 ];
 
 const userLocation = [49.4429, 11.86155];
+const mapCenter = [49.4449, 11.8554];
+const defaultZoom = 15;
+const vehicleCard = document.getElementById("vehicle-card");
+const vehicleCardClose = document.getElementById("vehicle-card-close");
+const vehicleCardType = document.getElementById("vehicle-card-type");
+const vehicleCardName = document.getElementById("vehicle-card-name");
+const vehicleCardRange = document.getElementById("vehicle-card-range");
+const vehicleCardPrice = document.getElementById("vehicle-card-price");
+
+let activeScooterMarker = null;
 
 function markerIcon(type) {
   return L.divIcon({
@@ -24,7 +52,11 @@ function markerIcon(type) {
 const map = L.map("main-map", {
   zoomControl: false,
   attributionControl: false,
-  scrollWheelZoom: false
+  scrollWheelZoom: false,
+  dragging: true,
+  doubleClickZoom: false,
+  boxZoom: false,
+  keyboard: false
 });
 
 L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png", {
@@ -32,16 +64,64 @@ L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png
   maxZoom: 20
 }).addTo(map);
 
+map.setView(mapCenter, defaultZoom);
+
 L.marker(userLocation, { icon: markerIcon("user") }).addTo(map);
 
 scooters.forEach((scooter) => {
-  L.marker(scooter.coords, { icon: markerIcon("scooter") }).addTo(map);
+  const marker = L.marker(scooter.coords, { icon: markerIcon("scooter") }).addTo(map);
+  marker.on("click", () => {
+    openVehicleCard(scooter, marker);
+  });
 });
 
 hubs.forEach((hub) => {
   L.marker(hub.coords, { icon: markerIcon("hub") }).addTo(map);
 });
 
-map.fitBounds(L.latLngBounds([userLocation, ...scooters.map((item) => item.coords), ...hubs.map((item) => item.coords)]), {
-  padding: [48, 48]
-});
+vehicleCardClose.addEventListener("click", closeVehicleCard);
+map.on("click", closeVehicleCard);
+
+function openVehicleCard(scooter, marker) {
+  vehicleCardType.textContent = scooter.type;
+  vehicleCardName.textContent = scooter.name;
+  vehicleCardRange.textContent = scooter.range;
+  vehicleCardPrice.textContent = scooter.price;
+  vehicleCard.dataset.open = "true";
+  vehicleCard.setAttribute("aria-hidden", "false");
+  setActiveScooterMarker(marker);
+  keepMarkerVisible(marker);
+}
+
+function closeVehicleCard() {
+  vehicleCard.dataset.open = "false";
+  vehicleCard.setAttribute("aria-hidden", "true");
+  clearActiveScooterMarker();
+}
+
+function setActiveScooterMarker(marker) {
+  clearActiveScooterMarker();
+  activeScooterMarker = marker;
+  const markerNode = marker.getElement()?.querySelector(".map-marker.scooter");
+  if (markerNode) {
+    markerNode.classList.add("is-active");
+  }
+}
+
+function clearActiveScooterMarker() {
+  const markerNode = activeScooterMarker?.getElement()?.querySelector(".map-marker.scooter");
+  if (markerNode) {
+    markerNode.classList.remove("is-active");
+  }
+  activeScooterMarker = null;
+}
+
+function keepMarkerVisible(marker) {
+  const cardHeight = vehicleCard.getBoundingClientRect().height;
+  const mapHeight = map.getSize().y;
+  const markerPoint = map.latLngToContainerPoint(marker.getLatLng());
+  const maxVisibleY = mapHeight - cardHeight - 36;
+  if (markerPoint.y > maxVisibleY) {
+    map.panBy([0, markerPoint.y - maxVisibleY], { animate: true, duration: 0.25 });
+  }
+}
