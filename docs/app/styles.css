@@ -92,10 +92,10 @@ body {
   right: 0;
   bottom: 0;
   display: grid;
-  gap: 10px;
-  height: 25dvh;
-  max-height: 25dvh;
-  padding: 14px 16px calc(14px + env(safe-area-inset-bottom, 0px));
+  gap: 12px;
+  height: 28dvh;
+  max-height: 28dvh;
+  padding: 16px 18px calc(16px + env(safe-area-inset-bottom, 0px));
   background: rgba(255, 255, 255, 0.97);
   border-top-left-radius: 26px;
   border-top-right-radius: 26px;
@@ -112,12 +112,12 @@ body {
 
 .vehicle-card__close {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 14px;
+  right: 14px;
   display: grid;
   place-items: center;
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border: 0;
   border-radius: 999px;
   background: #f4f6f3;
@@ -128,15 +128,15 @@ body {
 
 .vehicle-card__body {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 96px;
-  gap: 10px;
+  grid-template-columns: minmax(0, 1fr) 108px;
+  gap: 12px;
   align-items: end;
-  padding-right: 44px;
+  padding-right: 48px;
 }
 
 .vehicle-card__eyebrow {
-  margin: 0 0 4px;
-  font-size: 10px;
+  margin: 0 0 5px;
+  font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -145,21 +145,21 @@ body {
 
 .vehicle-card__title {
   margin: 0;
-  font-size: clamp(1.15rem, 2.5vw, 1.45rem);
+  font-size: clamp(1.24rem, 2.8vw, 1.56rem);
   line-height: 1.06;
 }
 
 .vehicle-card__meta {
   display: grid;
-  gap: 6px;
-  margin-top: 10px;
+  gap: 8px;
+  margin-top: 12px;
 }
 
 .vehicle-card__meta-item {
   display: flex;
   gap: 10px;
   align-items: flex-start;
-  font-size: clamp(0.88rem, 1.6vw, 1rem);
+  font-size: clamp(0.94rem, 1.8vw, 1.04rem);
   color: #465248;
 }
 
@@ -170,8 +170,8 @@ body {
 .vehicle-card__meta-icon {
   flex: 0 0 auto;
   position: relative;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   margin-top: 1px;
 }
 
@@ -223,13 +223,13 @@ body {
 .vehicle-card__visual {
   display: grid;
   place-items: end center;
-  min-height: 84px;
+  min-height: 98px;
 }
 
 .vehicle-card__vehicle {
   position: relative;
-  width: 84px;
-  height: 90px;
+  width: 94px;
+  height: 100px;
 }
 
 .vehicle-card__wheel {
@@ -283,20 +283,20 @@ body {
 
 .vehicle-card__actions {
   display: flex;
-  gap: 10px;
+  gap: 12px;
 }
 
 .vehicle-card__pill {
   flex: 1;
   min-width: 0;
-  padding: 10px 14px;
+  padding: 11px 15px;
   border: 0;
   border-radius: 999px;
   background: #f1f4f0;
   color: #19241b;
   font: inherit;
   font-weight: 600;
-  font-size: 0.92rem;
+  font-size: 0.95rem;
 }
 
 .vehicle-card__reserve {
@@ -304,7 +304,7 @@ body {
   place-items: center;
   gap: 2px;
   width: 100%;
-  padding: 12px 20px;
+  padding: 14px 20px;
   border: 0;
   border-radius: 24px;
   background: #94ed8f;
@@ -313,51 +313,53 @@ body {
 }
 
 .vehicle-card__reserve-title {
-  font-size: 1rem;
+  font-size: 1.04rem;
   font-weight: 700;
 }
 
 .vehicle-card__reserve-subtitle {
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   font-weight: 500;
 }
 
 @media (max-height: 820px) {
   .vehicle-card {
-    gap: 8px;
-    padding-top: 12px;
+    gap: 10px;
+    height: 27dvh;
+    max-height: 27dvh;
+    padding-top: 14px;
   }
 
   .vehicle-card__body {
-    grid-template-columns: minmax(0, 1fr) 78px;
-    gap: 8px;
+    grid-template-columns: minmax(0, 1fr) 88px;
+    gap: 10px;
   }
 
   .vehicle-card__title {
-    font-size: 1.05rem;
+    font-size: 1.14rem;
   }
 
   .vehicle-card__meta {
-    gap: 4px;
-    margin-top: 8px;
+    gap: 6px;
+    margin-top: 10px;
   }
 
   .vehicle-card__meta-item {
-    font-size: 0.82rem;
+    font-size: 0.88rem;
   }
 
   .vehicle-card__visual {
-    min-height: 68px;
+    min-height: 76px;
   }
 
   .vehicle-card__vehicle {
-    width: 70px;
-    height: 74px;
+    width: 78px;
+    height: 82px;
   }
 
   .vehicle-card__pill,
   .vehicle-card__reserve {
-    padding-top: 10px;
+    padding-top: 11px;
     padding-bottom: 10px;
   }
 }
