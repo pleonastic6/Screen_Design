@@ -51,11 +51,54 @@
         <button class="vehicle-card__pill" type="button">Klingeln</button>
         <button class="vehicle-card__pill" type="button">Problem melden</button>
       </div>
-      <button class="vehicle-card__reserve" type="button">
-        <span class="vehicle-card__reserve-title">Reservieren</span>
+      <button class="vehicle-card__reserve" id="vehicle-card-reserve" type="button">
+        <span class="vehicle-card__reserve-title">Buchen</span>
         <span class="vehicle-card__reserve-subtitle">Kostenlos fuer 10 Minuten</span>
       </button>
     </aside>
+    <section class="booking-screen" id="booking-screen" aria-hidden="true">
+      <div class="booking-screen__map-fade" aria-hidden="true"></div>
+      <div class="booking-sheet">
+        <button class="booking-sheet__back" id="booking-screen-back" type="button" aria-label="Zurueck zur Kartenansicht">
+          <span aria-hidden="true">‹</span>
+        </button>
+        <p class="booking-sheet__eyebrow">Scooter gebucht</p>
+        <h2 class="booking-sheet__title" id="booking-screen-name">E-Scooter AM-311</h2>
+        <div class="booking-sheet__hero">
+          <div class="booking-sheet__hero-copy">
+            <p class="booking-sheet__label">Fuer dich reserviert</p>
+            <p class="booking-sheet__timer">10:00 Min</p>
+            <p class="booking-sheet__hint">Du hast genug Zeit, um entspannt hinzugehen.</p>
+          </div>
+          <div class="booking-sheet__badge">Gratis</div>
+        </div>
+        <div class="booking-sheet__route">
+          <div class="booking-sheet__route-icon" aria-hidden="true"></div>
+          <div class="booking-sheet__route-copy">
+            <p class="booking-sheet__route-title">Etwa 4 Minuten zu Fuss</p>
+            <p class="booking-sheet__route-subtitle">Der Scooter wartet am angezeigten Marker.</p>
+          </div>
+        </div>
+        <div class="booking-sheet__info">
+          <div class="booking-sheet__row">
+            <span class="booking-sheet__row-label">Standort</span>
+            <span class="booking-sheet__row-value" id="booking-screen-type">Nahe OTH Amberg</span>
+          </div>
+          <div class="booking-sheet__row">
+            <span class="booking-sheet__row-label">Reichweite</span>
+            <span class="booking-sheet__row-value" id="booking-screen-range">54 km</span>
+          </div>
+          <div class="booking-sheet__row">
+            <span class="booking-sheet__row-label">Tarif</span>
+            <span class="booking-sheet__row-value" id="booking-screen-price">1,00 EUR entsperren, 0,19 EUR/Min</span>
+          </div>
+        </div>
+        <div class="booking-sheet__actions">
+          <button class="booking-sheet__primary" type="button">Route starten</button>
+          <button class="booking-sheet__secondary" id="booking-screen-cancel" type="button">Buchung aufheben</button>
+        </div>
+      </div>
+    </section>
   </main>
 
   <script
