@@ -5,9 +5,9 @@ const scooters = [
 ];
 
 const hubs = [
-  { name: "Campus OTH", coords: [49.43855, 11.86215] },
-  { name: "Marktplatz", coords: [49.44275, 11.86015] },
-  { name: "Bahnhof", coords: [49.44615, 11.86655] }
+  { name: "Campus OTH", coords: [49.4448780, 11.8473735] },
+  { name: "Marktplatz", coords: [49.4452441, 11.8580549] },
+  { name: "Bahnhof", coords: [49.4480826, 11.8611094] }
 ];
 
 const userLocation = [49.4429, 11.86155];
