@@ -742,6 +742,10 @@ input {
   letter-spacing: -0.02em;
 }
 
+.sheet-reveal {
+  display: none;
+}
+
 .primary-btn,
 .secondary-btn {
   min-height: 54px;
@@ -936,6 +940,12 @@ input {
     touch-action: auto;
   }
 
+  .app-shell[data-sheet-open="false"]:not([data-immersive="true"]) .control-dock {
+    transform: translateY(calc(100% + 32px));
+    opacity: 0;
+    pointer-events: none;
+  }
+
   .app-shell[data-immersive="true"] .control-dock {
     top: 0;
     bottom: 0;
@@ -969,6 +979,35 @@ input {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .sheet-reveal {
+    display: inline-flex;
+    position: fixed;
+    left: 50%;
+    bottom: calc(84px + env(safe-area-inset-bottom));
+    z-index: 48;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 10px 24px rgba(32, 41, 34, 0.12);
+    transform: translateX(-50%);
+  }
+
+  .sheet-reveal[hidden] {
+    display: none;
+  }
+
+  .sheet-reveal-pill {
+    width: 26px;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(22, 31, 24, 0.25);
   }
 
   .floating-card {

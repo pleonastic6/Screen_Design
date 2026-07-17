@@ -65,6 +65,7 @@ let currentScreen = "home";
 let selectedScooter = null;
 let activeFilter = "all";
 let searchTerm = "";
+let panelMode = "open";
 let countdownTimer = null;
 let toastTimer = null;
 
@@ -416,14 +417,39 @@ function isImmersiveRideScreen(screen = currentScreen) {
   return ["ride", "parked", "return-blocked", "return-ok", "summary"].includes(screen);
 }
 
+function canTogglePanel() {
+  return isMobileViewport() && !isImmersiveRideScreen();
+}
+
+function getDefaultPanelMode(screen = currentScreen) {
+  return screen === "home" ? "hidden" : "open";
+}
+
+function ensurePanelMode() {
+  if (isImmersiveRideScreen()) {
+    panelMode = "open";
+    return;
+  }
+
+  if (!isMobileViewport()) {
+    panelMode = "open";
+    return;
+  }
+
+  if (panelMode !== "open" && panelMode !== "hidden") {
+    panelMode = getDefaultPanelMode();
+  }
+}
+
 function syncDockState() {
   const shell = document.querySelector(".app-shell");
   if (!shell) return;
+  ensurePanelMode();
   shell.dataset.screen = currentScreen;
   shell.dataset.immersive = String(isImmersiveRideScreen());
   shell.dataset.paneActive = "false";
-  shell.dataset.sheetMode = "open";
-  shell.dataset.sheetOpen = "true";
+  shell.dataset.sheetMode = panelMode;
+  shell.dataset.sheetOpen = String(panelMode === "open");
 }
 
 function markerIcon(type, extraClass = "") {
@@ -704,13 +730,25 @@ function renderPanel() {
 
   const backAction = document.getElementById("back-action");
   const sheetHandle = document.getElementById("sheet-handle");
+  const sheetReveal = document.getElementById("sheet-reveal");
   if (backAction) {
     const target = backTargets[currentScreen];
     backAction.hidden = !target;
     if (target) backAction.dataset.go = target;
   }
   if (sheetHandle) {
-    sheetHandle.hidden = !backTargets[currentScreen];
+    const toggleMode = canTogglePanel();
+    const target = backTargets[currentScreen];
+    sheetHandle.hidden = !(toggleMode || target);
+    sheetHandle.dataset.role = toggleMode ? "toggle" : "back";
+    sheetHandle.setAttribute("aria-label", toggleMode ? "Info-Bereich ein- oder ausblenden" : "Zum vorherigen Schritt zurueck");
+    const icon = sheetHandle.querySelector(".sheet-handle-icon");
+    if (icon) {
+      icon.textContent = toggleMode ? (panelMode === "open" ? "⌄" : "⌃") : "‹";
+    }
+  }
+  if (sheetReveal) {
+    sheetReveal.hidden = !(canTogglePanel() && panelMode === "hidden");
   }
 
   const primaryAction = document.getElementById("primary-action");
@@ -754,7 +792,7 @@ function renderPanel() {
 function renderMobileNav() {
   const scanAction = document.getElementById("scan-action");
   if (!scanAction) return;
-  scanAction.hidden = !isMobileViewport();
+  scanAction.hidden = !isMobileViewport() || panelMode === "hidden";
 }
 
 function renderAll() {
@@ -771,6 +809,9 @@ function renderAll() {
 }
 
 function reopenCurrentSheet() {
+  if (canTogglePanel()) {
+    panelMode = "open";
+  }
   renderAll();
 }
 
@@ -785,6 +826,19 @@ function showScreen(nextScreen) {
     selectedScooter = null;
   }
   currentScreen = nextScreen;
+  panelMode = getDefaultPanelMode(nextScreen);
+  if (nextScreen !== "home" && !isImmersiveRideScreen(nextScreen)) {
+    panelMode = "open";
+  }
+  renderAll();
+}
+
+function togglePanel() {
+  if (!canTogglePanel()) {
+    goBack();
+    return;
+  }
+  panelMode = panelMode === "open" ? "hidden" : "open";
   renderAll();
 }
 
@@ -865,7 +919,13 @@ document.getElementById("scan-action")?.addEventListener("click", () => {
 });
 
 document.getElementById("sheet-handle")?.addEventListener("click", async () => {
-  goBack();
+  togglePanel();
+});
+
+document.getElementById("sheet-reveal")?.addEventListener("click", async () => {
+  if (!canTogglePanel()) return;
+  panelMode = "open";
+  renderAll();
 });
 
 window.addEventListener("resize", () => {
