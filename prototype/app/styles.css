@@ -672,7 +672,7 @@ input {
 
 .info-card strong {
   display: block;
-  margin-bottom: 2px;
+  margin-bottom: 1px;
 }
 
 .info-card[data-info="secondary"] {
@@ -680,7 +680,7 @@ input {
 }
 
 .info-card.compact p {
-  font-size: 0.9rem;
+  font-size: 0.86rem;
 }
 
 .action-row {
@@ -1082,35 +1082,46 @@ input {
   }
 
   .app-shell[data-immersive="true"] .focus-banner {
-    padding: 14px 15px;
-    border-radius: 22px;
-    box-shadow: 0 10px 26px rgba(28, 41, 33, 0.06);
+    padding: 11px 13px;
+    border-radius: 18px;
+    box-shadow: 0 8px 18px rgba(28, 41, 33, 0.05);
   }
 
   .app-shell[data-immersive="true"] .focus-banner strong {
-    font-size: 1.12rem;
+    font-size: 1rem;
+    margin: 3px 0 2px;
+  }
+
+  .app-shell[data-immersive="true"] .focus-banner .overline {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+  }
+
+  .app-shell[data-immersive="true"] .focus-banner p:last-child {
+    font-size: 0.78rem;
+    line-height: 1.28;
   }
 
   .app-shell[data-immersive="true"] .info-stack {
-    gap: 8px;
+    gap: 6px;
   }
 
   .app-shell[data-immersive="true"] .info-card,
   .app-shell[data-immersive="true"] .info-card.compact {
-    padding: 12px 13px;
-    border-radius: 18px;
+    padding: 10px 12px;
+    border-radius: 16px;
     background:
       linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(246, 248, 244, 0.74)),
       rgba(255, 255, 255, 0.78);
   }
 
   .app-shell[data-immersive="true"] .info-card strong {
-    font-size: 0.9rem;
+    font-size: 0.86rem;
   }
 
   .app-shell[data-immersive="true"] .info-card p {
-    font-size: 0.8rem;
-    line-height: 1.34;
+    font-size: 0.76rem;
+    line-height: 1.28;
   }
 
   .app-shell[data-immersive="true"] .action-row {
