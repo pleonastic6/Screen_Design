@@ -92,10 +92,10 @@ body {
   right: 0;
   bottom: 0;
   display: grid;
-  gap: 12px;
-  height: 30dvh;
-  max-height: 30dvh;
-  padding: 16px 18px calc(16px + env(safe-area-inset-bottom, 0px));
+  gap: 10px;
+  height: 31dvh;
+  max-height: 31dvh;
+  padding: 16px 18px calc(12px + env(safe-area-inset-bottom, 0px));
   background: rgba(255, 255, 255, 0.97);
   border-top-left-radius: 26px;
   border-top-right-radius: 26px;
@@ -283,13 +283,13 @@ body {
 
 .vehicle-card__actions {
   display: flex;
-  gap: 12px;
+  gap: 10px;
 }
 
 .vehicle-card__pill {
   flex: 1;
   min-width: 0;
-  padding: 11px 15px;
+  padding: 10px 14px;
   border: 0;
   border-radius: 999px;
   background: #f1f4f0;
@@ -300,11 +300,12 @@ body {
 }
 
 .vehicle-card__reserve {
-  display: grid;
-  place-items: center;
-  gap: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  padding: 14px 20px;
+  min-height: 52px;
+  padding: 12px 20px;
   border: 0;
   border-radius: 24px;
   background: #94ed8f;
@@ -315,11 +316,6 @@ body {
 .vehicle-card__reserve-title {
   font-size: 1.04rem;
   font-weight: 700;
-}
-
-.vehicle-card__reserve-subtitle {
-  font-size: 0.85rem;
-  font-weight: 500;
 }
 
 .booking-screen {
@@ -557,8 +553,8 @@ body {
 @media (max-height: 820px) {
   .vehicle-card {
     gap: 10px;
-    height: 29dvh;
-    max-height: 29dvh;
+    height: 30dvh;
+    max-height: 30dvh;
     padding-top: 14px;
   }
 
@@ -591,7 +587,7 @@ body {
 
   .vehicle-card__pill,
   .vehicle-card__reserve {
-    padding-top: 11px;
+    padding-top: 10px;
     padding-bottom: 10px;
   }
 
