@@ -421,6 +421,10 @@ function canTogglePanel() {
   return isMobileViewport() && !isImmersiveRideScreen();
 }
 
+function shouldCollapseWithBackAction() {
+  return canTogglePanel() && currentScreen !== "home";
+}
+
 function getDefaultPanelMode(screen = currentScreen) {
   return screen === "home" ? "hidden" : "open";
 }
@@ -733,8 +737,15 @@ function renderPanel() {
   const sheetReveal = document.getElementById("sheet-reveal");
   if (backAction) {
     const target = backTargets[currentScreen];
-    backAction.hidden = !target;
-    if (target) backAction.dataset.go = target;
+    const collapseMode = shouldCollapseWithBackAction();
+    backAction.hidden = !(target || collapseMode);
+    backAction.textContent = collapseMode ? "Einklappen" : "Zurueck";
+    backAction.dataset.role = collapseMode ? "collapse" : "back";
+    if (collapseMode) {
+      delete backAction.dataset.go;
+    } else if (target) {
+      backAction.dataset.go = target;
+    }
   }
   if (sheetHandle) {
     const toggleMode = canTogglePanel();
@@ -842,6 +853,15 @@ function togglePanel() {
   renderAll();
 }
 
+function collapsePanel() {
+  if (!canTogglePanel()) {
+    goBack();
+    return;
+  }
+  panelMode = "hidden";
+  renderAll();
+}
+
 function startCountdown() {
   if (countdownTimer) window.clearInterval(countdownTimer);
   const tick = () => {
@@ -926,6 +946,14 @@ document.getElementById("sheet-reveal")?.addEventListener("click", async () => {
   if (!canTogglePanel()) return;
   panelMode = "open";
   renderAll();
+});
+
+document.getElementById("back-action")?.addEventListener("click", async () => {
+  if (shouldCollapseWithBackAction()) {
+    collapsePanel();
+    return;
+  }
+  goBack();
 });
 
 window.addEventListener("resize", () => {
