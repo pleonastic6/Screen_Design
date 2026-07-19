@@ -93,11 +93,39 @@
           </div>
         </div>
         <div class="booking-sheet__actions">
-          <button class="booking-sheet__primary" type="button">Route starten</button>
+          <button class="booking-sheet__primary" id="booking-screen-unlock" type="button">Scooter entsperren</button>
           <button class="booking-sheet__secondary" id="booking-screen-cancel" type="button">Buchung aufheben</button>
         </div>
       </div>
     </section>
+    <section class="unlock-screen" id="unlock-screen" aria-hidden="true">
+      <div class="unlock-screen__glow" aria-hidden="true"></div>
+      <div class="unlock-card">
+        <div class="unlock-card__icon" aria-hidden="true">
+          <span class="unlock-card__ring"></span>
+          <span class="unlock-card__check"></span>
+        </div>
+        <p class="unlock-card__eyebrow">Unlock</p>
+        <h2 class="unlock-card__title" id="unlock-screen-title">Scooter wird entsperrt</h2>
+        <p class="unlock-card__hint" id="unlock-screen-hint">Wir verbinden uns mit dem Schloss. Das dauert nur einen Moment.</p>
+        <div class="unlock-card__steps" aria-hidden="true">
+          <span class="unlock-card__dot"></span>
+          <span class="unlock-card__dot"></span>
+          <span class="unlock-card__dot"></span>
+        </div>
+        <button class="unlock-card__action" id="unlock-screen-action" type="button" disabled>Fahrt starten</button>
+      </div>
+    </section>
+    <aside class="ride-status" id="ride-status" aria-hidden="true">
+      <div class="ride-status__top">
+        <span class="ride-status__live">Fahrt aktiv</span>
+        <span class="ride-status__name" id="ride-status-name">E-Scooter AM-311</span>
+      </div>
+      <div class="ride-status__bottom">
+        <span class="ride-status__metric" id="ride-status-timer">00:00</span>
+        <span class="ride-status__metric" id="ride-status-cost">1,00 EUR</span>
+      </div>
+    </aside>
   </main>
 
   <script

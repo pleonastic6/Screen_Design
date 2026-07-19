@@ -71,10 +71,10 @@ const scooters = [
   },
   {
     name: "E-Scooter AM-111",
-    type: "E-Scooter in der Ziegelgasse",
+    type: "E-Scooter am Kaiser-Wilhelm-Ring",
     range: "31 km Reichweite",
     price: "1,00 EUR entsperren, 0,19 EUR/Min",
-    coords: [49.44392, 11.85996]
+    coords: [49.44418, 11.86482]
   },
   {
     name: "E-Scooter AM-112",
@@ -85,10 +85,10 @@ const scooters = [
   },
   {
     name: "E-Scooter AM-113",
-    type: "E-Scooter am Malteserplatz",
+    type: "E-Scooter an der OTH Amberg-Weiden",
     range: "41 km Reichweite",
     price: "1,00 EUR entsperren, 0,19 EUR/Min",
-    coords: [49.44558, 11.86012]
+    coords: [49.44482, 11.84788]
   },
   {
     name: "E-Scooter AM-114",
@@ -113,10 +113,10 @@ const scooters = [
   },
   {
     name: "E-Scooter AM-117",
-    type: "E-Scooter in der Spitalgasse",
+    type: "E-Scooter am Emailfabrikplatz",
     range: "52 km Reichweite",
     price: "1,00 EUR entsperren, 0,19 EUR/Min",
-    coords: [49.44504, 11.85662]
+    coords: [49.44392, 11.84684]
   },
   {
     name: "E-Scooter AM-118",
@@ -148,10 +148,10 @@ const scooters = [
   },
   {
     name: "E-Scooter AM-122",
-    type: "E-Scooter an der Herrnmuehlgasse",
+    type: "E-Scooter in der Mariansgasse",
     range: "45 km Reichweite",
     price: "1,00 EUR entsperren, 0,19 EUR/Min",
-    coords: [49.44366, 11.86092]
+    coords: [49.44406, 11.86394]
   },
   {
     name: "E-Scooter AM-123",
@@ -169,10 +169,10 @@ const scooters = [
   },
   {
     name: "E-Scooter AM-125",
-    type: "E-Scooter am Eichenforstgaesschen",
+    type: "E-Scooter an der Georg-Graner-Strasse",
     range: "30 km Reichweite",
     price: "1,00 EUR entsperren, 0,19 EUR/Min",
-    coords: [49.44492, 11.86134]
+    coords: [49.44552, 11.85092]
   },
   {
     name: "E-Scooter AM-126",
@@ -183,17 +183,17 @@ const scooters = [
   },
   {
     name: "E-Scooter AM-127",
-    type: "E-Scooter in der Sebastianstrasse",
+    type: "E-Scooter am Studentenwohnheim",
     range: "54 km Reichweite",
     price: "1,00 EUR entsperren, 0,19 EUR/Min",
-    coords: [49.44656, 11.85964]
+    coords: [49.44434, 11.84944]
   },
   {
     name: "E-Scooter AM-128",
-    type: "E-Scooter in der Marstallgasse",
+    type: "E-Scooter in der Fleurystraße",
     range: "35 km Reichweite",
     price: "1,00 EUR entsperren, 0,19 EUR/Min",
-    coords: [49.44462, 11.85792]
+    coords: [49.44362, 11.86538]
   },
   {
     name: "E-Scooter AM-129",
@@ -204,10 +204,10 @@ const scooters = [
   },
   {
     name: "E-Scooter AM-130",
-    type: "E-Scooter in der Wingershofer Gasse",
+    type: "E-Scooter am Kaiser-Wilhelm-Ring Ost",
     range: "54 km Reichweite",
     price: "1,00 EUR entsperren, 0,19 EUR/Min",
-    coords: [49.44596, 11.86162]
+    coords: [49.44526, 11.86612]
   }
 ];
 
@@ -230,16 +230,28 @@ const vehicleCardPrice = document.getElementById("vehicle-card-price");
 const bookingScreen = document.getElementById("booking-screen");
 const bookingScreenBack = document.getElementById("booking-screen-back");
 const bookingScreenCancel = document.getElementById("booking-screen-cancel");
+const bookingScreenUnlock = document.getElementById("booking-screen-unlock");
 const bookingScreenName = document.getElementById("booking-screen-name");
 const bookingScreenType = document.getElementById("booking-screen-type");
 const bookingScreenRange = document.getElementById("booking-screen-range");
 const bookingScreenPrice = document.getElementById("booking-screen-price");
 const bookingScreenTimer = document.getElementById("booking-screen-timer");
+const unlockScreen = document.getElementById("unlock-screen");
+const unlockScreenTitle = document.getElementById("unlock-screen-title");
+const unlockScreenHint = document.getElementById("unlock-screen-hint");
+const unlockScreenAction = document.getElementById("unlock-screen-action");
+const rideStatus = document.getElementById("ride-status");
+const rideStatusName = document.getElementById("ride-status-name");
+const rideStatusTimer = document.getElementById("ride-status-timer");
+const rideStatusCost = document.getElementById("ride-status-cost");
 
 let activeScooterMarker = null;
 let activeScooter = null;
 let bookingCountdownId = null;
 let bookingEndsAt = null;
+let unlockTimeoutId = null;
+let rideStatusIntervalId = null;
+let rideStartedAt = null;
 
 function markerIcon(type) {
   return L.divIcon({
@@ -284,6 +296,8 @@ vehicleCardClose.addEventListener("click", closeVehicleCard);
 vehicleCardReserve.addEventListener("click", openBookingScreen);
 bookingScreenBack.addEventListener("click", closeBookingScreen);
 bookingScreenCancel.addEventListener("click", closeBookingScreen);
+bookingScreenUnlock.addEventListener("click", openUnlockScreen);
+unlockScreenAction.addEventListener("click", startRideSession);
 map.on("click", closeVehicleCard);
 
 function openVehicleCard(scooter, marker) {
@@ -320,14 +334,72 @@ function openBookingScreen() {
   startBookingCountdown();
 }
 
-function closeBookingScreen() {
+function closeBookingScreen(reopenVehicleCard = true) {
   bookingScreen.dataset.open = "false";
   bookingScreen.setAttribute("aria-hidden", "true");
-  if (activeScooter && activeScooterMarker) {
+  stopBookingCountdown();
+  bookingEndsAt = null;
+  bookingScreenTimer.textContent = "10:00 Min";
+  if (reopenVehicleCard && activeScooter && activeScooterMarker) {
     vehicleCard.dataset.open = "true";
     vehicleCard.setAttribute("aria-hidden", "false");
     keepMarkerVisible(activeScooterMarker);
   }
+}
+
+function openUnlockScreen() {
+  if (!activeScooter) {
+    return;
+  }
+
+  closeBookingScreen(false);
+  resetUnlockScreen();
+  unlockScreen.dataset.open = "true";
+  unlockScreen.dataset.state = "unlocking";
+  unlockScreen.setAttribute("aria-hidden", "false");
+  unlockTimeoutId = window.setTimeout(finishUnlockScreen, 1600);
+}
+
+function finishUnlockScreen() {
+  unlockScreen.dataset.state = "success";
+  unlockScreenTitle.textContent = "Scooter ist bereit";
+  unlockScreenHint.textContent = "Das Schloss ist offen. Halt den Lenker fest und starte deine Fahrt.";
+  unlockScreenAction.disabled = false;
+}
+
+function closeUnlockScreen() {
+  if (unlockTimeoutId) {
+    window.clearTimeout(unlockTimeoutId);
+    unlockTimeoutId = null;
+  }
+  unlockScreen.dataset.open = "false";
+  unlockScreen.setAttribute("aria-hidden", "true");
+}
+
+function resetUnlockScreen() {
+  closeUnlockScreen();
+  unlockScreen.dataset.state = "unlocking";
+  unlockScreenTitle.textContent = "Scooter wird entsperrt";
+  unlockScreenHint.textContent = "Wir verbinden uns mit dem Schloss. Das dauert nur einen Moment.";
+  unlockScreenAction.disabled = true;
+}
+
+function startRideSession() {
+  if (!activeScooter) {
+    return;
+  }
+
+  closeUnlockScreen();
+  vehicleCard.dataset.open = "false";
+  vehicleCard.setAttribute("aria-hidden", "true");
+  clearActiveScooterMarker();
+  rideStartedAt = Date.now();
+  rideStatusName.textContent = activeScooter.name;
+  rideStatus.dataset.active = "true";
+  rideStatus.setAttribute("aria-hidden", "false");
+  updateRideStatus();
+  stopRideStatus();
+  rideStatusIntervalId = window.setInterval(updateRideStatus, 1000);
 }
 
 function startBookingCountdown() {
@@ -360,6 +432,29 @@ function updateBookingCountdown() {
   if (remainingSeconds === 0) {
     stopBookingCountdown();
   }
+}
+
+function stopRideStatus() {
+  if (rideStatusIntervalId) {
+    window.clearInterval(rideStatusIntervalId);
+    rideStatusIntervalId = null;
+  }
+}
+
+function updateRideStatus() {
+  if (!rideStartedAt) {
+    rideStatusTimer.textContent = "00:00";
+    rideStatusCost.textContent = "1,00 EUR";
+    return;
+  }
+
+  const elapsedSeconds = Math.max(Math.floor((Date.now() - rideStartedAt) / 1000), 0);
+  const minutes = Math.floor(elapsedSeconds / 60);
+  const seconds = elapsedSeconds % 60;
+  const cost = 1 + (elapsedSeconds / 60) * 0.19;
+
+  rideStatusTimer.textContent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  rideStatusCost.textContent = `${cost.toFixed(2).replace(".", ",")} EUR`;
 }
 
 function setActiveScooterMarker(marker) {
