@@ -98,6 +98,42 @@
         </div>
       </div>
     </section>
+    <section class="confirm-screen" id="confirm-screen" aria-hidden="true">
+      <div class="confirm-screen__fade" aria-hidden="true"></div>
+      <div class="confirm-sheet">
+        <button class="confirm-sheet__back" id="confirm-screen-back" type="button" aria-label="Zurueck zur Buchung">
+          <span aria-hidden="true">‹</span>
+        </button>
+        <p class="confirm-sheet__eyebrow">Vor Ort</p>
+        <h2 class="confirm-sheet__title">Ist das dein Scooter?</h2>
+        <p class="confirm-sheet__subline">Kurz abgleichen, dann geht es direkt ins Entsperren.</p>
+        <div class="confirm-sheet__hero">
+          <div>
+            <p class="confirm-sheet__hero-label">Reserviert fuer dich</p>
+            <p class="confirm-sheet__hero-name" id="confirm-screen-name">E-Scooter AM-311</p>
+          </div>
+          <div class="confirm-sheet__hero-badge">Bereit</div>
+        </div>
+        <div class="confirm-sheet__checks">
+          <div class="confirm-sheet__check">
+            <span class="confirm-sheet__check-label">Standort</span>
+            <span class="confirm-sheet__check-value" id="confirm-screen-type">Nahe OTH Amberg</span>
+          </div>
+          <div class="confirm-sheet__check">
+            <span class="confirm-sheet__check-label">Akku</span>
+            <span class="confirm-sheet__check-value" id="confirm-screen-battery">74 %</span>
+          </div>
+          <div class="confirm-sheet__check">
+            <span class="confirm-sheet__check-label">Reichweite</span>
+            <span class="confirm-sheet__check-value" id="confirm-screen-range">54 km</span>
+          </div>
+        </div>
+        <div class="confirm-sheet__actions">
+          <button class="confirm-sheet__secondary" id="confirm-screen-back-action" type="button">Noch mal pruefen</button>
+          <button class="confirm-sheet__primary" id="confirm-screen-unlock" type="button">Ja, entsperren</button>
+        </div>
+      </div>
+    </section>
     <section class="unlock-screen" id="unlock-screen" aria-hidden="true">
       <div class="unlock-screen__glow" aria-hidden="true"></div>
       <div class="unlock-card">

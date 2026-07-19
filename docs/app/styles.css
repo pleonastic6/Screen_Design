@@ -360,6 +360,180 @@ body {
   transform: translateY(0);
 }
 
+.confirm-screen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 200ms ease;
+  z-index: 690;
+  background:
+    radial-gradient(circle at top right, rgba(148, 237, 143, 0.18), transparent 18rem),
+    linear-gradient(180deg, #f7fbf5 0%, #edf4eb 100%);
+}
+
+.confirm-screen[data-open="true"] {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+.confirm-screen__fade {
+  display: none;
+}
+
+.confirm-sheet {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100dvh;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) 18px var(--bottom-safe-space);
+  width: 100%;
+  transform: translateY(18px);
+  transition: transform 220ms ease;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.confirm-screen[data-open="true"] .confirm-sheet {
+  transform: translateY(0);
+}
+
+.confirm-sheet__back {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(237, 242, 235, 0.92);
+  color: #142017;
+  font-size: 32px;
+  line-height: 1;
+}
+
+.confirm-sheet__eyebrow {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #5c6b60;
+}
+
+.confirm-sheet__title {
+  margin: 0;
+  font-size: clamp(1.45rem, 4vw, 1.9rem);
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+}
+
+.confirm-sheet__subline {
+  margin: -4px 0 0;
+  max-width: 28rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: #5b695d;
+}
+
+.confirm-sheet__hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(148, 237, 143, 0.26), transparent 8rem),
+    rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(20, 32, 23, 0.06);
+  box-shadow: 0 16px 32px rgba(23, 35, 27, 0.08);
+}
+
+.confirm-sheet__hero-label {
+  margin: 0 0 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #5c6a5d;
+}
+
+.confirm-sheet__hero-name {
+  margin: 0;
+  font-size: clamp(1.35rem, 4vw, 1.7rem);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+}
+
+.confirm-sheet__hero-badge {
+  flex: 0 0 auto;
+  padding: 9px 12px;
+  border-radius: 999px;
+  background: #eff8eb;
+  color: #244126;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.confirm-sheet__checks {
+  display: grid;
+  gap: 12px;
+}
+
+.confirm-sheet__check {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  padding: 16px 18px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(20, 32, 23, 0.06);
+}
+
+.confirm-sheet__check-label {
+  font-size: 0.88rem;
+  color: #627064;
+}
+
+.confirm-sheet__check-value {
+  text-align: right;
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: #142017;
+}
+
+.confirm-sheet__actions {
+  display: grid;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 4px;
+  position: sticky;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(237, 244, 235, 0) 0%, rgba(237, 244, 235, 0.94) 18%, rgba(237, 244, 235, 0.98) 100%);
+}
+
+.confirm-sheet__primary,
+.confirm-sheet__secondary {
+  width: 100%;
+  padding: 15px 18px;
+  border: 0;
+  border-radius: 22px;
+  font: inherit;
+  font-weight: 700;
+}
+
+.confirm-sheet__primary {
+  background: #94ed8f;
+  color: #0d180f;
+  box-shadow: 0 12px 24px rgba(127, 214, 106, 0.22);
+}
+
+.confirm-sheet__secondary {
+  background: #eef1ed;
+  color: #253126;
+}
+
 .unlock-screen {
   position: absolute;
   inset: 0;
@@ -1585,6 +1759,30 @@ body {
     padding: 24px 20px 20px;
   }
 
+  .confirm-sheet {
+    gap: 14px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .confirm-sheet__hero,
+  .confirm-sheet__check {
+    padding: 14px 16px;
+  }
+
+  .confirm-sheet__title {
+    font-size: 1.3rem;
+  }
+
+  .confirm-sheet__subline {
+    font-size: 0.86rem;
+  }
+
+  .confirm-sheet__primary,
+  .confirm-sheet__secondary {
+    padding: 13px 16px;
+  }
+
   .ride-sheet {
     gap: 14px;
     padding-left: 16px;
@@ -1708,6 +1906,7 @@ body {
   }
 
   .ride-sheet,
+  .confirm-sheet,
   .pause-sheet,
   .return-sheet,
   .summary-sheet {
@@ -1719,6 +1918,7 @@ body {
   }
 
   .ride-sheet__eyebrow,
+  .confirm-sheet__eyebrow,
   .pause-sheet__eyebrow,
   .return-sheet__eyebrow,
   .summary-sheet__eyebrow {
@@ -1726,6 +1926,7 @@ body {
   }
 
   .ride-sheet__title,
+  .confirm-sheet__title,
   .pause-sheet__title,
   .return-sheet__title,
   .summary-sheet__title {

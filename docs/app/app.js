@@ -236,6 +236,14 @@ const bookingScreenType = document.getElementById("booking-screen-type");
 const bookingScreenRange = document.getElementById("booking-screen-range");
 const bookingScreenPrice = document.getElementById("booking-screen-price");
 const bookingScreenTimer = document.getElementById("booking-screen-timer");
+const confirmScreen = document.getElementById("confirm-screen");
+const confirmScreenBack = document.getElementById("confirm-screen-back");
+const confirmScreenBackAction = document.getElementById("confirm-screen-back-action");
+const confirmScreenUnlock = document.getElementById("confirm-screen-unlock");
+const confirmScreenName = document.getElementById("confirm-screen-name");
+const confirmScreenType = document.getElementById("confirm-screen-type");
+const confirmScreenBattery = document.getElementById("confirm-screen-battery");
+const confirmScreenRange = document.getElementById("confirm-screen-range");
 const unlockScreen = document.getElementById("unlock-screen");
 const unlockScreenTitle = document.getElementById("unlock-screen-title");
 const unlockScreenHint = document.getElementById("unlock-screen-hint");
@@ -326,7 +334,10 @@ vehicleCardClose.addEventListener("click", closeVehicleCard);
 vehicleCardReserve.addEventListener("click", openBookingScreen);
 bookingScreenBack.addEventListener("click", closeBookingScreen);
 bookingScreenCancel.addEventListener("click", closeBookingScreen);
-bookingScreenUnlock.addEventListener("click", openUnlockScreen);
+bookingScreenUnlock.addEventListener("click", openConfirmScreen);
+confirmScreenBack.addEventListener("click", closeConfirmScreen);
+confirmScreenBackAction.addEventListener("click", closeConfirmScreen);
+confirmScreenUnlock.addEventListener("click", openUnlockScreen);
 unlockScreenAction.addEventListener("click", startRideSession);
 rideScreenPause.addEventListener("click", openPauseScreen);
 rideScreenEnd.addEventListener("click", openReturnScreen);
@@ -385,11 +396,36 @@ function closeBookingScreen(reopenVehicleCard = true) {
   }
 }
 
+function openConfirmScreen() {
+  if (!activeScooter) {
+    return;
+  }
+
+  bookingScreen.dataset.open = "false";
+  bookingScreen.setAttribute("aria-hidden", "true");
+  confirmScreenName.textContent = activeScooter.name;
+  confirmScreenType.textContent = activeScooter.type;
+  confirmScreenBattery.textContent = getBatteryLabel(activeScooter.range);
+  confirmScreenRange.textContent = activeScooter.range;
+  confirmScreen.dataset.open = "true";
+  confirmScreen.setAttribute("aria-hidden", "false");
+}
+
+function closeConfirmScreen(reopenBooking = true) {
+  confirmScreen.dataset.open = "false";
+  confirmScreen.setAttribute("aria-hidden", "true");
+  if (reopenBooking) {
+    bookingScreen.dataset.open = "true";
+    bookingScreen.setAttribute("aria-hidden", "false");
+  }
+}
+
 function openUnlockScreen() {
   if (!activeScooter) {
     return;
   }
 
+  closeConfirmScreen(false);
   closeBookingScreen(false);
   resetUnlockScreen();
   unlockScreen.dataset.open = "true";
