@@ -126,6 +126,118 @@
         <span class="ride-status__metric" id="ride-status-cost">1,00 EUR</span>
       </div>
     </aside>
+    <section class="ride-screen" id="ride-screen" aria-hidden="true">
+      <div class="ride-screen__fade" aria-hidden="true"></div>
+      <div class="ride-sheet">
+        <div class="ride-sheet__grab" aria-hidden="true"></div>
+        <div class="ride-sheet__header">
+          <div>
+            <p class="ride-sheet__eyebrow">Unterwegs</p>
+            <h2 class="ride-sheet__title" id="ride-screen-name">E-Scooter AM-311</h2>
+          </div>
+          <div class="ride-sheet__badge">Live</div>
+        </div>
+        <div class="ride-sheet__hero">
+          <div class="ride-sheet__hero-block">
+            <span class="ride-sheet__hero-label">Fahrzeit</span>
+            <span class="ride-sheet__hero-value" id="ride-screen-timer">00:00</span>
+          </div>
+          <div class="ride-sheet__hero-block ride-sheet__hero-block--accent">
+            <span class="ride-sheet__hero-label">Kosten</span>
+            <span class="ride-sheet__hero-value" id="ride-screen-cost">1,00 EUR</span>
+          </div>
+        </div>
+        <div class="ride-sheet__stats">
+          <div class="ride-sheet__stat">
+            <span class="ride-sheet__stat-label">Akku</span>
+            <span class="ride-sheet__stat-value" id="ride-screen-battery">74 %</span>
+          </div>
+          <div class="ride-sheet__stat">
+            <span class="ride-sheet__stat-label">Reichweite</span>
+            <span class="ride-sheet__stat-value" id="ride-screen-range">41 km</span>
+          </div>
+          <div class="ride-sheet__stat">
+            <span class="ride-sheet__stat-label">Zone</span>
+            <span class="ride-sheet__stat-value" id="ride-screen-zone">Altstadt</span>
+          </div>
+        </div>
+        <div class="ride-sheet__notice">
+          <p class="ride-sheet__notice-title">Scooter korrekt abstellen</p>
+          <p class="ride-sheet__notice-copy">Freie Rueckgabe nur im Stadtgebiet und nur bei mehr als 30 % Akku. Ladehub gibt Bonus.</p>
+        </div>
+        <div class="ride-sheet__actions">
+          <button class="ride-sheet__secondary" id="ride-screen-pause" type="button">Temporär parken</button>
+          <button class="ride-sheet__primary" id="ride-screen-end" type="button">Fahrt beenden</button>
+        </div>
+      </div>
+    </section>
+    <section class="return-screen" id="return-screen" aria-hidden="true">
+      <div class="return-screen__fade" aria-hidden="true"></div>
+      <div class="return-sheet">
+        <button class="return-sheet__back" id="return-screen-back" type="button" aria-label="Zurueck zur Fahrt">
+          <span aria-hidden="true">‹</span>
+        </button>
+        <p class="return-sheet__eyebrow">Rueckgabepruefung</p>
+        <h2 class="return-sheet__title">Scooter hier abstellen?</h2>
+        <div class="return-sheet__hero return-sheet__hero--success" id="return-screen-hero">
+          <div>
+            <p class="return-sheet__hero-label" id="return-screen-status-label">Rueckgabe erlaubt</p>
+            <p class="return-sheet__hero-title" id="return-screen-status-title">Du stehst in einer gueltigen Zone.</p>
+          </div>
+          <div class="return-sheet__hero-icon" id="return-screen-status-icon" aria-hidden="true"></div>
+        </div>
+        <div class="return-sheet__checks">
+          <div class="return-sheet__check">
+            <span class="return-sheet__check-label">Zone</span>
+            <span class="return-sheet__check-value" id="return-screen-zone">Altstadt erlaubt</span>
+          </div>
+          <div class="return-sheet__check">
+            <span class="return-sheet__check-label">Akku</span>
+            <span class="return-sheet__check-value" id="return-screen-battery">74 % · freie Rueckgabe moeglich</span>
+          </div>
+          <div class="return-sheet__check">
+            <span class="return-sheet__check-label">Ladehub</span>
+            <span class="return-sheet__check-value" id="return-screen-hub">Marktplatz in 2 Min Entfernung</span>
+          </div>
+        </div>
+        <div class="return-sheet__bonus">
+          <p class="return-sheet__bonus-title">Bonus sichern</p>
+          <p class="return-sheet__bonus-copy" id="return-screen-bonus">Wenn du am Ladehub abstellst, bekommst du 30 Freiminuten gutgeschrieben.</p>
+        </div>
+        <div class="return-sheet__actions">
+          <button class="return-sheet__secondary" id="return-screen-continue" type="button">Weiterfahren</button>
+          <button class="return-sheet__primary" id="return-screen-confirm" type="button">Rueckgabe bestaetigen</button>
+        </div>
+      </div>
+    </section>
+    <section class="summary-screen" id="summary-screen" aria-hidden="true">
+      <div class="summary-screen__fade" aria-hidden="true"></div>
+      <div class="summary-sheet">
+        <p class="summary-sheet__eyebrow">Fahrt beendet</p>
+        <h2 class="summary-sheet__title">Sauber geparkt. Nice.</h2>
+        <div class="summary-sheet__hero">
+          <div class="summary-sheet__hero-block">
+            <span class="summary-sheet__hero-label">Dauer</span>
+            <span class="summary-sheet__hero-value" id="summary-screen-time">08:24</span>
+          </div>
+          <div class="summary-sheet__hero-block">
+            <span class="summary-sheet__hero-label">Gesamt</span>
+            <span class="summary-sheet__hero-value" id="summary-screen-cost">2,60 EUR</span>
+          </div>
+        </div>
+        <div class="summary-sheet__rows">
+          <div class="summary-sheet__row">
+            <span class="summary-sheet__row-label">Rueckgabeort</span>
+            <span class="summary-sheet__row-value" id="summary-screen-zone">Marktplatz Ladehub</span>
+          </div>
+          <div class="summary-sheet__row">
+            <span class="summary-sheet__row-label">Bonus</span>
+            <span class="summary-sheet__row-value" id="summary-screen-bonus">30 Freiminuten gutgeschrieben</span>
+          </div>
+        </div>
+        <button class="summary-sheet__action" id="summary-screen-close" type="button">Zurueck zur Karte</button>
+      </div>
+    </section>
   </main>
 
   <script

@@ -244,6 +244,31 @@ const rideStatus = document.getElementById("ride-status");
 const rideStatusName = document.getElementById("ride-status-name");
 const rideStatusTimer = document.getElementById("ride-status-timer");
 const rideStatusCost = document.getElementById("ride-status-cost");
+const rideScreen = document.getElementById("ride-screen");
+const rideScreenName = document.getElementById("ride-screen-name");
+const rideScreenTimer = document.getElementById("ride-screen-timer");
+const rideScreenCost = document.getElementById("ride-screen-cost");
+const rideScreenBattery = document.getElementById("ride-screen-battery");
+const rideScreenRange = document.getElementById("ride-screen-range");
+const rideScreenZone = document.getElementById("ride-screen-zone");
+const rideScreenEnd = document.getElementById("ride-screen-end");
+const returnScreen = document.getElementById("return-screen");
+const returnScreenBack = document.getElementById("return-screen-back");
+const returnScreenContinue = document.getElementById("return-screen-continue");
+const returnScreenConfirm = document.getElementById("return-screen-confirm");
+const returnScreenHero = document.getElementById("return-screen-hero");
+const returnScreenStatusLabel = document.getElementById("return-screen-status-label");
+const returnScreenStatusTitle = document.getElementById("return-screen-status-title");
+const returnScreenZone = document.getElementById("return-screen-zone");
+const returnScreenBattery = document.getElementById("return-screen-battery");
+const returnScreenHub = document.getElementById("return-screen-hub");
+const returnScreenBonus = document.getElementById("return-screen-bonus");
+const summaryScreen = document.getElementById("summary-screen");
+const summaryScreenTime = document.getElementById("summary-screen-time");
+const summaryScreenCost = document.getElementById("summary-screen-cost");
+const summaryScreenZone = document.getElementById("summary-screen-zone");
+const summaryScreenBonus = document.getElementById("summary-screen-bonus");
+const summaryScreenClose = document.getElementById("summary-screen-close");
 
 let activeScooterMarker = null;
 let activeScooter = null;
@@ -252,6 +277,7 @@ let bookingEndsAt = null;
 let unlockTimeoutId = null;
 let rideStatusIntervalId = null;
 let rideStartedAt = null;
+let lastReturnContext = null;
 
 function markerIcon(type) {
   return L.divIcon({
@@ -298,6 +324,11 @@ bookingScreenBack.addEventListener("click", closeBookingScreen);
 bookingScreenCancel.addEventListener("click", closeBookingScreen);
 bookingScreenUnlock.addEventListener("click", openUnlockScreen);
 unlockScreenAction.addEventListener("click", startRideSession);
+rideScreenEnd.addEventListener("click", openReturnScreen);
+returnScreenBack.addEventListener("click", closeReturnScreen);
+returnScreenContinue.addEventListener("click", closeReturnScreen);
+returnScreenConfirm.addEventListener("click", confirmReturn);
+summaryScreenClose.addEventListener("click", closeSummaryScreen);
 map.on("click", closeVehicleCard);
 
 function openVehicleCard(scooter, marker) {
@@ -395,11 +426,83 @@ function startRideSession() {
   clearActiveScooterMarker();
   rideStartedAt = Date.now();
   rideStatusName.textContent = activeScooter.name;
+  rideScreenName.textContent = activeScooter.name;
+  rideScreenBattery.textContent = getBatteryLabel(activeScooter.range);
+  rideScreenRange.textContent = activeScooter.range;
+  rideScreenZone.textContent = getZoneLabel(activeScooter.type);
   rideStatus.dataset.active = "true";
   rideStatus.setAttribute("aria-hidden", "false");
+  rideScreen.dataset.open = "true";
+  rideScreen.setAttribute("aria-hidden", "false");
+  closeReturnScreen();
+  closeSummaryScreen();
   updateRideStatus();
   stopRideStatus();
   rideStatusIntervalId = window.setInterval(updateRideStatus, 1000);
+}
+
+function openReturnScreen() {
+  if (!activeScooter) {
+    return;
+  }
+
+  const batteryPercent = getBatteryPercent(activeScooter.range);
+  const zoneLabel = getZoneLabel(activeScooter.type);
+  const nearHub = zoneLabel !== "Altstadt";
+  const returnAllowed = batteryPercent > 30;
+  lastReturnContext = { batteryPercent, zoneLabel, nearHub, returnAllowed };
+
+  returnScreenHero.classList.toggle("return-sheet__hero--success", returnAllowed);
+  returnScreenStatusLabel.textContent = returnAllowed ? "Rueckgabe erlaubt" : "Rueckgabe gesperrt";
+  returnScreenStatusTitle.textContent = returnAllowed
+    ? "Du stehst in einer gueltigen Zone."
+    : "Akku zu niedrig. Bitte an einem Ladehub abstellen.";
+  returnScreenZone.textContent = `${zoneLabel} · ${returnAllowed ? "Abstellen moeglich" : "nur Ladehub erlaubt"}`;
+  returnScreenBattery.textContent = `${batteryPercent} % · ${batteryPercent > 30 ? "freie Rueckgabe moeglich" : "unter 30 %, bitte Ladehub nutzen"}`;
+  returnScreenHub.textContent = nearHub
+    ? "Bahnhof oder Campus OTH in 2-3 Min Entfernung"
+    : "Marktplatz Ladehub in 2 Min Entfernung";
+  returnScreenBonus.textContent = nearHub
+    ? "Wenn du direkt am Ladehub abstellst, bekommst du 30 Freiminuten gutgeschrieben."
+    : "Zum naechsten Ladehub gibt es 30 Freiminuten. Lohnt sich fuer die Abschlussfolie.";
+  returnScreenConfirm.disabled = !returnAllowed;
+  returnScreen.dataset.open = "true";
+  returnScreen.setAttribute("aria-hidden", "false");
+}
+
+function closeReturnScreen() {
+  returnScreen.dataset.open = "false";
+  returnScreen.setAttribute("aria-hidden", "true");
+}
+
+function confirmReturn() {
+  const durationLabel = rideScreenTimer.textContent;
+  const costLabel = rideScreenCost.textContent;
+  const context = lastReturnContext ?? {
+    zoneLabel: getZoneLabel(activeScooter?.type ?? ""),
+    nearHub: false
+  };
+
+  stopRideStatus();
+  rideStartedAt = null;
+  closeReturnScreen();
+  rideScreen.dataset.open = "false";
+  rideScreen.setAttribute("aria-hidden", "true");
+  rideStatus.dataset.active = "false";
+  rideStatus.setAttribute("aria-hidden", "true");
+  summaryScreenTime.textContent = durationLabel;
+  summaryScreenCost.textContent = costLabel;
+  summaryScreenZone.textContent = context.nearHub ? `${context.zoneLabel} Ladehub` : `${context.zoneLabel} Stadtgebiet`;
+  summaryScreenBonus.textContent = context.nearHub
+    ? "30 Freiminuten gutgeschrieben"
+    : "Kein Bonus, aber Rueckgabe war gueltig";
+  summaryScreen.dataset.open = "true";
+  summaryScreen.setAttribute("aria-hidden", "false");
+}
+
+function closeSummaryScreen() {
+  summaryScreen.dataset.open = "false";
+  summaryScreen.setAttribute("aria-hidden", "true");
 }
 
 function startBookingCountdown() {
@@ -445,6 +548,8 @@ function updateRideStatus() {
   if (!rideStartedAt) {
     rideStatusTimer.textContent = "00:00";
     rideStatusCost.textContent = "1,00 EUR";
+    rideScreenTimer.textContent = "00:00";
+    rideScreenCost.textContent = "1,00 EUR";
     return;
   }
 
@@ -452,9 +557,42 @@ function updateRideStatus() {
   const minutes = Math.floor(elapsedSeconds / 60);
   const seconds = elapsedSeconds % 60;
   const cost = 1 + (elapsedSeconds / 60) * 0.19;
+  const elapsedLabel = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  const costLabel = `${cost.toFixed(2).replace(".", ",")} EUR`;
 
-  rideStatusTimer.textContent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-  rideStatusCost.textContent = `${cost.toFixed(2).replace(".", ",")} EUR`;
+  rideStatusTimer.textContent = elapsedLabel;
+  rideStatusCost.textContent = costLabel;
+  rideScreenTimer.textContent = elapsedLabel;
+  rideScreenCost.textContent = costLabel;
+}
+
+function getBatteryLabel(rangeText) {
+  return `${getBatteryPercent(rangeText)} %`;
+}
+
+function getBatteryPercent(rangeText) {
+  const rangeKm = Number.parseInt(rangeText, 10);
+  if (Number.isNaN(rangeKm)) {
+    return 72;
+  }
+
+  return Math.max(18, Math.min(100, Math.round((rangeKm / 56) * 100)));
+}
+
+function getZoneLabel(locationText) {
+  if (locationText.includes("OTH")) {
+    return "Campus";
+  }
+
+  if (
+    locationText.includes("Bahnhof") ||
+    locationText.includes("Ring") ||
+    locationText.includes("Emailfabrik")
+  ) {
+    return "Randzone";
+  }
+
+  return "Altstadt";
 }
 
 function setActiveScooterMarker(marker) {
