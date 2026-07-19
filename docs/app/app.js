@@ -249,7 +249,13 @@ const rideScreenCostDetail = document.getElementById("ride-screen-cost-detail");
 const rideScreenBattery = document.getElementById("ride-screen-battery");
 const rideScreenRange = document.getElementById("ride-screen-range");
 const rideScreenZone = document.getElementById("ride-screen-zone");
+const rideScreenPause = document.getElementById("ride-screen-pause");
 const rideScreenEnd = document.getElementById("ride-screen-end");
+const pauseScreen = document.getElementById("pause-screen");
+const pauseScreenTime = document.getElementById("pause-screen-time");
+const pauseScreenCost = document.getElementById("pause-screen-cost");
+const pauseScreenResume = document.getElementById("pause-screen-resume");
+const pauseScreenEnd = document.getElementById("pause-screen-end");
 const returnScreen = document.getElementById("return-screen");
 const returnScreenBack = document.getElementById("return-screen-back");
 const returnScreenContinue = document.getElementById("return-screen-continue");
@@ -322,7 +328,10 @@ bookingScreenBack.addEventListener("click", closeBookingScreen);
 bookingScreenCancel.addEventListener("click", closeBookingScreen);
 bookingScreenUnlock.addEventListener("click", openUnlockScreen);
 unlockScreenAction.addEventListener("click", startRideSession);
+rideScreenPause.addEventListener("click", openPauseScreen);
 rideScreenEnd.addEventListener("click", openReturnScreen);
+pauseScreenResume.addEventListener("click", closePauseScreen);
+pauseScreenEnd.addEventListener("click", openReturnScreenFromPause);
 returnScreenBack.addEventListener("click", closeReturnScreen);
 returnScreenContinue.addEventListener("click", closeReturnScreen);
 returnScreenConfirm.addEventListener("click", confirmReturn);
@@ -429,11 +438,28 @@ function startRideSession() {
   rideScreenZone.textContent = getZoneLabel(activeScooter.type);
   rideScreen.dataset.open = "true";
   rideScreen.setAttribute("aria-hidden", "false");
+  closePauseScreen();
   closeReturnScreen();
   closeSummaryScreen();
   updateRideStatus();
   stopRideStatus();
   rideStatusIntervalId = window.setInterval(updateRideStatus, 1000);
+}
+
+function openPauseScreen() {
+  pauseScreen.dataset.open = "true";
+  pauseScreen.setAttribute("aria-hidden", "false");
+  updateRideStatus();
+}
+
+function closePauseScreen() {
+  pauseScreen.dataset.open = "false";
+  pauseScreen.setAttribute("aria-hidden", "true");
+}
+
+function openReturnScreenFromPause() {
+  closePauseScreen();
+  openReturnScreen();
 }
 
 function openReturnScreen() {
@@ -483,6 +509,7 @@ function confirmReturn() {
   closeReturnScreen();
   rideScreen.dataset.open = "false";
   rideScreen.setAttribute("aria-hidden", "true");
+  closePauseScreen();
   summaryScreenTime.textContent = durationLabel;
   summaryScreenCost.textContent = costLabel;
   summaryScreenZone.textContent = context.nearHub ? `${context.zoneLabel} Ladehub` : `${context.zoneLabel} Stadtgebiet`;
@@ -543,6 +570,8 @@ function updateRideStatus() {
     rideScreenCost.textContent = "1,00 EUR";
     rideScreenTimerDetail.textContent = "00:00";
     rideScreenCostDetail.textContent = "1,00 EUR";
+    pauseScreenTime.textContent = "00:00";
+    pauseScreenCost.textContent = "1,00 EUR";
     return;
   }
 
@@ -557,6 +586,8 @@ function updateRideStatus() {
   rideScreenCost.textContent = costLabel;
   rideScreenTimerDetail.textContent = elapsedLabel;
   rideScreenCostDetail.textContent = costLabel;
+  pauseScreenTime.textContent = elapsedLabel;
+  pauseScreenCost.textContent = costLabel;
 }
 
 function getBatteryLabel(rangeText) {

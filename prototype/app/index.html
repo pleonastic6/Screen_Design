@@ -134,6 +134,7 @@
           <div>
             <p class="ride-sheet__eyebrow">Unterwegs</p>
             <h2 class="ride-sheet__title">Dein Scooter ist live</h2>
+            <p class="ride-sheet__subline">Zeit, Kosten und Rueckgabe-Regeln bleiben waehrend der Fahrt jederzeit im Blick.</p>
           </div>
           <div class="ride-sheet__badge">Live</div>
         </div>
@@ -171,6 +172,32 @@
         </div>
       </div>
     </section>
+    <section class="pause-screen" id="pause-screen" aria-hidden="true">
+      <div class="pause-screen__fade" aria-hidden="true"></div>
+      <div class="pause-sheet">
+        <p class="pause-sheet__eyebrow">Temporär geparkt</p>
+        <h2 class="pause-sheet__title">Scooter ist gesichert</h2>
+        <p class="pause-sheet__subline">Du kannst gleich weiterfahren. Wichtig: Die Abrechnung laeuft waehrend der Pause weiter.</p>
+        <div class="pause-sheet__hero">
+          <div class="pause-sheet__hero-block">
+            <span class="pause-sheet__hero-label">Fahrzeit</span>
+            <span class="pause-sheet__hero-value" id="pause-screen-time">00:00</span>
+          </div>
+          <div class="pause-sheet__hero-block pause-sheet__hero-block--accent">
+            <span class="pause-sheet__hero-label">Kosten</span>
+            <span class="pause-sheet__hero-value" id="pause-screen-cost">1,00 EUR</span>
+          </div>
+        </div>
+        <div class="pause-sheet__notice">
+          <p class="pause-sheet__notice-title">Pause ist kein Fahrtende</p>
+          <p class="pause-sheet__notice-copy">Der Scooter bleibt fuer dich reserviert, aber die Minuten laufen weiter, bis du weiterfaehrst oder final abstellst.</p>
+        </div>
+        <div class="pause-sheet__actions">
+          <button class="pause-sheet__secondary" id="pause-screen-resume" type="button">Weiterfahren</button>
+          <button class="pause-sheet__primary" id="pause-screen-end" type="button">Jetzt endgültig zurückgeben</button>
+        </div>
+      </div>
+    </section>
     <section class="return-screen" id="return-screen" aria-hidden="true">
       <div class="return-screen__fade" aria-hidden="true"></div>
       <div class="return-sheet">
@@ -179,6 +206,7 @@
         </button>
         <p class="return-sheet__eyebrow">Rueckgabepruefung</p>
         <h2 class="return-sheet__title">Scooter hier abstellen?</h2>
+        <p class="return-sheet__subline">Wir pruefen kurz Zone, Akku und naechsten Ladehub, bevor die Fahrt wirklich endet.</p>
         <div class="return-sheet__hero return-sheet__hero--success" id="return-screen-hero">
           <div>
             <p class="return-sheet__hero-label" id="return-screen-status-label">Rueckgabe erlaubt</p>
@@ -215,6 +243,7 @@
       <div class="summary-sheet">
         <p class="summary-sheet__eyebrow">Fahrt beendet</p>
         <h2 class="summary-sheet__title">Sauber geparkt. Nice.</h2>
+        <p class="summary-sheet__subline">Hier siehst du direkt Dauer, Preis und ob du dir einen Bonus eingesammelt hast.</p>
         <div class="summary-sheet__hero">
           <div class="summary-sheet__hero-block">
             <span class="summary-sheet__hero-label">Dauer</span>
