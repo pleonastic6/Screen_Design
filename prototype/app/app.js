@@ -240,14 +240,12 @@ const unlockScreen = document.getElementById("unlock-screen");
 const unlockScreenTitle = document.getElementById("unlock-screen-title");
 const unlockScreenHint = document.getElementById("unlock-screen-hint");
 const unlockScreenAction = document.getElementById("unlock-screen-action");
-const rideStatus = document.getElementById("ride-status");
-const rideStatusName = document.getElementById("ride-status-name");
-const rideStatusTimer = document.getElementById("ride-status-timer");
-const rideStatusCost = document.getElementById("ride-status-cost");
 const rideScreen = document.getElementById("ride-screen");
 const rideScreenName = document.getElementById("ride-screen-name");
 const rideScreenTimer = document.getElementById("ride-screen-timer");
 const rideScreenCost = document.getElementById("ride-screen-cost");
+const rideScreenTimerDetail = document.getElementById("ride-screen-timer-detail");
+const rideScreenCostDetail = document.getElementById("ride-screen-cost-detail");
 const rideScreenBattery = document.getElementById("ride-screen-battery");
 const rideScreenRange = document.getElementById("ride-screen-range");
 const rideScreenZone = document.getElementById("ride-screen-zone");
@@ -425,13 +423,10 @@ function startRideSession() {
   vehicleCard.setAttribute("aria-hidden", "true");
   clearActiveScooterMarker();
   rideStartedAt = Date.now();
-  rideStatusName.textContent = activeScooter.name;
   rideScreenName.textContent = activeScooter.name;
   rideScreenBattery.textContent = getBatteryLabel(activeScooter.range);
   rideScreenRange.textContent = activeScooter.range;
   rideScreenZone.textContent = getZoneLabel(activeScooter.type);
-  rideStatus.dataset.active = "true";
-  rideStatus.setAttribute("aria-hidden", "false");
   rideScreen.dataset.open = "true";
   rideScreen.setAttribute("aria-hidden", "false");
   closeReturnScreen();
@@ -488,8 +483,6 @@ function confirmReturn() {
   closeReturnScreen();
   rideScreen.dataset.open = "false";
   rideScreen.setAttribute("aria-hidden", "true");
-  rideStatus.dataset.active = "false";
-  rideStatus.setAttribute("aria-hidden", "true");
   summaryScreenTime.textContent = durationLabel;
   summaryScreenCost.textContent = costLabel;
   summaryScreenZone.textContent = context.nearHub ? `${context.zoneLabel} Ladehub` : `${context.zoneLabel} Stadtgebiet`;
@@ -546,10 +539,10 @@ function stopRideStatus() {
 
 function updateRideStatus() {
   if (!rideStartedAt) {
-    rideStatusTimer.textContent = "00:00";
-    rideStatusCost.textContent = "1,00 EUR";
     rideScreenTimer.textContent = "00:00";
     rideScreenCost.textContent = "1,00 EUR";
+    rideScreenTimerDetail.textContent = "00:00";
+    rideScreenCostDetail.textContent = "1,00 EUR";
     return;
   }
 
@@ -560,10 +553,10 @@ function updateRideStatus() {
   const elapsedLabel = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
   const costLabel = `${cost.toFixed(2).replace(".", ",")} EUR`;
 
-  rideStatusTimer.textContent = elapsedLabel;
-  rideStatusCost.textContent = costLabel;
   rideScreenTimer.textContent = elapsedLabel;
   rideScreenCost.textContent = costLabel;
+  rideScreenTimerDetail.textContent = elapsedLabel;
+  rideScreenCostDetail.textContent = costLabel;
 }
 
 function getBatteryLabel(rangeText) {

@@ -116,35 +116,35 @@
         <button class="unlock-card__action" id="unlock-screen-action" type="button" disabled>Fahrt starten</button>
       </div>
     </section>
-    <aside class="ride-status" id="ride-status" aria-hidden="true">
-      <div class="ride-status__top">
-        <span class="ride-status__live">Fahrt aktiv</span>
-        <span class="ride-status__name" id="ride-status-name">E-Scooter AM-311</span>
-      </div>
-      <div class="ride-status__bottom">
-        <span class="ride-status__metric" id="ride-status-timer">00:00</span>
-        <span class="ride-status__metric" id="ride-status-cost">1,00 EUR</span>
-      </div>
-    </aside>
     <section class="ride-screen" id="ride-screen" aria-hidden="true">
       <div class="ride-screen__fade" aria-hidden="true"></div>
       <div class="ride-sheet">
         <div class="ride-sheet__grab" aria-hidden="true"></div>
+        <div class="ride-sheet__statusbar">
+          <div class="ride-sheet__statusbar-top">
+            <span class="ride-sheet__live">Fahrt aktiv</span>
+            <span class="ride-sheet__status-name" id="ride-screen-name">E-Scooter AM-311</span>
+          </div>
+          <div class="ride-sheet__statusbar-bottom">
+            <span class="ride-sheet__status-metric" id="ride-screen-timer">00:00</span>
+            <span class="ride-sheet__status-metric" id="ride-screen-cost">1,00 EUR</span>
+          </div>
+        </div>
         <div class="ride-sheet__header">
           <div>
             <p class="ride-sheet__eyebrow">Unterwegs</p>
-            <h2 class="ride-sheet__title" id="ride-screen-name">E-Scooter AM-311</h2>
+            <h2 class="ride-sheet__title">Dein Scooter ist live</h2>
           </div>
           <div class="ride-sheet__badge">Live</div>
         </div>
         <div class="ride-sheet__hero">
           <div class="ride-sheet__hero-block">
             <span class="ride-sheet__hero-label">Fahrzeit</span>
-            <span class="ride-sheet__hero-value" id="ride-screen-timer">00:00</span>
+            <span class="ride-sheet__hero-value" id="ride-screen-timer-detail">00:00</span>
           </div>
           <div class="ride-sheet__hero-block ride-sheet__hero-block--accent">
             <span class="ride-sheet__hero-label">Kosten</span>
-            <span class="ride-sheet__hero-value" id="ride-screen-cost">1,00 EUR</span>
+            <span class="ride-sheet__hero-value" id="ride-screen-cost-detail">1,00 EUR</span>
           </div>
         </div>
         <div class="ride-sheet__stats">
