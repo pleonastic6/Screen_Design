@@ -132,6 +132,40 @@
           <button class="confirm-sheet__secondary" id="confirm-screen-back-action" type="button">Noch mal pruefen</button>
           <button class="confirm-sheet__primary" id="confirm-screen-unlock" type="button">Ja, entsperren</button>
         </div>
+        <button class="confirm-sheet__text-action" id="confirm-screen-issue" type="button">Scooter passt nicht?</button>
+      </div>
+    </section>
+    <section class="issue-screen" id="issue-screen" aria-hidden="true">
+      <div class="issue-screen__fade" aria-hidden="true"></div>
+      <div class="issue-sheet">
+        <button class="issue-sheet__back" id="issue-screen-back" type="button" aria-label="Zurueck zur Bestätigung">
+          <span aria-hidden="true">‹</span>
+        </button>
+        <p class="issue-sheet__eyebrow">Vor Ort Problem</p>
+        <h2 class="issue-sheet__title">Scooter nicht passend?</h2>
+        <p class="issue-sheet__subline">Dann lieber hier abbrechen statt den falschen Scooter zu entsperren.</p>
+        <div class="issue-sheet__hero">
+          <p class="issue-sheet__hero-title" id="issue-screen-name">E-Scooter AM-311</p>
+          <p class="issue-sheet__hero-copy">Pruefe Kennzeichen, Standort und ob der Scooter frei zugaenglich ist.</p>
+        </div>
+        <div class="issue-sheet__checks">
+          <div class="issue-sheet__check">
+            <span class="issue-sheet__check-title">Falsches Kennzeichen</span>
+            <span class="issue-sheet__check-copy">Wenn Name oder Nummer nicht stimmen, lieber neu auswaehlen.</span>
+          </div>
+          <div class="issue-sheet__check">
+            <span class="issue-sheet__check-title">Scooter blockiert</span>
+            <span class="issue-sheet__check-copy">Zum Beispiel hinter einem Radstaender oder in einer engen Gruppe.</span>
+          </div>
+          <div class="issue-sheet__check">
+            <span class="issue-sheet__check-title">Nicht auffindbar</span>
+            <span class="issue-sheet__check-copy">Marker passt nicht mehr oder der Scooter wurde inzwischen bewegt.</span>
+          </div>
+        </div>
+        <div class="issue-sheet__actions">
+          <button class="issue-sheet__secondary" id="issue-screen-return" type="button">Zurueck zur Bestaetigung</button>
+          <button class="issue-sheet__primary" id="issue-screen-search" type="button">Anderen Scooter suchen</button>
+        </div>
       </div>
     </section>
     <section class="unlock-screen" id="unlock-screen" aria-hidden="true">
@@ -150,6 +184,20 @@
           <span class="unlock-card__dot"></span>
         </div>
         <button class="unlock-card__action" id="unlock-screen-action" type="button" disabled>Fahrt starten</button>
+        <button class="unlock-card__text-action" id="unlock-screen-issue" type="button">Entsperren klappt nicht?</button>
+      </div>
+    </section>
+    <section class="unlock-error-screen" id="unlock-error-screen" aria-hidden="true">
+      <div class="unlock-error-screen__glow" aria-hidden="true"></div>
+      <div class="unlock-error-card">
+        <div class="unlock-error-card__icon" aria-hidden="true">!</div>
+        <p class="unlock-error-card__eyebrow">Unlock Problem</p>
+        <h2 class="unlock-error-card__title">Scooter reagiert nicht</h2>
+        <p class="unlock-error-card__hint">Die Verbindung zum Schloss war nicht stabil. Du kannst es direkt noch einmal probieren oder einen anderen Scooter waehlen.</p>
+        <div class="unlock-error-card__actions">
+          <button class="unlock-error-card__secondary" id="unlock-error-screen-retry" type="button">Erneut versuchen</button>
+          <button class="unlock-error-card__primary" id="unlock-error-screen-search" type="button">Anderen Scooter waehlen</button>
+        </div>
       </div>
     </section>
     <section class="ride-screen" id="ride-screen" aria-hidden="true">

@@ -244,10 +244,20 @@ const confirmScreenName = document.getElementById("confirm-screen-name");
 const confirmScreenType = document.getElementById("confirm-screen-type");
 const confirmScreenBattery = document.getElementById("confirm-screen-battery");
 const confirmScreenRange = document.getElementById("confirm-screen-range");
+const confirmScreenIssue = document.getElementById("confirm-screen-issue");
+const issueScreen = document.getElementById("issue-screen");
+const issueScreenBack = document.getElementById("issue-screen-back");
+const issueScreenReturn = document.getElementById("issue-screen-return");
+const issueScreenSearch = document.getElementById("issue-screen-search");
+const issueScreenName = document.getElementById("issue-screen-name");
 const unlockScreen = document.getElementById("unlock-screen");
 const unlockScreenTitle = document.getElementById("unlock-screen-title");
 const unlockScreenHint = document.getElementById("unlock-screen-hint");
 const unlockScreenAction = document.getElementById("unlock-screen-action");
+const unlockScreenIssue = document.getElementById("unlock-screen-issue");
+const unlockErrorScreen = document.getElementById("unlock-error-screen");
+const unlockErrorScreenRetry = document.getElementById("unlock-error-screen-retry");
+const unlockErrorScreenSearch = document.getElementById("unlock-error-screen-search");
 const rideScreen = document.getElementById("ride-screen");
 const rideScreenName = document.getElementById("ride-screen-name");
 const rideScreenTimer = document.getElementById("ride-screen-timer");
@@ -338,7 +348,14 @@ bookingScreenUnlock.addEventListener("click", openConfirmScreen);
 confirmScreenBack.addEventListener("click", closeConfirmScreen);
 confirmScreenBackAction.addEventListener("click", closeConfirmScreen);
 confirmScreenUnlock.addEventListener("click", openUnlockScreen);
+confirmScreenIssue.addEventListener("click", openIssueScreen);
+issueScreenBack.addEventListener("click", closeIssueScreen);
+issueScreenReturn.addEventListener("click", closeIssueScreen);
+issueScreenSearch.addEventListener("click", searchAnotherScooter);
 unlockScreenAction.addEventListener("click", startRideSession);
+unlockScreenIssue.addEventListener("click", openUnlockErrorScreen);
+unlockErrorScreenRetry.addEventListener("click", retryUnlockFlow);
+unlockErrorScreenSearch.addEventListener("click", searchAnotherScooter);
 rideScreenPause.addEventListener("click", openPauseScreen);
 rideScreenEnd.addEventListener("click", openReturnScreen);
 pauseScreenResume.addEventListener("click", closePauseScreen);
@@ -420,11 +437,41 @@ function closeConfirmScreen(reopenBooking = true) {
   }
 }
 
+function openIssueScreen() {
+  if (!activeScooter) {
+    return;
+  }
+
+  issueScreenName.textContent = activeScooter.name;
+  confirmScreen.dataset.open = "false";
+  confirmScreen.setAttribute("aria-hidden", "true");
+  issueScreen.dataset.open = "true";
+  issueScreen.setAttribute("aria-hidden", "false");
+}
+
+function closeIssueScreen(reopenConfirm = true) {
+  issueScreen.dataset.open = "false";
+  issueScreen.setAttribute("aria-hidden", "true");
+  if (reopenConfirm) {
+    confirmScreen.dataset.open = "true";
+    confirmScreen.setAttribute("aria-hidden", "false");
+  }
+}
+
+function searchAnotherScooter() {
+  closeIssueScreen(false);
+  closeConfirmScreen(false);
+  closeBookingScreen(false);
+  closeVehicleCard();
+}
+
 function openUnlockScreen() {
   if (!activeScooter) {
     return;
   }
 
+  closeUnlockErrorScreen();
+  closeIssueScreen(false);
   closeConfirmScreen(false);
   closeBookingScreen(false);
   resetUnlockScreen();
@@ -448,6 +495,22 @@ function closeUnlockScreen() {
   }
   unlockScreen.dataset.open = "false";
   unlockScreen.setAttribute("aria-hidden", "true");
+}
+
+function openUnlockErrorScreen() {
+  closeUnlockScreen();
+  unlockErrorScreen.dataset.open = "true";
+  unlockErrorScreen.setAttribute("aria-hidden", "false");
+}
+
+function closeUnlockErrorScreen() {
+  unlockErrorScreen.dataset.open = "false";
+  unlockErrorScreen.setAttribute("aria-hidden", "true");
+}
+
+function retryUnlockFlow() {
+  closeUnlockErrorScreen();
+  openUnlockScreen();
 }
 
 function resetUnlockScreen() {
