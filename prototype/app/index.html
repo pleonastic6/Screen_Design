@@ -18,6 +18,16 @@
 <body>
   <main class="map-screen">
     <div class="map-frame" id="main-map" aria-label="Karte mit Scootern und Ladehubs"></div>
+    <div class="map-legend" aria-label="Rueckgabezonen">
+      <div class="map-legend__item">
+        <span class="map-legend__swatch map-legend__swatch--zone" aria-hidden="true"></span>
+        <span>Rueckgabegebiet</span>
+      </div>
+      <div class="map-legend__item">
+        <span class="map-legend__swatch map-legend__swatch--hub" aria-hidden="true"></span>
+        <span>Ladehub mit Bonus</span>
+      </div>
+    </div>
     <aside class="vehicle-card" id="vehicle-card" aria-hidden="true">
       <button class="vehicle-card__close" id="vehicle-card-close" type="button" aria-label="Infocard schliessen">
         <span aria-hidden="true">×</span>
@@ -243,6 +253,11 @@
             <span class="ride-sheet__stat-label">Zone</span>
             <span class="ride-sheet__stat-value" id="ride-screen-zone">Altstadt</span>
           </div>
+        </div>
+        <div class="ride-sheet__zone-card">
+          <span class="ride-sheet__zone-pill" id="ride-screen-zone-pill">Im Rueckgabegebiet</span>
+          <p class="ride-sheet__zone-title" id="ride-screen-zone-title">Freie Rueckgabe ist hier moeglich.</p>
+          <p class="ride-sheet__zone-copy" id="ride-screen-zone-copy">Wenn du an einem markierten Ladehub parkst, bekommst du 30 Freiminuten gutgeschrieben.</p>
         </div>
         <div class="ride-sheet__actions">
           <button class="ride-sheet__secondary" id="ride-screen-pause" type="button">Temporär parken</button>

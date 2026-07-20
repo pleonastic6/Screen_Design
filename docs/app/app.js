@@ -267,6 +267,9 @@ const rideScreenCostDetail = document.getElementById("ride-screen-cost-detail");
 const rideScreenBattery = document.getElementById("ride-screen-battery");
 const rideScreenRange = document.getElementById("ride-screen-range");
 const rideScreenZone = document.getElementById("ride-screen-zone");
+const rideScreenZonePill = document.getElementById("ride-screen-zone-pill");
+const rideScreenZoneTitle = document.getElementById("ride-screen-zone-title");
+const rideScreenZoneCopy = document.getElementById("ride-screen-zone-copy");
 const rideScreenPause = document.getElementById("ride-screen-pause");
 const rideScreenEnd = document.getElementById("ride-screen-end");
 const pauseScreen = document.getElementById("pause-screen");
@@ -300,6 +303,10 @@ let unlockTimeoutId = null;
 let rideStatusIntervalId = null;
 let rideStartedAt = null;
 let lastReturnContext = null;
+const returnZone = {
+  center: [49.44515, 11.85815],
+  radius: 720
+};
 
 function markerIcon(type) {
   return L.divIcon({
@@ -327,6 +334,14 @@ L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png
 
 map.setView(mapCenter, defaultZoom);
 
+L.circle(returnZone.center, {
+  radius: returnZone.radius,
+  color: "#6fc95d",
+  weight: 2,
+  fillColor: "#8ee27a",
+  fillOpacity: 0.12
+}).addTo(map);
+
 L.marker(userLocation, { icon: markerIcon("user") }).addTo(map);
 
 scooters.forEach((scooter) => {
@@ -337,6 +352,13 @@ scooters.forEach((scooter) => {
 });
 
 hubs.forEach((hub) => {
+  L.circle(hub.coords, {
+    radius: 95,
+    color: "#4f93ff",
+    weight: 1.5,
+    fillColor: "#4f93ff",
+    fillOpacity: 0.1
+  }).addTo(map);
   L.marker(hub.coords, { icon: markerIcon("hub") }).addTo(map);
 });
 
@@ -459,9 +481,11 @@ function closeIssueScreen(reopenConfirm = true) {
 }
 
 function searchAnotherScooter() {
+  closeUnlockErrorScreen();
   closeIssueScreen(false);
   closeConfirmScreen(false);
   closeBookingScreen(false);
+  closeUnlockScreen();
   closeVehicleCard();
 }
 
@@ -534,7 +558,7 @@ function startRideSession() {
   rideScreenName.textContent = activeScooter.name;
   rideScreenBattery.textContent = getBatteryLabel(activeScooter.range);
   rideScreenRange.textContent = activeScooter.range;
-  rideScreenZone.textContent = getZoneLabel(activeScooter.type);
+  updateRideZoneUI();
   rideScreen.dataset.open = "true";
   rideScreen.setAttribute("aria-hidden", "false");
   closePauseScreen();
@@ -567,8 +591,9 @@ function openReturnScreen() {
   }
 
   const batteryPercent = getBatteryPercent(activeScooter.range);
-  const zoneLabel = getZoneLabel(activeScooter.type);
-  const nearHub = zoneLabel !== "Altstadt";
+  const zoneContext = getZoneContext(activeScooter);
+  const zoneLabel = zoneContext.label;
+  const nearHub = zoneContext.nearHub;
   const returnAllowed = batteryPercent > 30;
   lastReturnContext = { batteryPercent, zoneLabel, nearHub, returnAllowed };
 
@@ -689,6 +714,15 @@ function updateRideStatus() {
   pauseScreenCost.textContent = costLabel;
 }
 
+function updateRideZoneUI() {
+  const zoneContext = getZoneContext(activeScooter);
+  rideScreenZone.textContent = zoneContext.label;
+  rideScreenZonePill.dataset.state = zoneContext.state;
+  rideScreenZonePill.textContent = zoneContext.pill;
+  rideScreenZoneTitle.textContent = zoneContext.title;
+  rideScreenZoneCopy.textContent = zoneContext.copy;
+}
+
 function getBatteryLabel(rangeText) {
   return `${getBatteryPercent(rangeText)} %`;
 }
@@ -716,6 +750,65 @@ function getZoneLabel(locationText) {
   }
 
   return "Altstadt";
+}
+
+function getZoneContext(scooter) {
+  if (!scooter) {
+    return {
+      label: "Altstadt",
+      nearHub: false,
+      state: "default",
+      pill: "Im Rueckgabegebiet",
+      title: "Freie Rueckgabe ist hier moeglich.",
+      copy: "Wenn du an einem markierten Ladehub parkst, bekommst du 30 Freiminuten gutgeschrieben."
+    };
+  }
+
+  const nearestHub = getNearestHub(scooter.coords);
+  const hubDistance = nearestHub ? map.distance(scooter.coords, nearestHub.coords) : Number.POSITIVE_INFINITY;
+  const inReturnZone = map.distance(scooter.coords, returnZone.center) <= returnZone.radius;
+  const nearHub = hubDistance <= 180;
+
+  if (nearHub && nearestHub) {
+    return {
+      label: `${nearestHub.name} Hub`,
+      nearHub: true,
+      state: "hub",
+      pill: "Bonus direkt in Reichweite",
+      title: `Am ${nearestHub.name}-Ladehub gibt es Extra-Bonus.`,
+      copy: "Wenn du die Fahrt hier beendest, sicherst du dir 30 Freiminuten fuer die naechste Runde."
+    };
+  }
+
+  if (inReturnZone) {
+    return {
+      label: "Stadtgebiet",
+      nearHub: false,
+      state: "default",
+      pill: "Im Rueckgabegebiet",
+      title: "Freie Rueckgabe ist hier moeglich.",
+      copy: "Die gruene Zone auf der Karte zeigt dir, wo du sauber abstellen kannst. Ein blauer Hub bringt dir zusaetzlich Bonus."
+    };
+  }
+
+  return {
+    label: getZoneLabel(scooter.type),
+    nearHub: false,
+    state: "edge",
+    pill: "Am Rand des Gebiets",
+    title: "Rueckgabe klappt, aber ein Hub lohnt sich mehr.",
+    copy: "Du bist nahe am Rand. Fuer die beste Abschlussansicht fährst du noch kurz zu einem markierten Ladehub."
+  };
+}
+
+function getNearestHub(coords) {
+  return hubs.reduce((nearest, hub) => {
+    if (!nearest) {
+      return hub;
+    }
+
+    return map.distance(coords, hub.coords) < map.distance(coords, nearest.coords) ? hub : nearest;
+  }, null);
 }
 
 function setActiveScooterMarker(marker) {

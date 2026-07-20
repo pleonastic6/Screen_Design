@@ -50,6 +50,49 @@ body {
   display: none;
 }
 
+.map-legend {
+  position: absolute;
+  top: calc(16px + env(safe-area-inset-top, 0px));
+  left: 16px;
+  display: grid;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(20, 32, 23, 0.08);
+  box-shadow: 0 14px 30px rgba(31, 42, 34, 0.12);
+  backdrop-filter: blur(10px);
+  z-index: 420;
+}
+
+.map-legend__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #4d5d50;
+}
+
+.map-legend__swatch {
+  flex: 0 0 auto;
+  width: 12px;
+  height: 12px;
+}
+
+.map-legend__swatch--zone {
+  border-radius: 999px;
+  background: rgba(127, 214, 106, 0.3);
+  border: 2px solid rgba(92, 180, 76, 0.9);
+}
+
+.map-legend__swatch--hub {
+  border-radius: 4px;
+  background: rgba(79, 147, 255, 0.24);
+  border: 2px solid rgba(47, 102, 199, 0.92);
+  transform: rotate(45deg);
+}
+
 .map-marker {
   display: grid;
   place-items: center;
@@ -1172,6 +1215,54 @@ body {
   font-weight: 700;
 }
 
+.ride-sheet__zone-card {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(127, 214, 106, 0.2), transparent 8rem),
+    rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(20, 32, 23, 0.06);
+  box-shadow: 0 10px 24px rgba(23, 35, 27, 0.05);
+}
+
+.ride-sheet__zone-pill {
+  justify-self: start;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: #eff8eb;
+  color: #244126;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.ride-sheet__zone-pill[data-state="hub"] {
+  background: #edf4ff;
+  color: #2450a6;
+}
+
+.ride-sheet__zone-pill[data-state="edge"] {
+  background: #f2f5f0;
+  color: #526253;
+}
+
+.ride-sheet__zone-title,
+.ride-sheet__zone-copy {
+  margin: 0;
+}
+
+.ride-sheet__zone-title {
+  font-size: 0.96rem;
+  font-weight: 700;
+}
+
+.ride-sheet__zone-copy {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #566558;
+}
+
 .ride-sheet__notice {
   padding: 16px 16px 18px;
   border-radius: 22px;
@@ -2128,6 +2219,7 @@ body {
   }
 
   .ride-sheet__stat,
+  .ride-sheet__zone-card,
   .ride-sheet__notice {
     padding: 12px 14px;
   }
@@ -2142,6 +2234,18 @@ body {
   .ride-sheet__stats,
   .ride-sheet__actions {
     grid-template-columns: 1fr;
+  }
+
+  .map-legend {
+    top: calc(12px + env(safe-area-inset-top, 0px));
+    left: 12px;
+    right: 12px;
+    gap: 6px;
+    padding: 10px 12px;
+  }
+
+  .map-legend__item {
+    font-size: 0.76rem;
   }
 
   .return-sheet {
