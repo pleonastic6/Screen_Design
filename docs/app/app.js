@@ -249,6 +249,8 @@ const confirmScreenName = document.getElementById("confirm-screen-name");
 const confirmScreenType = document.getElementById("confirm-screen-type");
 const confirmScreenBattery = document.getElementById("confirm-screen-battery");
 const confirmScreenRange = document.getElementById("confirm-screen-range");
+const confirmScreenOptions = document.getElementById("confirm-screen-options");
+const confirmScreenSelectionNote = document.getElementById("confirm-screen-selection-note");
 const issueScreen = document.getElementById("issue-screen");
 const issueScreenBack = document.getElementById("issue-screen-back");
 const issueScreenReturn = document.getElementById("issue-screen-return");
@@ -273,6 +275,7 @@ const rideScreenZone = document.getElementById("ride-screen-zone");
 const rideScreenZonePill = document.getElementById("ride-screen-zone-pill");
 const rideScreenZoneTitle = document.getElementById("ride-screen-zone-title");
 const rideScreenZoneCopy = document.getElementById("ride-screen-zone-copy");
+const rideScreenZoneAction = document.getElementById("ride-screen-zone-action");
 const rideScreenPause = document.getElementById("ride-screen-pause");
 const rideScreenEnd = document.getElementById("ride-screen-end");
 const pauseScreen = document.getElementById("pause-screen");
@@ -306,6 +309,8 @@ let unlockTimeoutId = null;
 let rideStatusIntervalId = null;
 let rideStartedAt = null;
 let lastReturnContext = null;
+let rideCurrentCoords = null;
+let selectedConfirmScooterName = null;
 const returnZone = {
   center: [49.44515, 11.85815],
   radius: 720
@@ -388,12 +393,14 @@ bookingScreenUnlock.addEventListener("click", openConfirmScreen);
 confirmScreenBack.addEventListener("click", closeConfirmScreen);
 confirmScreenBackAction.addEventListener("click", closeConfirmScreen);
 confirmScreenUnlock.addEventListener("click", openUnlockScreen);
+confirmScreenOptions.addEventListener("click", handleConfirmOptionClick);
 issueScreenBack.addEventListener("click", closeIssueScreen);
 issueScreenReturn.addEventListener("click", closeIssueScreen);
 issueScreenSearch.addEventListener("click", searchAnotherScooter);
 unlockScreenAction.addEventListener("click", startRideSession);
 unlockErrorScreenRetry.addEventListener("click", retryUnlockFlow);
 unlockErrorScreenSearch.addEventListener("click", searchAnotherScooter);
+rideScreenZoneAction.addEventListener("click", moveRideToNearestHub);
 rideScreenPause.addEventListener("click", openPauseScreen);
 rideScreenEnd.addEventListener("click", openReturnScreen);
 pauseScreenResume.addEventListener("click", closePauseScreen);
@@ -466,6 +473,8 @@ function openConfirmScreen() {
   confirmScreenType.textContent = activeScooter.type;
   confirmScreenBattery.textContent = getBatteryLabel(activeScooter.range);
   confirmScreenRange.textContent = activeScooter.range;
+  renderConfirmScooterOptions();
+  updateConfirmSelection(activeScooter.name);
   confirmScreen.dataset.open = "true";
   confirmScreen.setAttribute("aria-hidden", "false");
 }
@@ -510,7 +519,7 @@ function searchAnotherScooter() {
 }
 
 function openUnlockScreen() {
-  if (!activeScooter) {
+  if (!activeScooter || selectedConfirmScooterName !== activeScooter.name) {
     return;
   }
 
@@ -575,6 +584,7 @@ function startRideSession() {
   vehicleCard.setAttribute("aria-hidden", "true");
   clearActiveScooterMarker();
   rideStartedAt = Date.now();
+  rideCurrentCoords = activeScooter.coords;
   rideScreenName.textContent = activeScooter.name;
   rideScreenBattery.textContent = getBatteryLabel(activeScooter.range);
   rideScreenRange.textContent = activeScooter.range;
@@ -611,7 +621,7 @@ function openReturnScreen() {
   }
 
   const batteryPercent = getBatteryPercent(activeScooter.range);
-  const zoneContext = getZoneContext(activeScooter);
+  const zoneContext = getZoneContext(activeScooter, rideCurrentCoords);
   const zoneLabel = zoneContext.label;
   const nearHub = zoneContext.nearHub;
   const returnAllowed = batteryPercent > 30;
@@ -650,6 +660,7 @@ function confirmReturn() {
 
   stopRideStatus();
   rideStartedAt = null;
+  rideCurrentCoords = null;
   closeReturnScreen();
   rideScreen.dataset.open = "false";
   rideScreen.setAttribute("aria-hidden", "true");
@@ -735,12 +746,14 @@ function updateRideStatus() {
 }
 
 function updateRideZoneUI() {
-  const zoneContext = getZoneContext(activeScooter);
+  const zoneContext = getZoneContext(activeScooter, rideCurrentCoords);
   rideScreenZone.textContent = zoneContext.label;
   rideScreenZonePill.dataset.state = zoneContext.state;
   rideScreenZonePill.textContent = zoneContext.pill;
   rideScreenZoneTitle.textContent = zoneContext.title;
   rideScreenZoneCopy.textContent = zoneContext.copy;
+  rideScreenZoneAction.textContent = zoneContext.nearHub ? "Am Ladehub angekommen" : "Zum naechsten Ladehub bringen";
+  rideScreenZoneAction.disabled = zoneContext.nearHub;
 }
 
 function getBatteryLabel(rangeText) {
@@ -761,6 +774,65 @@ function getAvailabilityLabel(status) {
   }
 
   return "Verfuegbar";
+}
+
+function renderConfirmScooterOptions() {
+  if (!activeScooter) {
+    confirmScreenOptions.innerHTML = "";
+    return;
+  }
+
+  const nearbyScooters = scooters
+    .filter((scooter) => scooter.name !== activeScooter.name)
+    .sort((left, right) => map.distance(activeScooter.coords, left.coords) - map.distance(activeScooter.coords, right.coords))
+    .slice(0, 3);
+
+  const options = [activeScooter, ...nearbyScooters];
+  confirmScreenOptions.innerHTML = options.map((scooter) => {
+    const isReserved = scooter.name === activeScooter.name;
+    const meta = isReserved ? "Reserviert fuer dich" : getAvailabilityLabel(scooter.status);
+    return `
+      <button
+        class="confirm-sheet__option"
+        type="button"
+        data-scooter-name="${scooter.name}"
+        data-reserved="${isReserved ? "true" : "false"}"
+      >
+        <span class="confirm-sheet__option-top">
+          <span class="confirm-sheet__option-name">${scooter.name}</span>
+          <span class="confirm-sheet__option-badge ${isReserved ? "is-reserved" : ""}">${meta}</span>
+        </span>
+        <span class="confirm-sheet__option-bottom">
+          <span>${getBatteryLabel(scooter.range)}</span>
+          <span>${scooter.range}</span>
+        </span>
+      </button>
+    `;
+  }).join("");
+}
+
+function handleConfirmOptionClick(event) {
+  const option = event.target.closest(".confirm-sheet__option");
+  if (!option) {
+    return;
+  }
+
+  updateConfirmSelection(option.dataset.scooterName);
+}
+
+function updateConfirmSelection(scooterName) {
+  selectedConfirmScooterName = scooterName;
+  const options = confirmScreenOptions.querySelectorAll(".confirm-sheet__option");
+  options.forEach((option) => {
+    const isSelected = option.dataset.scooterName === scooterName;
+    option.dataset.selected = isSelected ? "true" : "false";
+  });
+
+  const isReservedScooter = scooterName === activeScooter?.name;
+  confirmScreenUnlock.disabled = !isReservedScooter;
+  confirmScreenSelectionNote.textContent = isReservedScooter
+    ? "Nummer stimmt. Diesen Scooter kannst du jetzt sicher entsperren."
+    : "Das ist nicht dein reservierter Scooter. Bitte waehle die passende Nummer.";
 }
 
 function getBatteryPercent(rangeText) {
@@ -788,7 +860,7 @@ function getZoneLabel(locationText) {
   return "Altstadt";
 }
 
-function getZoneContext(scooter) {
+function getZoneContext(scooter, currentCoords = null) {
   if (!scooter) {
     return {
       label: "Altstadt",
@@ -800,9 +872,10 @@ function getZoneContext(scooter) {
     };
   }
 
-  const nearestHub = getNearestHub(scooter.coords);
-  const hubDistance = nearestHub ? map.distance(scooter.coords, nearestHub.coords) : Number.POSITIVE_INFINITY;
-  const inReturnZone = map.distance(scooter.coords, returnZone.center) <= returnZone.radius;
+  const referenceCoords = currentCoords ?? scooter.coords;
+  const nearestHub = getNearestHub(referenceCoords);
+  const hubDistance = nearestHub ? map.distance(referenceCoords, nearestHub.coords) : Number.POSITIVE_INFINITY;
+  const inReturnZone = map.distance(referenceCoords, returnZone.center) <= returnZone.radius;
   const nearHub = hubDistance <= 180;
 
   if (nearHub && nearestHub) {
@@ -845,6 +918,20 @@ function getNearestHub(coords) {
 
     return map.distance(coords, hub.coords) < map.distance(coords, nearest.coords) ? hub : nearest;
   }, null);
+}
+
+function moveRideToNearestHub() {
+  if (!activeScooter) {
+    return;
+  }
+
+  const nearestHub = getNearestHub(rideCurrentCoords ?? activeScooter.coords);
+  if (!nearestHub) {
+    return;
+  }
+
+  rideCurrentCoords = nearestHub.coords;
+  updateRideZoneUI();
 }
 
 function setActiveScooterMarker(marker) {

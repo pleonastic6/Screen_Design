@@ -620,6 +620,85 @@ body {
   color: #142017;
 }
 
+.confirm-sheet__picker {
+  display: grid;
+  gap: 10px;
+}
+
+.confirm-sheet__picker-title,
+.confirm-sheet__picker-copy,
+.confirm-sheet__selection-note {
+  margin: 0;
+}
+
+.confirm-sheet__picker-title {
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: #142017;
+}
+
+.confirm-sheet__picker-copy,
+.confirm-sheet__selection-note {
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: #5b695d;
+}
+
+.confirm-sheet__options {
+  display: grid;
+  gap: 10px;
+}
+
+.confirm-sheet__option {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid rgba(20, 32, 23, 0.08);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.88);
+  color: #142017;
+  text-align: left;
+  font: inherit;
+}
+
+.confirm-sheet__option[data-selected="true"] {
+  border-color: rgba(127, 214, 106, 0.72);
+  box-shadow: 0 0 0 4px rgba(127, 214, 106, 0.14);
+}
+
+.confirm-sheet__option-top,
+.confirm-sheet__option-bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.confirm-sheet__option-name {
+  font-size: 0.96rem;
+  font-weight: 700;
+}
+
+.confirm-sheet__option-badge {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #f1f4ef;
+  color: #536055;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.confirm-sheet__option-badge.is-reserved {
+  background: #eff8eb;
+  color: #244126;
+}
+
+.confirm-sheet__option-bottom {
+  font-size: 0.82rem;
+  color: #627064;
+}
+
 .confirm-sheet__actions {
   display: grid;
   gap: 10px;
@@ -644,6 +723,12 @@ body {
   background: #94ed8f;
   color: #0d180f;
   box-shadow: 0 12px 24px rgba(127, 214, 106, 0.22);
+}
+
+.confirm-sheet__primary:disabled {
+  background: #dde3dc;
+  color: #5a675c;
+  box-shadow: none;
 }
 
 .confirm-sheet__secondary {
@@ -1335,6 +1420,24 @@ body {
   font-size: 0.85rem;
   line-height: 1.5;
   color: #566558;
+}
+
+.ride-sheet__zone-action {
+  justify-self: start;
+  margin-top: 2px;
+  padding: 11px 14px;
+  border: 0;
+  border-radius: 16px;
+  background: #142017;
+  color: #f7fbf5;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.ride-sheet__zone-action:disabled {
+  background: #dfe6dc;
+  color: #546155;
 }
 
 .ride-sheet__notice {
