@@ -55,6 +55,7 @@ body {
   top: calc(16px + env(safe-area-inset-top, 0px));
   left: 16px;
   display: grid;
+  grid-template-columns: repeat(2, minmax(0, max-content));
   gap: 8px;
   padding: 12px 14px;
   border-radius: 20px;
@@ -78,6 +79,30 @@ body {
   flex: 0 0 auto;
   width: 12px;
   height: 12px;
+}
+
+.map-legend__swatch--available {
+  border-radius: 999px;
+  background: #7fd66a;
+  border: 2px solid rgba(255, 255, 255, 0.96);
+}
+
+.map-legend__swatch--reserved {
+  border-radius: 999px;
+  background: #f0c64a;
+  border: 2px solid rgba(255, 255, 255, 0.96);
+}
+
+.map-legend__swatch--low {
+  border-radius: 999px;
+  background: #ff8e6b;
+  border: 2px solid rgba(255, 255, 255, 0.96);
+}
+
+.map-legend__swatch--charging {
+  border-radius: 999px;
+  background: #4f93ff;
+  border: 2px solid rgba(255, 255, 255, 0.96);
 }
 
 .map-legend__swatch--zone {
@@ -105,6 +130,18 @@ body {
 
 .map-marker.scooter {
   background: var(--lime);
+}
+
+.map-marker.scooter.reserved {
+  background: #f0c64a;
+}
+
+.map-marker.scooter.low {
+  background: #ff8e6b;
+}
+
+.map-marker.scooter.charging {
+  background: #4f93ff;
 }
 
 .map-marker.scooter.is-active {
@@ -211,6 +248,10 @@ body {
   color: #5f6962;
 }
 
+.vehicle-card__meta-item--status {
+  color: #365039;
+}
+
 .vehicle-card__meta-icon {
   flex: 0 0 auto;
   position: relative;
@@ -236,6 +277,33 @@ body {
   height: 6px;
   border-radius: 2px;
   background: #1f2e22;
+}
+
+.vehicle-card__meta-icon--status::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: #7fd66a;
+  box-shadow: 0 0 0 4px rgba(127, 214, 106, 0.16);
+}
+
+.vehicle-card[data-status="reserved"] .vehicle-card__meta-icon--status::before {
+  background: #f0c64a;
+  box-shadow: 0 0 0 4px rgba(240, 198, 74, 0.16);
+}
+
+.vehicle-card[data-status="low"] .vehicle-card__meta-icon--status::before {
+  background: #ff8e6b;
+  box-shadow: 0 0 0 4px rgba(255, 142, 107, 0.16);
+}
+
+.vehicle-card[data-status="charging"] .vehicle-card__meta-icon--status::before {
+  background: #4f93ff;
+  box-shadow: 0 0 0 4px rgba(79, 147, 255, 0.16);
 }
 
 .vehicle-card__meta-icon--price::before,
@@ -355,6 +423,12 @@ body {
   background: #94ed8f;
   color: #0d180f;
   font: inherit;
+}
+
+.vehicle-card__reserve:disabled {
+  background: #dde3dc;
+  color: #5a675c;
+  box-shadow: none;
 }
 
 .vehicle-card__reserve-title {
@@ -2240,6 +2314,7 @@ body {
     top: calc(12px + env(safe-area-inset-top, 0px));
     left: 12px;
     right: 12px;
+    grid-template-columns: 1fr;
     gap: 6px;
     padding: 10px 12px;
   }

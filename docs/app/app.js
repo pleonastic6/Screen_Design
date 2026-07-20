@@ -211,6 +211,9 @@ const scooters = [
   }
 ];
 
+const PRICE_LABEL = "0,10 EUR je 5 Min";
+const RESERVATION_MINUTES = 30;
+
 const hubs = [
   { name: "Campus OTH", coords: [49.4448780, 11.8473735] },
   { name: "Marktplatz", coords: [49.4452441, 11.8580549] },
@@ -223,8 +226,10 @@ const defaultZoom = 15;
 const vehicleCard = document.getElementById("vehicle-card");
 const vehicleCardClose = document.getElementById("vehicle-card-close");
 const vehicleCardReserve = document.getElementById("vehicle-card-reserve");
+const vehicleCardReserveTitle = document.getElementById("vehicle-card-reserve-title");
 const vehicleCardType = document.getElementById("vehicle-card-type");
 const vehicleCardName = document.getElementById("vehicle-card-name");
+const vehicleCardStatus = document.getElementById("vehicle-card-status");
 const vehicleCardRange = document.getElementById("vehicle-card-range");
 const vehicleCardPrice = document.getElementById("vehicle-card-price");
 const bookingScreen = document.getElementById("booking-screen");
@@ -244,7 +249,6 @@ const confirmScreenName = document.getElementById("confirm-screen-name");
 const confirmScreenType = document.getElementById("confirm-screen-type");
 const confirmScreenBattery = document.getElementById("confirm-screen-battery");
 const confirmScreenRange = document.getElementById("confirm-screen-range");
-const confirmScreenIssue = document.getElementById("confirm-screen-issue");
 const issueScreen = document.getElementById("issue-screen");
 const issueScreenBack = document.getElementById("issue-screen-back");
 const issueScreenReturn = document.getElementById("issue-screen-return");
@@ -254,7 +258,6 @@ const unlockScreen = document.getElementById("unlock-screen");
 const unlockScreenTitle = document.getElementById("unlock-screen-title");
 const unlockScreenHint = document.getElementById("unlock-screen-hint");
 const unlockScreenAction = document.getElementById("unlock-screen-action");
-const unlockScreenIssue = document.getElementById("unlock-screen-issue");
 const unlockErrorScreen = document.getElementById("unlock-error-screen");
 const unlockErrorScreenRetry = document.getElementById("unlock-error-screen-retry");
 const unlockErrorScreenSearch = document.getElementById("unlock-error-screen-search");
@@ -308,6 +311,21 @@ const returnZone = {
   radius: 720
 };
 
+scooters.forEach((scooter, index) => {
+  const batteryPercent = getBatteryPercent(scooter.range);
+  if (index === 2 || index === 14 || index === 23) {
+    scooter.status = "reserved";
+  } else if (index === 0 || index === 12 || index === 17) {
+    scooter.status = "charging";
+  } else if (batteryPercent <= 35) {
+    scooter.status = "low";
+  } else {
+    scooter.status = "available";
+  }
+
+  scooter.price = PRICE_LABEL;
+});
+
 function markerIcon(type) {
   return L.divIcon({
     className: "",
@@ -345,7 +363,7 @@ L.circle(returnZone.center, {
 L.marker(userLocation, { icon: markerIcon("user") }).addTo(map);
 
 scooters.forEach((scooter) => {
-  const marker = L.marker(scooter.coords, { icon: markerIcon("scooter") }).addTo(map);
+  const marker = L.marker(scooter.coords, { icon: markerIcon(`scooter ${scooter.status}`) }).addTo(map);
   marker.on("click", () => {
     openVehicleCard(scooter, marker);
   });
@@ -370,12 +388,10 @@ bookingScreenUnlock.addEventListener("click", openConfirmScreen);
 confirmScreenBack.addEventListener("click", closeConfirmScreen);
 confirmScreenBackAction.addEventListener("click", closeConfirmScreen);
 confirmScreenUnlock.addEventListener("click", openUnlockScreen);
-confirmScreenIssue.addEventListener("click", openIssueScreen);
 issueScreenBack.addEventListener("click", closeIssueScreen);
 issueScreenReturn.addEventListener("click", closeIssueScreen);
 issueScreenSearch.addEventListener("click", searchAnotherScooter);
 unlockScreenAction.addEventListener("click", startRideSession);
-unlockScreenIssue.addEventListener("click", openUnlockErrorScreen);
 unlockErrorScreenRetry.addEventListener("click", retryUnlockFlow);
 unlockErrorScreenSearch.addEventListener("click", searchAnotherScooter);
 rideScreenPause.addEventListener("click", openPauseScreen);
@@ -392,8 +408,12 @@ function openVehicleCard(scooter, marker) {
   activeScooter = scooter;
   vehicleCardType.textContent = scooter.type;
   vehicleCardName.textContent = scooter.name;
+  vehicleCardStatus.textContent = getAvailabilityLabel(scooter.status);
+  vehicleCard.dataset.status = scooter.status;
   vehicleCardRange.textContent = scooter.range;
-  vehicleCardPrice.textContent = scooter.price;
+  vehicleCardPrice.textContent = PRICE_LABEL;
+  vehicleCardReserve.disabled = scooter.status === "reserved";
+  vehicleCardReserveTitle.textContent = scooter.status === "reserved" ? "Derzeit reserviert" : "30 Min reservieren";
   vehicleCard.dataset.open = "true";
   vehicleCard.setAttribute("aria-hidden", "false");
   setActiveScooterMarker(marker);
@@ -407,14 +427,14 @@ function closeVehicleCard() {
 }
 
 function openBookingScreen() {
-  if (!activeScooter) {
+  if (!activeScooter || activeScooter.status === "reserved") {
     return;
   }
 
   bookingScreenName.textContent = activeScooter.name;
   bookingScreenType.textContent = activeScooter.type;
   bookingScreenRange.textContent = activeScooter.range;
-  bookingScreenPrice.textContent = activeScooter.price;
+  bookingScreenPrice.textContent = PRICE_LABEL;
   vehicleCard.dataset.open = "false";
   vehicleCard.setAttribute("aria-hidden", "true");
   bookingScreen.dataset.open = "true";
@@ -427,7 +447,7 @@ function closeBookingScreen(reopenVehicleCard = true) {
   bookingScreen.setAttribute("aria-hidden", "true");
   stopBookingCountdown();
   bookingEndsAt = null;
-  bookingScreenTimer.textContent = "10:00 Min";
+  bookingScreenTimer.textContent = "30:00 Min";
   if (reopenVehicleCard && activeScooter && activeScooterMarker) {
     vehicleCard.dataset.open = "true";
     vehicleCard.setAttribute("aria-hidden", "false");
@@ -650,7 +670,7 @@ function closeSummaryScreen() {
 }
 
 function startBookingCountdown() {
-  bookingEndsAt = Date.now() + 10 * 60 * 1000;
+  bookingEndsAt = Date.now() + RESERVATION_MINUTES * 60 * 1000;
   stopBookingCountdown();
   updateBookingCountdown();
   bookingCountdownId = window.setInterval(updateBookingCountdown, 1000);
@@ -665,7 +685,7 @@ function stopBookingCountdown() {
 
 function updateBookingCountdown() {
   if (!bookingEndsAt) {
-    bookingScreenTimer.textContent = "10:00 Min";
+    bookingScreenTimer.textContent = "30:00 Min";
     return;
   }
 
@@ -691,18 +711,18 @@ function stopRideStatus() {
 function updateRideStatus() {
   if (!rideStartedAt) {
     rideScreenTimer.textContent = "00:00";
-    rideScreenCost.textContent = "1,00 EUR";
+    rideScreenCost.textContent = "0,00 EUR";
     rideScreenTimerDetail.textContent = "00:00";
-    rideScreenCostDetail.textContent = "1,00 EUR";
+    rideScreenCostDetail.textContent = "0,00 EUR";
     pauseScreenTime.textContent = "00:00";
-    pauseScreenCost.textContent = "1,00 EUR";
+    pauseScreenCost.textContent = "0,00 EUR";
     return;
   }
 
   const elapsedSeconds = Math.max(Math.floor((Date.now() - rideStartedAt) / 1000), 0);
   const minutes = Math.floor(elapsedSeconds / 60);
   const seconds = elapsedSeconds % 60;
-  const cost = 1 + (elapsedSeconds / 60) * 0.19;
+  const cost = (elapsedSeconds / 300) * 0.10;
   const elapsedLabel = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
   const costLabel = `${cost.toFixed(2).replace(".", ",")} EUR`;
 
@@ -725,6 +745,22 @@ function updateRideZoneUI() {
 
 function getBatteryLabel(rangeText) {
   return `${getBatteryPercent(rangeText)} %`;
+}
+
+function getAvailabilityLabel(status) {
+  if (status === "reserved") {
+    return "Reserviert";
+  }
+
+  if (status === "charging") {
+    return "Laedt am Hub";
+  }
+
+  if (status === "low") {
+    return "Verfuegbar mit wenig Akku";
+  }
+
+  return "Verfuegbar";
 }
 
 function getBatteryPercent(rangeText) {

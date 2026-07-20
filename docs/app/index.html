@@ -18,7 +18,23 @@
 <body>
   <main class="map-screen">
     <div class="map-frame" id="main-map" aria-label="Karte mit Scootern und Ladehubs"></div>
-    <div class="map-legend" aria-label="Rueckgabezonen">
+    <div class="map-legend" aria-label="Kartenlegende">
+      <div class="map-legend__item">
+        <span class="map-legend__swatch map-legend__swatch--available" aria-hidden="true"></span>
+        <span>Verfuegbar</span>
+      </div>
+      <div class="map-legend__item">
+        <span class="map-legend__swatch map-legend__swatch--reserved" aria-hidden="true"></span>
+        <span>Reserviert</span>
+      </div>
+      <div class="map-legend__item">
+        <span class="map-legend__swatch map-legend__swatch--low" aria-hidden="true"></span>
+        <span>Niedriger Akku</span>
+      </div>
+      <div class="map-legend__item">
+        <span class="map-legend__swatch map-legend__swatch--charging" aria-hidden="true"></span>
+        <span>Laedt am Hub</span>
+      </div>
       <div class="map-legend__item">
         <span class="map-legend__swatch map-legend__swatch--zone" aria-hidden="true"></span>
         <span>Rueckgabegebiet</span>
@@ -37,13 +53,17 @@
           <p class="vehicle-card__eyebrow" id="vehicle-card-type">E-Scooter in der Naehe</p>
           <h2 class="vehicle-card__title" id="vehicle-card-name">E-Scooter XXX-JWM</h2>
           <div class="vehicle-card__meta">
+            <div class="vehicle-card__meta-item vehicle-card__meta-item--status">
+              <span class="vehicle-card__meta-icon vehicle-card__meta-icon--status" aria-hidden="true"></span>
+              <span id="vehicle-card-status">Verfuegbar</span>
+            </div>
             <div class="vehicle-card__meta-item">
               <span class="vehicle-card__meta-icon vehicle-card__meta-icon--battery" aria-hidden="true"></span>
               <span id="vehicle-card-range">54 km Reichweite</span>
             </div>
             <div class="vehicle-card__meta-item vehicle-card__meta-item--price">
               <span class="vehicle-card__meta-icon vehicle-card__meta-icon--price" aria-hidden="true"></span>
-              <span id="vehicle-card-price">1,00 EUR entsperren, 0,19 EUR/Min</span>
+              <span id="vehicle-card-price">0,10 EUR je 5 Min</span>
             </div>
           </div>
         </div>
@@ -62,7 +82,7 @@
         <button class="vehicle-card__pill" type="button">Problem melden</button>
       </div>
       <button class="vehicle-card__reserve" id="vehicle-card-reserve" type="button">
-        <span class="vehicle-card__reserve-title">Buchen</span>
+        <span class="vehicle-card__reserve-title" id="vehicle-card-reserve-title">30 Min reservieren</span>
       </button>
     </aside>
     <section class="booking-screen" id="booking-screen" aria-hidden="true">
@@ -76,8 +96,8 @@
         <div class="booking-sheet__hero">
           <div class="booking-sheet__hero-copy">
             <p class="booking-sheet__label">Fuer dich reserviert</p>
-            <p class="booking-sheet__timer" id="booking-screen-timer">10:00 Min</p>
-            <p class="booking-sheet__hint">Du hast genug Zeit, um entspannt hinzugehen.</p>
+            <p class="booking-sheet__timer" id="booking-screen-timer">30:00 Min</p>
+            <p class="booking-sheet__hint">Du kannst den Scooter bis zu 30 Minuten vorab fuer dich sichern.</p>
           </div>
           <div class="booking-sheet__badge">Gratis</div>
         </div>
@@ -99,7 +119,7 @@
           </div>
           <div class="booking-sheet__row">
             <span class="booking-sheet__row-label">Tarif</span>
-            <span class="booking-sheet__row-value" id="booking-screen-price">1,00 EUR entsperren, 0,19 EUR/Min</span>
+            <span class="booking-sheet__row-value" id="booking-screen-price">0,10 EUR je 5 Min</span>
           </div>
         </div>
         <div class="booking-sheet__actions">
@@ -142,7 +162,6 @@
           <button class="confirm-sheet__secondary" id="confirm-screen-back-action" type="button">Noch mal pruefen</button>
           <button class="confirm-sheet__primary" id="confirm-screen-unlock" type="button">Ja, entsperren</button>
         </div>
-        <button class="confirm-sheet__text-action" id="confirm-screen-issue" type="button">Scooter passt nicht?</button>
       </div>
     </section>
     <section class="issue-screen" id="issue-screen" aria-hidden="true">
@@ -194,7 +213,6 @@
           <span class="unlock-card__dot"></span>
         </div>
         <button class="unlock-card__action" id="unlock-screen-action" type="button" disabled>Fahrt starten</button>
-        <button class="unlock-card__text-action" id="unlock-screen-issue" type="button">Entsperren klappt nicht?</button>
       </div>
     </section>
     <section class="unlock-error-screen" id="unlock-error-screen" aria-hidden="true">
@@ -221,7 +239,7 @@
           </div>
           <div class="ride-sheet__statusbar-bottom">
             <span class="ride-sheet__status-metric" id="ride-screen-timer">00:00</span>
-            <span class="ride-sheet__status-metric" id="ride-screen-cost">1,00 EUR</span>
+            <span class="ride-sheet__status-metric" id="ride-screen-cost">0,00 EUR</span>
           </div>
         </div>
         <div class="ride-sheet__header">
@@ -237,7 +255,7 @@
           </div>
           <div class="ride-sheet__hero-block ride-sheet__hero-block--accent">
             <span class="ride-sheet__hero-label">Kosten</span>
-            <span class="ride-sheet__hero-value" id="ride-screen-cost-detail">1,00 EUR</span>
+            <span class="ride-sheet__hero-value" id="ride-screen-cost-detail">0,00 EUR</span>
           </div>
         </div>
         <div class="ride-sheet__stats">
@@ -278,7 +296,7 @@
           </div>
           <div class="pause-sheet__hero-block pause-sheet__hero-block--accent">
             <span class="pause-sheet__hero-label">Kosten</span>
-            <span class="pause-sheet__hero-value" id="pause-screen-cost">1,00 EUR</span>
+            <span class="pause-sheet__hero-value" id="pause-screen-cost">0,00 EUR</span>
           </div>
         </div>
         <div class="pause-sheet__notice">
