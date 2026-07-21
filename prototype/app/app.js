@@ -414,6 +414,13 @@ const summaryScreenTime = document.getElementById("summary-screen-time");
 const summaryScreenCost = document.getElementById("summary-screen-cost");
 const summaryScreenZone = document.getElementById("summary-screen-zone");
 const summaryScreenBonus = document.getElementById("summary-screen-bonus");
+const summaryScreenDistance = document.getElementById("summary-screen-distance");
+const summaryScreenStart = document.getElementById("summary-screen-start");
+const summaryScreenEnd = document.getElementById("summary-screen-end");
+const summaryScreenRouteLine = document.getElementById("summary-screen-route-line");
+const summaryScreenRouteShadow = document.getElementById("summary-screen-route-shadow");
+const summaryScreenRouteStart = document.getElementById("summary-screen-route-start");
+const summaryScreenRouteEnd = document.getElementById("summary-screen-route-end");
 const summaryScreenClose = document.getElementById("summary-screen-close");
 
 let activeScooterMarker = null;
@@ -425,6 +432,7 @@ let rideStatusIntervalId = null;
 let rideStartedAt = null;
 let lastReturnContext = null;
 let rideCurrentCoords = null;
+let rideStartCoords = null;
 let selectedConfirmScooterName = null;
 
 scooters.forEach((scooter, index) => {
@@ -489,15 +497,6 @@ restrictedZones.forEach((zone) => {
     weight: 2,
     fillColor: "#f39a9a",
     fillOpacity: 0.18
-  }).addTo(map);
-});
-
-hubZones.forEach((zone) => {
-  L.polygon(zone.points, {
-    color: "#4f93ff",
-    weight: 2,
-    fillColor: "#7eb4ff",
-    fillOpacity: 0.2
   }).addTo(map);
 });
 
@@ -715,6 +714,7 @@ function startRideSession() {
   vehicleCard.setAttribute("aria-hidden", "true");
   clearActiveScooterMarker();
   rideStartedAt = Date.now();
+  rideStartCoords = activeScooter.coords;
   rideCurrentCoords = activeScooter.coords;
   rideScreenName.textContent = activeScooter.name;
   rideScreenBattery.textContent = getBatteryLabel(activeScooter.range);
@@ -798,7 +798,10 @@ function confirmReturn() {
 
   stopRideStatus();
   rideStartedAt = null;
+  const finalCoords = rideCurrentCoords ?? activeScooter?.coords ?? rideStartCoords;
+  renderSummaryRoute(rideStartCoords ?? activeScooter?.coords, finalCoords, context);
   rideCurrentCoords = null;
+  rideStartCoords = null;
   closeReturnScreen();
   rideScreen.dataset.open = "false";
   rideScreen.setAttribute("aria-hidden", "true");
@@ -816,6 +819,66 @@ function confirmReturn() {
 function closeSummaryScreen() {
   summaryScreen.dataset.open = "false";
   summaryScreen.setAttribute("aria-hidden", "true");
+}
+
+function renderSummaryRoute(startCoords, endCoords, context) {
+  if (!startCoords || !endCoords) {
+    summaryScreenDistance.textContent = "0,0 km";
+    summaryScreenStart.textContent = "Startpunkt";
+    summaryScreenEnd.textContent = context.nearHub ? `${context.zoneLabel} Ladehub` : `${context.zoneLabel} Stadtgebiet`;
+    return;
+  }
+
+  const distanceKm = map.distance(startCoords, endCoords) / 1000;
+  summaryScreenDistance.textContent = `${distanceKm.toFixed(1).replace(".", ",")} km`;
+  summaryScreenStart.textContent = getStartLabel(startCoords);
+  summaryScreenEnd.textContent = context.nearHub ? `${context.zoneLabel} Ladehub` : `${context.zoneLabel} Stadtgebiet`;
+
+  const routeLayout = getSummaryRouteLayout(startCoords, endCoords, context.nearHub);
+  const path = buildRoutePath(routeLayout.points);
+  summaryScreenRouteLine.setAttribute("d", path);
+  summaryScreenRouteShadow.setAttribute("d", path);
+  summaryScreenRouteStart.style.left = `${routeLayout.start.x}px`;
+  summaryScreenRouteStart.style.top = `${routeLayout.start.y}px`;
+  summaryScreenRouteEnd.style.left = `${routeLayout.end.x}px`;
+  summaryScreenRouteEnd.style.top = `${routeLayout.end.y}px`;
+}
+
+function getStartLabel(coords) {
+  const nearestHub = getNearestHub(coords);
+  if (nearestHub && map.distance(coords, nearestHub.center) < 280) {
+    return nearestHub.shortName ?? nearestHub.name;
+  }
+
+  return "Scooter-Standort";
+}
+
+function getSummaryRouteLayout(startCoords, endCoords, nearHub) {
+  const latDiff = endCoords[0] - startCoords[0];
+  const lngDiff = endCoords[1] - startCoords[1];
+  const normalizedX = Math.max(0.18, Math.min(0.82, 0.5 + lngDiff * 22));
+  const normalizedY = Math.max(0.18, Math.min(0.8, 0.5 - latDiff * 30));
+  const start = { x: 28, y: 114 };
+  const end = { x: Math.round(320 * normalizedX), y: Math.round(150 * normalizedY) };
+  const mid1 = {
+    x: Math.round(start.x + (end.x - start.x) * 0.34),
+    y: Math.max(18, Math.round(Math.min(start.y, end.y) - (nearHub ? 44 : 28)))
+  };
+  const mid2 = {
+    x: Math.round(start.x + (end.x - start.x) * 0.72),
+    y: Math.min(126, Math.round(Math.max(start.y, end.y) - (nearHub ? 18 : 8)))
+  };
+
+  return {
+    start,
+    end,
+    points: [start, mid1, mid2, end]
+  };
+}
+
+function buildRoutePath(points) {
+  const [start, mid1, mid2, end] = points;
+  return `M${start.x} ${start.y} C${mid1.x} ${mid1.y} ${mid2.x} ${mid2.y} ${end.x} ${end.y}`;
 }
 
 function startBookingCountdown() {

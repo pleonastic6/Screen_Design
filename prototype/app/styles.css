@@ -2008,6 +2008,161 @@ body {
   letter-spacing: -0.05em;
 }
 
+.summary-sheet__route-card {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at top right, rgba(79, 147, 255, 0.14), transparent 8rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.88) 0%, rgba(241, 247, 238, 0.96) 100%);
+  border: 1px solid rgba(20, 32, 23, 0.06);
+  box-shadow: 0 16px 34px rgba(23, 35, 27, 0.06);
+}
+
+.summary-sheet__route-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.summary-sheet__route-label,
+.summary-sheet__route-title,
+.summary-sheet__route-stop-label,
+.summary-sheet__route-stop-value {
+  margin: 0;
+}
+
+.summary-sheet__route-label {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #5e6d61;
+}
+
+.summary-sheet__route-title {
+  margin-top: 4px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #162117;
+}
+
+.summary-sheet__route-distance {
+  padding: 9px 12px;
+  border-radius: 999px;
+  background: rgba(20, 32, 23, 0.06);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #244126;
+  white-space: nowrap;
+}
+
+.summary-sheet__route-map {
+  position: relative;
+  height: 150px;
+  overflow: hidden;
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(237, 246, 241, 0.95) 0%, rgba(230, 241, 232, 0.96) 100%);
+}
+
+.summary-sheet__route-grid,
+.summary-sheet__route-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.summary-sheet__route-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.55) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.55) 1px, transparent 1px);
+  background-size: 32px 32px;
+  opacity: 0.75;
+}
+
+.summary-sheet__route-line-shadow {
+  fill: none;
+  stroke: rgba(79, 147, 255, 0.18);
+  stroke-linecap: round;
+  stroke-width: 18;
+}
+
+.summary-sheet__route-line {
+  fill: none;
+  stroke: #244126;
+  stroke-linecap: round;
+  stroke-width: 5;
+  stroke-dasharray: 7 10;
+}
+
+.summary-sheet__route-point {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 3px solid #ffffff;
+  box-shadow: 0 10px 20px rgba(20, 32, 23, 0.16);
+}
+
+.summary-sheet__route-point--start {
+  left: 20px;
+  bottom: 24px;
+  background: #4f93ff;
+}
+
+.summary-sheet__route-point--end {
+  right: 20px;
+  top: 26px;
+  background: #7ee892;
+}
+
+.summary-sheet__route-stops {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.summary-sheet__route-stop {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.summary-sheet__route-stop-dot {
+  flex: 0 0 auto;
+  width: 12px;
+  height: 12px;
+  margin-top: 4px;
+  border-radius: 999px;
+}
+
+.summary-sheet__route-stop-dot--start {
+  background: #4f93ff;
+}
+
+.summary-sheet__route-stop-dot--end {
+  background: #7ee892;
+}
+
+.summary-sheet__route-stop-label {
+  font-size: 0.8rem;
+  color: #637165;
+}
+
+.summary-sheet__route-stop-value {
+  margin-top: 4px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #162117;
+}
+
 .summary-sheet__rows {
   display: grid;
   gap: 10px;

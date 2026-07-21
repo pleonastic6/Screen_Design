@@ -371,6 +371,40 @@
             <span class="summary-sheet__hero-value" id="summary-screen-cost">0,20 EUR</span>
           </div>
         </div>
+        <div class="summary-sheet__route-card">
+          <div class="summary-sheet__route-top">
+            <div>
+              <p class="summary-sheet__route-label">Deine Route</p>
+              <p class="summary-sheet__route-title">Kompakter Trip Recap</p>
+            </div>
+            <span class="summary-sheet__route-distance" id="summary-screen-distance">1,2 km</span>
+          </div>
+          <div class="summary-sheet__route-map" aria-hidden="true">
+            <div class="summary-sheet__route-grid"></div>
+            <svg class="summary-sheet__route-svg" viewBox="0 0 320 150" preserveAspectRatio="none">
+              <path class="summary-sheet__route-line-shadow" id="summary-screen-route-shadow" d="M28 116 C88 102 124 54 184 66 C230 76 252 110 292 38" />
+              <path class="summary-sheet__route-line" id="summary-screen-route-line" d="M28 116 C88 102 124 54 184 66 C230 76 252 110 292 38" />
+            </svg>
+            <div class="summary-sheet__route-point summary-sheet__route-point--start" id="summary-screen-route-start"></div>
+            <div class="summary-sheet__route-point summary-sheet__route-point--end" id="summary-screen-route-end"></div>
+          </div>
+          <div class="summary-sheet__route-stops">
+            <div class="summary-sheet__route-stop">
+              <span class="summary-sheet__route-stop-dot summary-sheet__route-stop-dot--start"></span>
+              <div>
+                <p class="summary-sheet__route-stop-label">Start</p>
+                <p class="summary-sheet__route-stop-value" id="summary-screen-start">Marktplatz</p>
+              </div>
+            </div>
+            <div class="summary-sheet__route-stop">
+              <span class="summary-sheet__route-stop-dot summary-sheet__route-stop-dot--end"></span>
+              <div>
+                <p class="summary-sheet__route-stop-label">Ziel</p>
+                <p class="summary-sheet__route-stop-value" id="summary-screen-end">Marktplatz Ladehub</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="summary-sheet__rows">
           <div class="summary-sheet__row">
             <span class="summary-sheet__row-label">Rückgabeort</span>
