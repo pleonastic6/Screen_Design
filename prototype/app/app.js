@@ -329,6 +329,65 @@ const hubZones = [
   }
 ];
 
+const summaryRouteTemplates = [
+  {
+    id: "marktplatz-loop",
+    anchor: [49.4452441, 11.8580549],
+    label: "Innenstadt-Loop",
+    waypoints: [
+      [49.44492, 11.85918],
+      [49.44428, 11.85994],
+      [49.44388, 11.85878],
+      [49.44422, 11.85718],
+      [49.44502, 11.85636],
+      [49.44592, 11.85682],
+      [49.44628, 11.85806]
+    ]
+  },
+  {
+    id: "bahnhof-arc",
+    anchor: [49.4480826, 11.8611094],
+    label: "Bahnhof-Bogen",
+    waypoints: [
+      [49.44724, 11.86042],
+      [49.44646, 11.85936],
+      [49.44572, 11.85822],
+      [49.44518, 11.85688],
+      [49.44592, 11.85534],
+      [49.44704, 11.85614],
+      [49.44808, 11.85808]
+    ]
+  },
+  {
+    id: "campus-swing",
+    anchor: [49.4448780, 11.8473735],
+    label: "Campus-Swing",
+    waypoints: [
+      [49.44418, 11.84824],
+      [49.44404, 11.84966],
+      [49.44452, 11.85104],
+      [49.44534, 11.85166],
+      [49.44610, 11.85072],
+      [49.44594, 11.84896],
+      [49.44526, 11.84768]
+    ]
+  },
+  {
+    id: "weststadt-link",
+    anchor: [49.44588, 11.85608],
+    label: "Weststadt-Link",
+    waypoints: [
+      [49.44638, 11.85488],
+      [49.44592, 11.85372],
+      [49.44488, 11.85342],
+      [49.44406, 11.85430],
+      [49.44386, 11.85588],
+      [49.44474, 11.85694],
+      [49.44574, 11.85732]
+    ]
+  }
+];
+
 const userLocation = [49.4429, 11.86155];
 const mapCenter = [49.4449, 11.8554];
 const defaultZoom = 15;
@@ -834,17 +893,12 @@ async function renderSummaryRoute(startCoords, endCoords, context) {
     return;
   }
 
-  const distanceKm = map.distance(startCoords, endCoords) / 1000;
+  const routeTemplate = getSummaryRouteTemplate(startCoords, endCoords, context);
+  const routeCoords = buildGenericStreetRoute(startCoords, endCoords, routeTemplate);
+  const distanceKm = getRouteDistanceKm(routeCoords);
   summaryScreenDistance.textContent = `${distanceKm.toFixed(1).replace(".", ",")} km`;
   summaryScreenStart.textContent = getStartLabel(startCoords);
   summaryScreenEnd.textContent = context.nearHub ? `${context.zoneLabel} Ladehub` : `${context.zoneLabel} Stadtgebiet`;
-
-  const requestId = ++summaryRouteRequestId;
-  const routeCoords = await getStreetRoute(startCoords, endCoords);
-  if (requestId !== summaryRouteRequestId) {
-    return;
-  }
-
   drawSummaryRoute(routeCoords, startCoords, endCoords);
 }
 
@@ -857,28 +911,50 @@ function getStartLabel(coords) {
   return "Scooter-Standort";
 }
 
-async function getStreetRoute(startCoords, endCoords) {
-  const fallbackRoute = [startCoords, endCoords];
+function getSummaryRouteTemplate(startCoords, endCoords, context) {
+  const routeAnchor = context.nearHub
+    ? getNearestHub(endCoords)?.center ?? endCoords
+    : endCoords;
 
-  try {
-    const response = await fetch(
-      `https://router.project-osrm.org/route/v1/bicycle/${startCoords[1]},${startCoords[0]};${endCoords[1]},${endCoords[0]}?overview=full&geometries=geojson`,
-      { headers: { Accept: "application/json" } }
-    );
-    if (!response.ok) {
-      return fallbackRoute;
+  return summaryRouteTemplates.reduce((best, template) => {
+    if (!best) {
+      return template;
     }
 
-    const data = await response.json();
-    const coordinates = data.routes?.[0]?.geometry?.coordinates;
-    if (!coordinates?.length) {
-      return fallbackRoute;
-    }
+    return map.distance(routeAnchor, template.anchor) < map.distance(routeAnchor, best.anchor) ? template : best;
+  }, null);
+}
 
-    return coordinates.map(([lng, lat]) => [lat, lng]);
-  } catch {
-    return fallbackRoute;
+function buildGenericStreetRoute(startCoords, endCoords, template) {
+  if (!template) {
+    return [startCoords, endCoords];
   }
+
+  const route = [startCoords];
+  const startToTemplate = map.distance(startCoords, template.waypoints[0]);
+  const endToTemplate = map.distance(endCoords, template.waypoints[template.waypoints.length - 1]);
+
+  if (startToTemplate > endToTemplate) {
+    route.push(...template.waypoints);
+  } else {
+    route.push(...template.waypoints.slice().reverse());
+  }
+
+  route.push(endCoords);
+  return route;
+}
+
+function getRouteDistanceKm(routeCoords) {
+  if (routeCoords.length < 2) {
+    return 0;
+  }
+
+  let meters = 0;
+  for (let index = 1; index < routeCoords.length; index += 1) {
+    meters += map.distance(routeCoords[index - 1], routeCoords[index]);
+  }
+
+  return meters / 1000;
 }
 
 function ensureSummaryMap() {
