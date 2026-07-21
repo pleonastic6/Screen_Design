@@ -1,4 +1,7 @@
 const PRICE_LABEL = "0,10 EUR je 5 Min";
+const RETURN_CONFIRM_DELAY_MS = 420;
+const SUMMARY_ROUTE_DRAW_DELAY_MS = 360;
+const SUMMARY_ROUTE_DRAW_DURATION_MS = 900;
 
 const scooters = [
   {
@@ -496,6 +499,8 @@ let summaryRouteLayer = null;
 let summaryRouteStartMarker = null;
 let summaryRouteEndMarker = null;
 let summaryRouteRequestId = 0;
+let returnConfirmTimeoutId = null;
+let summaryRouteMarkerTimeoutId = null;
 
 document.body.classList.add("splash-active");
 window.setTimeout(() => {
@@ -852,22 +857,41 @@ function openReturnScreen() {
 }
 
 function closeReturnScreen() {
+  resetReturnConfirmButton();
   returnScreen.dataset.open = "false";
   returnScreen.setAttribute("aria-hidden", "true");
 }
 
 function confirmReturn() {
+  if (returnScreenConfirm.dataset.state === "confirming") {
+    return;
+  }
+
   const durationLabel = rideScreenTimer.textContent;
   const costLabel = rideScreenCost.textContent;
   const context = lastReturnContext ?? {
     zoneLabel: getZoneLabel(activeScooter?.type ?? ""),
     nearHub: false
   };
-
-  stopRideStatus();
-  rideStartedAt = null;
   const finalCoords = rideCurrentCoords ?? activeScooter?.coords ?? rideStartCoords;
   const startCoords = rideStartCoords ?? activeScooter?.coords;
+
+  returnScreenConfirm.dataset.state = "confirming";
+  returnScreenConfirm.disabled = true;
+  returnScreenConfirm.textContent = "Rückgabe läuft...";
+
+  if (returnConfirmTimeoutId) {
+    window.clearTimeout(returnConfirmTimeoutId);
+  }
+
+  returnConfirmTimeoutId = window.setTimeout(() => {
+    finalizeReturn(durationLabel, costLabel, context, startCoords, finalCoords);
+  }, RETURN_CONFIRM_DELAY_MS);
+}
+
+function finalizeReturn(durationLabel, costLabel, context, startCoords, finalCoords) {
+  stopRideStatus();
+  rideStartedAt = null;
   rideCurrentCoords = null;
   rideStartCoords = null;
   closeReturnScreen();
@@ -881,15 +905,31 @@ function confirmReturn() {
     ? "30 Freiminuten gutgeschrieben"
     : "Kein Bonus, aber Rückgabe war gültig";
   summaryScreen.dataset.open = "true";
+  summaryScreen.dataset.animate = "false";
   summaryScreen.setAttribute("aria-hidden", "false");
   window.requestAnimationFrame(() => {
-    renderSummaryRoute(startCoords, finalCoords, context).catch(() => {});
+    summaryScreen.dataset.animate = "true";
+    window.setTimeout(() => {
+      renderSummaryRoute(startCoords, finalCoords, context).catch(() => {});
+    }, SUMMARY_ROUTE_DRAW_DELAY_MS);
   });
 }
 
 function closeSummaryScreen() {
   summaryScreen.dataset.open = "false";
+  summaryScreen.dataset.animate = "false";
   summaryScreen.setAttribute("aria-hidden", "true");
+}
+
+function resetReturnConfirmButton() {
+  if (returnConfirmTimeoutId) {
+    window.clearTimeout(returnConfirmTimeoutId);
+    returnConfirmTimeoutId = null;
+  }
+
+  returnScreenConfirm.dataset.state = "";
+  returnScreenConfirm.textContent = "Hier zurückgeben";
+  returnScreenConfirm.disabled = !(lastReturnContext?.returnAllowed ?? false);
 }
 
 async function renderSummaryRoute(startCoords, endCoords, context) {
@@ -991,6 +1031,11 @@ function ensureSummaryMap() {
 function drawSummaryRoute(routeCoords, startCoords, endCoords) {
   const routeMap = ensureSummaryMap();
 
+  if (summaryRouteMarkerTimeoutId) {
+    window.clearTimeout(summaryRouteMarkerTimeoutId);
+    summaryRouteMarkerTimeoutId = null;
+  }
+
   if (summaryRouteLayer) {
     summaryRouteLayer.remove();
   }
@@ -1032,6 +1077,34 @@ function drawSummaryRoute(routeCoords, startCoords, endCoords) {
   const bounds = L.latLngBounds(routeCoords);
   routeMap.fitBounds(bounds.pad(0.22), { animate: false });
   window.setTimeout(() => routeMap.invalidateSize(false), 0);
+  window.requestAnimationFrame(() => animateSummaryRoute(routeMap));
+}
+
+function animateSummaryRoute(routeMap) {
+  const routePath = summaryRouteLayer?.getElement?.();
+
+  if (routePath) {
+    const routeLength = routePath.getTotalLength();
+    routePath.style.strokeDasharray = `${routeLength}`;
+    routePath.style.strokeDashoffset = `${routeLength}`;
+    routePath.style.transition = "none";
+    routePath.getBoundingClientRect();
+    routePath.style.transition = `stroke-dashoffset ${SUMMARY_ROUTE_DRAW_DURATION_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`;
+    routePath.style.strokeDashoffset = "0";
+  }
+
+  summaryRouteMarkerTimeoutId = window.setTimeout(() => {
+    revealSummaryRouteMarker(summaryRouteStartMarker);
+    revealSummaryRouteMarker(summaryRouteEndMarker);
+    routeMap.invalidateSize(false);
+  }, Math.max(SUMMARY_ROUTE_DRAW_DURATION_MS - 180, 240));
+}
+
+function revealSummaryRouteMarker(marker) {
+  const markerImage = marker?.getElement?.()?.querySelector(".summary-route-marker");
+  if (markerImage) {
+    markerImage.classList.add("is-visible");
+  }
 }
 
 function startBookingCountdown() {
