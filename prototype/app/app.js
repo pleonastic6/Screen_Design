@@ -1235,17 +1235,17 @@ function getZoneLabel(locationText) {
     locationText.includes("Ring") ||
     locationText.includes("Emailfabrik")
   ) {
-    return "Randzone";
+    return "Nordring";
   }
 
-  return "Altstadt";
+  return "Stadtgebiet";
 }
 
 function getZoneContext(scooter, currentCoords = null) {
   if (!scooter) {
     return {
-      label: "Altstadt",
-      summaryLabel: "Altstadt",
+      label: "Stadtgebiet Amberg",
+      summaryLabel: "Stadtgebiet",
       nearHub: false,
       state: "default",
       pill: "Im Rückgabegebiet",
@@ -1307,7 +1307,7 @@ function getZoneContext(scooter, currentCoords = null) {
       state: "default",
       pill: "Rückgabezone",
       title: `${returnZone.shortName} ist als grüne Rückgabezone freigegeben.`,
-      copy: "Du kannst hier sauber abstellen. Ein blauer Ladehub bringt dir zusätzlich Bonus.",
+      copy: "Du kannst hier sauber abstellen. Ein markierter Ladehub bringt dir zusätzlich Bonus.",
       returnTitle: `Du stehst in der Zone ${returnZone.name}.`,
       returnCopy: nearestHub
         ? `Optional: ${nearestHub.name} Ladehub bringt dir zusätzlich 30 Freiminuten.`
@@ -1325,7 +1325,7 @@ function getZoneContext(scooter, currentCoords = null) {
     state: "outside",
     pill: "Keine Freigabe",
     title: "Hier endet die Fahrt noch nicht.",
-    copy: "Du stehst außerhalb der markierten Flächen. Fahr bitte in eine grüne Zone oder an einen blauen Ladehub.",
+    copy: "Du stehst außerhalb der markierten Flächen. Fahr bitte in eine grüne Zone oder an einen markierten Ladehub.",
     returnTitle: "Außerhalb der freigegebenen Rückgabezonen.",
     returnCopy: nearestHub
       ? `Als nächstes bietet sich ${nearestHub.name} Ladehub an.`
