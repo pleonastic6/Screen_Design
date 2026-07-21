@@ -220,6 +220,98 @@ const hubs = [
   { name: "Bahnhof", coords: [49.4480826, 11.8611094] }
 ];
 
+const returnZones = [
+  {
+    name: "Altstadt rund um Marktplatz",
+    shortName: "Altstadt",
+    points: [
+      [49.44640, 11.85560],
+      [49.44645, 11.86045],
+      [49.44325, 11.86045],
+      [49.44320, 11.85555]
+    ]
+  },
+  {
+    name: "Paulanerplatz und Kaiser-Ludwig-Ring",
+    shortName: "Paulanerplatz",
+    points: [
+      [49.44670, 11.85375],
+      [49.44665, 11.85645],
+      [49.44475, 11.85655],
+      [49.44470, 11.85370]
+    ]
+  },
+  {
+    name: "Campus OTH und Georg-Graner-Straße",
+    shortName: "Campus OTH",
+    points: [
+      [49.44555, 11.84630],
+      [49.44550, 11.85065],
+      [49.44385, 11.85075],
+      [49.44390, 11.84620]
+    ]
+  }
+];
+
+const restrictedZones = [
+  {
+    name: "Bahnhofsvorplatz",
+    shortName: "Bahnhof",
+    points: [
+      [49.44895, 11.85970],
+      [49.44895, 11.86265],
+      [49.44715, 11.86265],
+      [49.44715, 11.85970]
+    ]
+  },
+  {
+    name: "Vilsufer an der Schiffgasse",
+    shortName: "Vilsufer",
+    points: [
+      [49.44495, 11.85755],
+      [49.44495, 11.85935],
+      [49.44355, 11.85920],
+      [49.44355, 11.85750]
+    ]
+  }
+];
+
+const hubZones = [
+  {
+    name: "Campus OTH Ladehub",
+    shortName: "Campus OTH",
+    center: [49.4448780, 11.8473735],
+    points: [
+      [49.44510, 11.84705],
+      [49.44510, 11.84770],
+      [49.44466, 11.84770],
+      [49.44466, 11.84705]
+    ]
+  },
+  {
+    name: "Marktplatz Ladehub",
+    shortName: "Marktplatz",
+    center: [49.4452441, 11.8580549],
+    points: [
+      [49.44547, 11.85770],
+      [49.44547, 11.85840],
+      [49.44500, 11.85840],
+      [49.44500, 11.85770]
+    ]
+  },
+  {
+    name: "Bahnhof Ladehub",
+    shortName: "Bahnhof",
+    center: [49.4480826, 11.8611094],
+    points: [
+      [49.44828, 11.86075],
+      [49.44828, 11.86148],
+      [49.44788, 11.86148],
+      [49.44788, 11.86075]
+    ]
+  }
+];
+
 const userLocation = [49.4429, 11.86155];
 const mapCenter = [49.4449, 11.8554];
 const defaultZoom = 15;
@@ -313,10 +405,6 @@ let rideStartedAt = null;
 let lastReturnContext = null;
 let rideCurrentCoords = null;
 let selectedConfirmScooterName = null;
-const returnZone = {
-  center: [49.44515, 11.85815],
-  radius: 720
-};
 
 scooters.forEach((scooter, index) => {
   const batteryPercent = getBatteryPercent(scooter.range);
@@ -335,13 +423,16 @@ scooters.forEach((scooter, index) => {
 
 function markerIcon(type) {
   const isScooter = type.includes("scooter");
+  const isHub = type.includes("hub");
   return L.divIcon({
     className: "",
     html: isScooter
       ? `<span class="map-marker ${type}"><img class="map-marker__scooter-icon" src="escooter-mint.svg" alt="" /></span>`
-      : `<span class="map-marker ${type}"></span>`,
-    iconSize: isScooter ? [42, 42] : [24, 24],
-    iconAnchor: isScooter ? [21, 21] : [12, 12]
+      : isHub
+        ? `<span class="map-marker ${type}"><img class="map-marker__hub-icon" src="hub-plug-blue.svg" alt="" /></span>`
+        : `<span class="map-marker ${type}"></span>`,
+    iconSize: isScooter ? [42, 42] : isHub ? [34, 42] : [24, 24],
+    iconAnchor: isScooter ? [21, 21] : isHub ? [17, 21] : [12, 12]
   });
 }
 
@@ -362,13 +453,50 @@ L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png
 
 map.setView(mapCenter, defaultZoom);
 
-L.circle(returnZone.center, {
-  radius: returnZone.radius,
-  color: "#6fc95d",
-  weight: 2,
-  fillColor: "#8ee27a",
-  fillOpacity: 0.12
-}).addTo(map);
+returnZones.forEach((zone) => {
+  L.polygon(zone.points, {
+    color: "#67c85e",
+    weight: 2,
+    fillColor: "#8fe27a",
+    fillOpacity: 0.16
+  })
+    .addTo(map)
+    .bindTooltip(zone.shortName, {
+      permanent: true,
+      direction: "center",
+      className: "zone-tooltip zone-tooltip--return"
+    });
+});
+
+restrictedZones.forEach((zone) => {
+  L.polygon(zone.points, {
+    color: "#f06d6d",
+    weight: 2,
+    fillColor: "#f39a9a",
+    fillOpacity: 0.18
+  })
+    .addTo(map)
+    .bindTooltip(zone.shortName, {
+      permanent: true,
+      direction: "center",
+      className: "zone-tooltip zone-tooltip--restricted"
+    });
+});
+
+hubZones.forEach((zone) => {
+  L.polygon(zone.points, {
+    color: "#4f93ff",
+    weight: 2,
+    fillColor: "#7eb4ff",
+    fillOpacity: 0.2
+  })
+    .addTo(map)
+    .bindTooltip(zone.shortName, {
+      permanent: true,
+      direction: "center",
+      className: "zone-tooltip zone-tooltip--hub"
+    });
+});
 
 L.marker(userLocation, { icon: markerIcon("user") }).addTo(map);
 
@@ -380,14 +508,7 @@ scooters.forEach((scooter) => {
 });
 
 hubs.forEach((hub) => {
-  L.circle(hub.coords, {
-    radius: 95,
-    color: "#4f93ff",
-    weight: 1.5,
-    fillColor: "#4f93ff",
-    fillOpacity: 0.1
-  }).addTo(map);
-  L.marker(hub.coords, { icon: markerIcon("hub") }).addTo(map);
+  L.marker(hub.coords, { icon: markerIcon("hub"), zIndexOffset: 1000 }).addTo(map);
 });
 
 vehicleCardClose.addEventListener("click", closeVehicleCard);
@@ -627,26 +748,29 @@ function openReturnScreen() {
 
   const batteryPercent = getBatteryPercent(activeScooter.range);
   const zoneContext = getZoneContext(activeScooter, rideCurrentCoords);
-  const zoneLabel = zoneContext.label;
-  const nearHub = zoneContext.nearHub;
-  const returnAllowed = batteryPercent > 30;
-  lastReturnContext = { batteryPercent, zoneLabel, nearHub, returnAllowed };
+  const needsHubBecauseLowBattery = batteryPercent <= 30 && !zoneContext.nearHub;
+  const returnAllowed = zoneContext.returnAllowed && !needsHubBecauseLowBattery;
+  lastReturnContext = {
+    batteryPercent,
+    zoneLabel: zoneContext.summaryLabel,
+    nearHub: zoneContext.nearHub,
+    returnAllowed
+  };
 
   returnScreenHero.classList.toggle("return-sheet__hero--success", returnAllowed);
+  returnScreenHero.classList.toggle("return-sheet__hero--danger", !returnAllowed);
   returnScreenTime.textContent = rideScreenTimer.textContent;
   returnScreenCost.textContent = rideScreenCost.textContent;
   returnScreenStatusLabel.textContent = returnAllowed ? "Rückgabe erlaubt" : "Rückgabe gesperrt";
-  returnScreenStatusTitle.textContent = returnAllowed
-    ? "Du stehst in einer gültigen Zone."
-    : "Akku zu niedrig. Bitte an einem Ladehub abstellen.";
-  returnScreenZone.textContent = `${zoneLabel} · ${returnAllowed ? "Abstellen möglich" : "nur Ladehub erlaubt"}`;
-  returnScreenBattery.textContent = `${batteryPercent} % · ${batteryPercent > 30 ? "freie Rückgabe möglich" : "unter 30 %, bitte Ladehub nutzen"}`;
-  returnScreenHub.textContent = nearHub
-    ? "Bahnhof oder Campus OTH in 2-3 Min Entfernung"
-    : "Marktplatz Ladehub in 2 Min Entfernung";
-  returnScreenBonus.textContent = nearHub
-    ? "Wenn du direkt am Ladehub abstellst, bekommst du 30 Freiminuten gutgeschrieben."
-    : "Zum nächsten Ladehub gibt es 30 Freiminuten. Lohnt sich für die Abschlussfolie.";
+  returnScreenStatusTitle.textContent = needsHubBecauseLowBattery
+    ? "Akku zu niedrig. Bitte direkt an einem Ladehub abstellen."
+    : zoneContext.returnTitle;
+  returnScreenZone.textContent = `${zoneContext.label} · ${returnAllowed ? "Abstellen möglich" : "nicht freigegeben"}`;
+  returnScreenBattery.textContent = `${batteryPercent} % · ${needsHubBecauseLowBattery ? "unter 30 %, bitte Ladehub nutzen" : zoneContext.batteryHint}`;
+  returnScreenHub.textContent = zoneContext.hubHint;
+  returnScreenBonus.textContent = needsHubBecauseLowBattery
+    ? `${zoneContext.hubHint}. Dort ist die Rückgabe trotz niedrigem Akku möglich.`
+    : zoneContext.returnCopy;
   returnScreenConfirm.disabled = !returnAllowed;
   returnScreen.dataset.open = "true";
   returnScreen.setAttribute("aria-hidden", "false");
@@ -875,59 +999,104 @@ function getZoneContext(scooter, currentCoords = null) {
   if (!scooter) {
     return {
       label: "Altstadt",
+      summaryLabel: "Altstadt",
       nearHub: false,
       state: "default",
       pill: "Im Rückgabegebiet",
       title: "Freie Rückgabe ist hier möglich.",
-      copy: "Wenn du an einem markierten Ladehub parkst, bekommst du 30 Freiminuten gutgeschrieben."
+      copy: "Wenn du an einem markierten Ladehub parkst, bekommst du 30 Freiminuten gutgeschrieben.",
+      returnTitle: "Du stehst in einer gültigen Rückgabezone.",
+      returnCopy: "Wenn du am Ladehub abstellst, bekommst du 30 Freiminuten gutgeschrieben.",
+      batteryHint: "freie Rückgabe möglich",
+      hubHint: "Marktplatz Ladehub in 2 Min Entfernung",
+      returnAllowed: true
     };
   }
 
   const referenceCoords = currentCoords ?? scooter.coords;
   const nearestHub = getNearestHub(referenceCoords);
-  const hubDistance = nearestHub ? map.distance(referenceCoords, nearestHub.coords) : Number.POSITIVE_INFINITY;
-  const inReturnZone = map.distance(referenceCoords, returnZone.center) <= returnZone.radius;
-  const nearHub = hubDistance <= 180;
+  const restrictedZone = findContainingZone(referenceCoords, restrictedZones);
+  const hubZone = findContainingZone(referenceCoords, hubZones);
+  const returnZone = findContainingZone(referenceCoords, returnZones);
 
-  if (nearHub && nearestHub) {
+  if (restrictedZone) {
     return {
-      label: `${nearestHub.name} Hub`,
-      nearHub: true,
-      state: "hub",
-      pill: "Bonus direkt in Reichweite",
-      title: `Am ${nearestHub.name}-Ladehub gibt es Extra-Bonus.`,
-      copy: "Wenn du die Fahrt hier beendest, sicherst du dir 30 Freiminuten für die nächste Runde."
+      label: restrictedZone.name,
+      summaryLabel: restrictedZone.shortName,
+      nearHub: false,
+      state: "restricted",
+      pill: "Sperrzone",
+      title: `${restrictedZone.name} ist gesperrt.`,
+      copy: "Hier darfst du den Scooter nicht abstellen. Fahr bitte in eine grüne Rückgabezone oder direkt an einen Ladehub.",
+      returnTitle: `${restrictedZone.name} ist als Sperrzone markiert.`,
+      returnCopy: "Bitte aus der roten Fläche herausfahren und dann erneut prüfen.",
+      batteryHint: "Sperrzone, hier nie abstellen",
+      hubHint: nearestHub ? `${nearestHub.name} Ladehub als nächstes Ziel` : "Nächsten Ladehub anfahren",
+      returnAllowed: false
     };
   }
 
-  if (inReturnZone) {
+  if (hubZone) {
     return {
-      label: "Stadtgebiet",
+      label: hubZone.name,
+      summaryLabel: hubZone.shortName,
+      nearHub: true,
+      state: "hub",
+      pill: "Ladehub erreicht",
+      title: `Am ${hubZone.shortName} gibt es Bonus für sauberes Abstellen.`,
+      copy: "Hier kannst du direkt abgeben und bekommst 30 Freiminuten für die nächste Runde.",
+      returnTitle: `Am ${hubZone.name} ist die Rückgabe sofort möglich.`,
+      returnCopy: "Perfekt: Hier gibt es einen klar markierten Ladehub plus Bonus.",
+      batteryHint: "Hub-Regel erfüllt",
+      hubHint: `${hubZone.name} direkt am Standort`,
+      returnAllowed: true
+    };
+  }
+
+  if (returnZone) {
+    return {
+      label: returnZone.name,
+      summaryLabel: returnZone.shortName,
       nearHub: false,
       state: "default",
-      pill: "Im Rückgabegebiet",
-      title: "Freie Rückgabe ist hier möglich.",
-      copy: "Die grüne Zone auf der Karte zeigt dir, wo du sauber abstellen kannst. Ein blauer Hub bringt dir zusätzlich Bonus."
+      pill: "Rückgabezone",
+      title: `${returnZone.shortName} ist als grüne Rückgabezone freigegeben.`,
+      copy: "Du kannst hier sauber abstellen. Ein blauer Ladehub bringt dir zusätzlich Bonus.",
+      returnTitle: `Du stehst in der Zone ${returnZone.name}.`,
+      returnCopy: nearestHub
+        ? `Optional: ${nearestHub.name} Ladehub bringt dir zusätzlich 30 Freiminuten.`
+        : "Hier ist Rückgabe okay, auch ohne Ladehub.",
+      batteryHint: "freie Rückgabe möglich",
+      hubHint: nearestHub ? `${nearestHub.name} Ladehub in kurzer Nähe` : "Kein Ladehub in direkter Nähe",
+      returnAllowed: true
     };
   }
 
   return {
-    label: getZoneLabel(scooter.type),
+    label: "Außerhalb der Rückgabezonen",
+    summaryLabel: getZoneLabel(scooter.type),
     nearHub: false,
-    state: "edge",
-    pill: "Am Rand des Gebiets",
-    title: "Rückgabe klappt, aber ein Hub lohnt sich mehr.",
-    copy: "Du bist nahe am Rand. Für die beste Abschlussansicht fährst du noch kurz zu einem markierten Ladehub."
+    state: "outside",
+    pill: "Keine Freigabe",
+    title: "Hier endet die Fahrt noch nicht.",
+    copy: "Du stehst außerhalb der markierten Flächen. Fahr bitte in eine grüne Zone oder an einen blauen Ladehub.",
+    returnTitle: "Außerhalb der freigegebenen Rückgabezonen.",
+    returnCopy: nearestHub
+      ? `Als nächstes bietet sich ${nearestHub.name} Ladehub an.`
+      : "Bitte eine markierte Rückgabezone anfahren.",
+    batteryHint: "außerhalb, bitte weiterfahren",
+    hubHint: nearestHub ? `${nearestHub.name} Ladehub als nächstes Ziel` : "Nächsten Ladehub anfahren",
+    returnAllowed: false
   };
 }
 
 function getNearestHub(coords) {
-  return hubs.reduce((nearest, hub) => {
+  return hubZones.reduce((nearest, hub) => {
     if (!nearest) {
       return hub;
     }
 
-    return map.distance(coords, hub.coords) < map.distance(coords, nearest.coords) ? hub : nearest;
+    return map.distance(coords, hub.center) < map.distance(coords, nearest.center) ? hub : nearest;
   }, null);
 }
 
@@ -941,8 +1110,31 @@ function moveRideToNearestHub() {
     return;
   }
 
-  rideCurrentCoords = nearestHub.coords;
+  rideCurrentCoords = nearestHub.center;
   updateRideZoneUI();
+}
+
+function findContainingZone(coords, zones) {
+  return zones.find((zone) => pointInPolygon(coords, zone.points)) ?? null;
+}
+
+function pointInPolygon(coords, polygon) {
+  const [lat, lng] = coords;
+  let inside = false;
+
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+    const [latI, lngI] = polygon[i];
+    const [latJ, lngJ] = polygon[j];
+    const intersects =
+      (lngI > lng) !== (lngJ > lng) &&
+      lat < ((latJ - latI) * (lng - lngI)) / (lngJ - lngI) + latI;
+
+    if (intersects) {
+      inside = !inside;
+    }
+  }
+
+  return inside;
 }
 
 function setActiveScooterMarker(marker) {
