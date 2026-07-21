@@ -801,7 +801,7 @@ function confirmReturn() {
   stopRideStatus();
   rideStartedAt = null;
   const finalCoords = rideCurrentCoords ?? activeScooter?.coords ?? rideStartCoords;
-  renderSummaryRoute(rideStartCoords ?? activeScooter?.coords, finalCoords, context);
+  const startCoords = rideStartCoords ?? activeScooter?.coords;
   rideCurrentCoords = null;
   rideStartCoords = null;
   closeReturnScreen();
@@ -816,6 +816,9 @@ function confirmReturn() {
     : "Kein Bonus, aber Rückgabe war gültig";
   summaryScreen.dataset.open = "true";
   summaryScreen.setAttribute("aria-hidden", "false");
+  window.requestAnimationFrame(() => {
+    renderSummaryRoute(startCoords, finalCoords, context).catch(() => {});
+  });
 }
 
 function closeSummaryScreen() {
