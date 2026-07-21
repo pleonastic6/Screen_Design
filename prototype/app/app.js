@@ -1,217 +1,218 @@
+const PRICE_LABEL = "0,10 EUR je 5 Min";
+
 const scooters = [
   {
     name: "E-Scooter AM-101",
     type: "E-Scooter am Marktplatz",
     range: "44 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44518, 11.85812]
   },
   {
     name: "E-Scooter AM-102",
     type: "E-Scooter in der Georgenstraße",
     range: "37 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44488, 11.85922]
   },
   {
     name: "E-Scooter AM-103",
     type: "E-Scooter in der Bahnhofstraße",
     range: "33 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44672, 11.86024]
   },
   {
     name: "E-Scooter AM-104",
     type: "E-Scooter in der Herrnstraße",
     range: "51 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44431, 11.86058]
   },
   {
     name: "E-Scooter AM-105",
     type: "E-Scooter am Hallplatz",
     range: "29 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44452, 11.85724]
   },
   {
     name: "E-Scooter AM-106",
     type: "E-Scooter am Rossmarkt",
     range: "48 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44416, 11.85642]
   },
   {
     name: "E-Scooter AM-107",
     type: "E-Scooter in der Vilsstraße",
     range: "42 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44384, 11.85588]
   },
   {
     name: "E-Scooter AM-108",
     type: "E-Scooter in der Regierungsstraße",
     range: "39 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44566, 11.85746]
   },
   {
     name: "E-Scooter AM-109",
     type: "E-Scooter in der Zeughausstraße",
     range: "35 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44602, 11.85884]
   },
   {
     name: "E-Scooter AM-110",
     type: "E-Scooter am Schrannenplatz",
     range: "46 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44473, 11.85988]
   },
   {
     name: "E-Scooter AM-111",
     type: "E-Scooter am Kaiser-Wilhelm-Ring",
     range: "31 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44418, 11.86482]
   },
   {
     name: "E-Scooter AM-112",
     type: "E-Scooter in der Kasernstraße",
     range: "53 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44645, 11.85695]
   },
   {
     name: "E-Scooter AM-113",
     type: "E-Scooter an der OTH Amberg-Weiden",
     range: "41 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44482, 11.84788]
   },
   {
     name: "E-Scooter AM-114",
     type: "E-Scooter in der Paradiesgasse",
     range: "36 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44408, 11.85788]
   },
   {
     name: "E-Scooter AM-115",
     type: "E-Scooter in der Mühlgasse",
     range: "47 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44356, 11.85702]
   },
   {
     name: "E-Scooter AM-116",
     type: "E-Scooter am Nabburger Torplatz",
     range: "28 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44684, 11.86208]
   },
   {
     name: "E-Scooter AM-117",
     type: "E-Scooter am Emailfabrikplatz",
     range: "52 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44392, 11.84684]
   },
   {
     name: "E-Scooter AM-118",
     type: "E-Scooter am Kaiser-Ludwig-Ring",
     range: "43 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44624, 11.85486]
   },
   {
     name: "E-Scooter AM-119",
     type: "E-Scooter in der Ringtheaterstraße",
     range: "34 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44706, 11.85858]
   },
   {
     name: "E-Scooter AM-120",
     type: "E-Scooter in der Schiffgasse",
     range: "49 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44438, 11.85862]
   },
   {
     name: "E-Scooter AM-121",
     type: "E-Scooter in der Vilsvorstadt",
     range: "38 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44328, 11.85512]
   },
   {
     name: "E-Scooter AM-122",
     type: "E-Scooter in der Mariansgasse",
     range: "45 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44406, 11.86394]
   },
   {
     name: "E-Scooter AM-123",
     type: "E-Scooter in der Pfarrgasse",
     range: "32 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44534, 11.85954]
   },
   {
     name: "E-Scooter AM-124",
     type: "E-Scooter in der Schießstätte",
     range: "56 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44742, 11.85564]
   },
   {
     name: "E-Scooter AM-125",
     type: "E-Scooter an der Georg-Graner-Straße",
     range: "30 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44552, 11.85092]
   },
   {
     name: "E-Scooter AM-126",
     type: "E-Scooter am Paulanerplatz",
     range: "40 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44588, 11.85608]
   },
   {
     name: "E-Scooter AM-127",
     type: "E-Scooter am Studentenwohnheim",
     range: "54 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44434, 11.84944]
   },
   {
     name: "E-Scooter AM-128",
     type: "E-Scooter in der Fleurystraße",
     range: "35 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44362, 11.86538]
   },
   {
     name: "E-Scooter AM-129",
     type: "E-Scooter am Salzstadelplatz",
     range: "50 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44348, 11.85614]
   },
   {
     name: "E-Scooter AM-130",
     type: "E-Scooter am Kaiser-Wilhelm-Ring Ost",
     range: "54 km Reichweite",
-    price: "1,00 EUR entsperren, 0,19 EUR/Min",
+    price: PRICE_LABEL,
     coords: [49.44526, 11.86612]
   }
 ];
 
-const PRICE_LABEL = "0,10 EUR je 5 Min";
 const RESERVATION_MINUTES = 30;
 
 const hubs = [
@@ -872,7 +873,8 @@ function updateRideStatus() {
   const elapsedSeconds = Math.max(Math.floor((Date.now() - rideStartedAt) / 1000), 0);
   const minutes = Math.floor(elapsedSeconds / 60);
   const seconds = elapsedSeconds % 60;
-  const cost = (elapsedSeconds / 300) * 0.10;
+  const billingBlocks = Math.ceil(elapsedSeconds / 300);
+  const cost = billingBlocks * 0.10;
   const elapsedLabel = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
   const costLabel = `${cost.toFixed(2).replace(".", ",")} EUR`;
 
