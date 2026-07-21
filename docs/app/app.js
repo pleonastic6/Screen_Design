@@ -478,6 +478,7 @@ const summaryScreenStart = document.getElementById("summary-screen-start");
 const summaryScreenEnd = document.getElementById("summary-screen-end");
 const summaryScreenRouteMap = document.getElementById("summary-screen-route-map");
 const summaryScreenClose = document.getElementById("summary-screen-close");
+const splashScreen = document.getElementById("splash-screen");
 
 let activeScooterMarker = null;
 let activeScooter = null;
@@ -495,6 +496,12 @@ let summaryRouteLayer = null;
 let summaryRouteStartMarker = null;
 let summaryRouteEndMarker = null;
 let summaryRouteRequestId = 0;
+
+document.body.classList.add("splash-active");
+window.setTimeout(() => {
+  document.body.classList.add("splash-done");
+  splashScreen?.classList.add("is-hidden");
+}, 1550);
 
 scooters.forEach((scooter, index) => {
   const batteryPercent = getBatteryPercent(scooter.range);
