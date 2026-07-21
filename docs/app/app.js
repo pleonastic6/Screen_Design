@@ -391,8 +391,8 @@ const summaryRouteTemplates = [
   }
 ];
 
-const userLocation = [49.4429, 11.86155];
-const mapCenter = [49.4449, 11.8554];
+const userLocation = [49.44506, 11.85858];
+const mapCenter = [49.4451, 11.8581];
 const defaultZoom = 15;
 const vehicleCard = document.getElementById("vehicle-card");
 const vehicleCardClose = document.getElementById("vehicle-card-close");
