@@ -222,61 +222,35 @@ const hubs = [
 
 const returnZones = [
   {
-    name: "Altstadt rund um Marktplatz",
-    shortName: "Altstadt",
+    name: "Stadtgebiet Amberg",
+    shortName: "Stadtgebiet",
     points: [
-      [49.44628, 11.85592],
-      [49.44638, 11.85702],
-      [49.44634, 11.85828],
-      [49.44618, 11.85948],
-      [49.44572, 11.86018],
-      [49.44498, 11.86028],
-      [49.44412, 11.86018],
-      [49.44352, 11.85972],
-      [49.44334, 11.85886],
-      [49.44330, 11.85772],
-      [49.44342, 11.85654],
-      [49.44378, 11.85588],
-      [49.44456, 11.85562],
-      [49.44548, 11.85560]
-    ]
-  },
-  {
-    name: "Paulanerplatz und Kaiser-Ludwig-Ring",
-    shortName: "Paulanerplatz",
-    points: [
-      [49.44662, 11.85386],
-      [49.44666, 11.85472],
-      [49.44658, 11.85564],
-      [49.44634, 11.85622],
-      [49.44588, 11.85652],
-      [49.44522, 11.85656],
-      [49.44484, 11.85628],
-      [49.44472, 11.85556],
-      [49.44472, 11.85462],
-      [49.44478, 11.85388],
-      [49.44518, 11.85350],
-      [49.44592, 11.85342],
-      [49.44638, 11.85354]
-    ]
-  },
-  {
-    name: "Campus OTH und Georg-Graner-Straße",
-    shortName: "Campus OTH",
-    points: [
-      [49.44548, 11.84646],
-      [49.44554, 11.84772],
-      [49.44552, 11.84896],
-      [49.44542, 11.85026],
-      [49.44504, 11.85072],
-      [49.44448, 11.85078],
-      [49.44402, 11.85062],
-      [49.44386, 11.85002],
-      [49.44384, 11.84894],
-      [49.44388, 11.84762],
-      [49.44398, 11.84654],
-      [49.44436, 11.84618],
-      [49.44494, 11.84616]
+      [49.44955, 11.84470],
+      [49.44976, 11.84720],
+      [49.44986, 11.85020],
+      [49.44992, 11.85380],
+      [49.44996, 11.85710],
+      [49.44996, 11.86060],
+      [49.44988, 11.86340],
+      [49.44954, 11.86530],
+      [49.44870, 11.86630],
+      [49.44720, 11.86688],
+      [49.44510, 11.86708],
+      [49.44278, 11.86694],
+      [49.44080, 11.86634],
+      [49.43956, 11.86510],
+      [49.43910, 11.86320],
+      [49.43904, 11.86050],
+      [49.43910, 11.85700],
+      [49.43916, 11.85340],
+      [49.43928, 11.85010],
+      [49.43952, 11.84730],
+      [49.44020, 11.84572],
+      [49.44144, 11.84488],
+      [49.44328, 11.84452],
+      [49.44530, 11.84442],
+      [49.44736, 11.84446],
+      [49.44886, 11.84454]
     ]
   }
 ];
@@ -366,6 +340,7 @@ const vehicleCardName = document.getElementById("vehicle-card-name");
 const vehicleCardStatus = document.getElementById("vehicle-card-status");
 const vehicleCardRange = document.getElementById("vehicle-card-range");
 const vehicleCardPrice = document.getElementById("vehicle-card-price");
+const vehicleCardBatteryIcon = document.getElementById("vehicle-card-battery-icon");
 const bookingScreen = document.getElementById("booking-screen");
 const bookingScreenBack = document.getElementById("booking-screen-back");
 const bookingScreenCancel = document.getElementById("booking-screen-cancel");
@@ -382,6 +357,7 @@ const confirmScreenUnlock = document.getElementById("confirm-screen-unlock");
 const confirmScreenName = document.getElementById("confirm-screen-name");
 const confirmScreenType = document.getElementById("confirm-screen-type");
 const confirmScreenBattery = document.getElementById("confirm-screen-battery");
+const confirmScreenBatteryIcon = document.getElementById("confirm-screen-battery-icon");
 const confirmScreenRange = document.getElementById("confirm-screen-range");
 const confirmScreenOptions = document.getElementById("confirm-screen-options");
 const confirmScreenSelectionNote = document.getElementById("confirm-screen-selection-note");
@@ -404,6 +380,7 @@ const rideScreenCost = document.getElementById("ride-screen-cost");
 const rideScreenTimerDetail = document.getElementById("ride-screen-timer-detail");
 const rideScreenCostDetail = document.getElementById("ride-screen-cost-detail");
 const rideScreenBattery = document.getElementById("ride-screen-battery");
+const rideScreenBatteryIcon = document.getElementById("ride-screen-battery-icon");
 const rideScreenRange = document.getElementById("ride-screen-range");
 const rideScreenZone = document.getElementById("ride-screen-zone");
 const rideScreenZonePill = document.getElementById("ride-screen-zone-pill");
@@ -428,6 +405,7 @@ const returnScreenTime = document.getElementById("return-screen-time");
 const returnScreenCost = document.getElementById("return-screen-cost");
 const returnScreenZone = document.getElementById("return-screen-zone");
 const returnScreenBattery = document.getElementById("return-screen-battery");
+const returnScreenBatteryIcon = document.getElementById("return-screen-battery-icon");
 const returnScreenHub = document.getElementById("return-screen-hub");
 const returnScreenBonus = document.getElementById("return-screen-bonus");
 const summaryScreen = document.getElementById("summary-screen");
@@ -568,6 +546,7 @@ function openVehicleCard(scooter, marker) {
   vehicleCardStatus.textContent = getAvailabilityLabel(scooter.status);
   vehicleCard.dataset.status = scooter.status;
   vehicleCardRange.textContent = scooter.range;
+  setBatteryIcon(vehicleCardBatteryIcon, scooter);
   vehicleCardPrice.textContent = PRICE_LABEL;
   vehicleCardReserve.disabled = scooter.status === "reserved";
   vehicleCardReserveTitle.textContent = scooter.status === "reserved" ? "Derzeit reserviert" : "30 Min reservieren";
@@ -622,6 +601,7 @@ function openConfirmScreen() {
   confirmScreenName.textContent = activeScooter.name;
   confirmScreenType.textContent = activeScooter.type;
   confirmScreenBattery.textContent = getBatteryLabel(activeScooter.range);
+  setBatteryIcon(confirmScreenBatteryIcon, activeScooter);
   confirmScreenRange.textContent = activeScooter.range;
   renderConfirmScooterOptions();
   updateConfirmSelection(activeScooter.name);
@@ -737,6 +717,7 @@ function startRideSession() {
   rideCurrentCoords = activeScooter.coords;
   rideScreenName.textContent = activeScooter.name;
   rideScreenBattery.textContent = getBatteryLabel(activeScooter.range);
+  setBatteryIcon(rideScreenBatteryIcon, activeScooter);
   rideScreenRange.textContent = activeScooter.range;
   updateRideZoneUI();
   rideScreen.dataset.open = "true";
@@ -791,6 +772,7 @@ function openReturnScreen() {
     : zoneContext.returnTitle;
   returnScreenZone.textContent = `${zoneContext.label} · ${returnAllowed ? "Abstellen möglich" : "nicht freigegeben"}`;
   returnScreenBattery.textContent = `${batteryPercent} % · ${needsHubBecauseLowBattery ? "unter 30 %, bitte Ladehub nutzen" : zoneContext.batteryHint}`;
+  setBatteryIcon(returnScreenBatteryIcon, activeScooter);
   returnScreenHub.textContent = zoneContext.hubHint;
   returnScreenBonus.textContent = needsHubBecauseLowBattery
     ? `${zoneContext.hubHint}. Dort ist die Rückgabe trotz niedrigem Akku möglich.`
@@ -917,6 +899,35 @@ function updateRideZoneUI() {
 
 function getBatteryLabel(rangeText) {
   return `${getBatteryPercent(rangeText)} %`;
+}
+
+function getBatteryIconSource(scooter) {
+  if (!scooter) {
+    return "battery-full-green.svg";
+  }
+
+  if (scooter.status === "charging") {
+    return "battery-charging-blue.svg";
+  }
+
+  const batteryPercent = getBatteryPercent(scooter.range);
+  if (batteryPercent >= 75) {
+    return "battery-full-green.svg";
+  }
+
+  if (batteryPercent >= 45) {
+    return "battery-high-orange.svg";
+  }
+
+  return "battery-half-red.svg";
+}
+
+function setBatteryIcon(element, scooter) {
+  if (!element) {
+    return;
+  }
+
+  element.src = getBatteryIconSource(scooter);
 }
 
 function getAvailabilityLabel(status) {

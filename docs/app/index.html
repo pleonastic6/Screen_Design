@@ -32,7 +32,7 @@
               <span id="vehicle-card-status">Verfügbar</span>
             </div>
             <div class="vehicle-card__meta-item">
-              <span class="vehicle-card__meta-icon vehicle-card__meta-icon--battery" aria-hidden="true"></span>
+              <img class="battery-icon battery-icon--meta" id="vehicle-card-battery-icon" src="battery-full-green.svg" alt="" aria-hidden="true" />
               <span id="vehicle-card-range">54 km Reichweite</span>
             </div>
             <div class="vehicle-card__meta-item vehicle-card__meta-item--price">
@@ -121,7 +121,10 @@
           </div>
           <div class="confirm-sheet__check">
             <span class="confirm-sheet__check-label">Akku</span>
-            <span class="confirm-sheet__check-value" id="confirm-screen-battery">74 %</span>
+            <span class="confirm-sheet__check-value confirm-sheet__check-value--battery">
+              <img class="battery-icon battery-icon--inline" id="confirm-screen-battery-icon" src="battery-full-green.svg" alt="" aria-hidden="true" />
+              <span id="confirm-screen-battery">74 %</span>
+            </span>
           </div>
           <div class="confirm-sheet__check">
             <span class="confirm-sheet__check-label">Reichweite</span>
@@ -239,7 +242,10 @@
         <div class="ride-sheet__stats">
           <div class="ride-sheet__stat">
             <span class="ride-sheet__stat-label">Akku</span>
-            <span class="ride-sheet__stat-value" id="ride-screen-battery">74 %</span>
+            <span class="ride-sheet__stat-value ride-sheet__stat-value--battery">
+              <img class="battery-icon battery-icon--inline" id="ride-screen-battery-icon" src="battery-full-green.svg" alt="" aria-hidden="true" />
+              <span id="ride-screen-battery">74 %</span>
+            </span>
           </div>
           <div class="ride-sheet__stat">
             <span class="ride-sheet__stat-label">Reichweite</span>
@@ -329,7 +335,10 @@
           </div>
           <div class="return-sheet__check">
             <span class="return-sheet__check-label">Akku</span>
-            <span class="return-sheet__check-value" id="return-screen-battery">74 % · freie Rückgabe möglich</span>
+            <span class="return-sheet__check-value return-sheet__check-value--battery">
+              <img class="battery-icon battery-icon--inline" id="return-screen-battery-icon" src="battery-full-green.svg" alt="" aria-hidden="true" />
+              <span id="return-screen-battery">74 % · freie Rückgabe möglich</span>
+            </span>
           </div>
           <div class="return-sheet__check">
             <span class="return-sheet__check-label">Ladehub</span>
