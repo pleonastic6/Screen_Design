@@ -63,11 +63,11 @@ body {
 .map-marker.scooter {
   width: 42px;
   height: 42px;
-  padding: 6px;
+  padding: 7px;
   background: rgba(255, 255, 255, 0.94);
-  border: 0;
+  border: 2px solid #7ee892;
   box-shadow:
-    0 0 0 6px rgba(255, 255, 255, 0.18),
+    0 0 0 4px rgba(255, 255, 255, 0.2),
     0 10px 22px rgba(28, 40, 32, 0.18);
 }
 
@@ -292,11 +292,13 @@ body {
   place-items: center;
   width: 108px;
   height: 108px;
-  padding: 10px;
+  padding: 13px;
   border-radius: 28px;
   background:
     radial-gradient(circle at top right, rgba(126, 232, 146, 0.22), transparent 58%),
     linear-gradient(180deg, rgba(244, 249, 242, 0.96) 0%, rgba(233, 241, 230, 0.92) 100%);
+  border: 2px solid rgba(126, 232, 146, 0.9);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7);
 }
 
 .vehicle-card__vehicle-image {
