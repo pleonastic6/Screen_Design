@@ -2077,19 +2077,20 @@ body {
 }
 
 .summary-route-marker {
-  width: 18px;
-  height: 18px;
-  border-radius: 999px;
-  border: 3px solid #ffffff;
-  box-shadow: 0 10px 20px rgba(20, 32, 23, 0.16);
+  width: 24px;
+  height: 32px;
+  display: block;
+  filter:
+    drop-shadow(0 0 6px rgba(255, 130, 119, 0.25))
+    drop-shadow(0 8px 14px rgba(20, 32, 23, 0.18));
 }
 
 .summary-route-marker--start {
-  background: #4f93ff;
+  transform: scale(0.94);
 }
 
 .summary-route-marker--end {
-  background: #7ee892;
+  transform: scale(1);
 }
 
 .summary-sheet__route-stops {

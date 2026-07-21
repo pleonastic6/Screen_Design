@@ -989,7 +989,7 @@ function drawSummaryRoute(routeCoords, startCoords, endCoords) {
   }
 
   summaryRouteLayer = L.polyline(routeCoords, {
-    color: "#244126",
+    color: "#7ee892",
     weight: 5,
     opacity: 0.95,
     lineCap: "round",
@@ -1007,18 +1007,18 @@ function drawSummaryRoute(routeCoords, startCoords, endCoords) {
   summaryRouteStartMarker = L.marker(startCoords, {
     icon: L.divIcon({
       className: "",
-      html: '<span class="summary-route-marker summary-route-marker--start"></span>',
-      iconSize: [18, 18],
-      iconAnchor: [9, 9]
+      html: '<img class="summary-route-marker summary-route-marker--start" src="route-pin-coral.svg" alt="" />',
+      iconSize: [24, 32],
+      iconAnchor: [12, 30]
     })
   }).addTo(routeMap);
 
   summaryRouteEndMarker = L.marker(endCoords, {
     icon: L.divIcon({
       className: "",
-      html: '<span class="summary-route-marker summary-route-marker--end"></span>',
-      iconSize: [18, 18],
-      iconAnchor: [9, 9]
+      html: '<img class="summary-route-marker summary-route-marker--end" src="route-pin-coral.svg" alt="" />',
+      iconSize: [24, 32],
+      iconAnchor: [12, 30]
     })
   }).addTo(routeMap);
 
