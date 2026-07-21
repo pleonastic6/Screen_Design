@@ -103,19 +103,20 @@ body {
 .map-marker.hub {
   width: 34px;
   height: 42px;
-  padding: 4px 6px 5px;
-  background: rgba(255, 255, 255, 0.96);
-  border: 2px solid #4f93ff;
-  box-shadow:
-    0 0 0 4px rgba(255, 255, 255, 0.22),
-    0 10px 22px rgba(37, 47, 39, 0.2);
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
 }
 
 .map-marker__hub-icon {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  filter: drop-shadow(0 3px 6px rgba(34, 73, 132, 0.2));
+  filter:
+    drop-shadow(0 0 8px rgba(141, 228, 255, 0.65))
+    drop-shadow(0 0 18px rgba(79, 147, 255, 0.35))
+    drop-shadow(0 5px 10px rgba(34, 73, 132, 0.24));
 }
 
 .map-marker.user {
