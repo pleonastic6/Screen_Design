@@ -334,11 +334,14 @@ scooters.forEach((scooter, index) => {
 });
 
 function markerIcon(type) {
+  const isScooter = type.includes("scooter");
   return L.divIcon({
     className: "",
-    html: `<span class="map-marker ${type}"></span>`,
-    iconSize: [24, 24],
-    iconAnchor: [12, 12]
+    html: isScooter
+      ? `<span class="map-marker ${type}"><img class="map-marker__scooter-icon" src="escooter-mint.svg" alt="" /></span>`
+      : `<span class="map-marker ${type}"></span>`,
+    iconSize: isScooter ? [42, 42] : [24, 24],
+    iconAnchor: isScooter ? [21, 21] : [12, 12]
   });
 }
 
