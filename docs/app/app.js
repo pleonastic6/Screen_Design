@@ -417,10 +417,7 @@ const summaryScreenBonus = document.getElementById("summary-screen-bonus");
 const summaryScreenDistance = document.getElementById("summary-screen-distance");
 const summaryScreenStart = document.getElementById("summary-screen-start");
 const summaryScreenEnd = document.getElementById("summary-screen-end");
-const summaryScreenRouteLine = document.getElementById("summary-screen-route-line");
-const summaryScreenRouteShadow = document.getElementById("summary-screen-route-shadow");
-const summaryScreenRouteStart = document.getElementById("summary-screen-route-start");
-const summaryScreenRouteEnd = document.getElementById("summary-screen-route-end");
+const summaryScreenRouteMap = document.getElementById("summary-screen-route-map");
 const summaryScreenClose = document.getElementById("summary-screen-close");
 
 let activeScooterMarker = null;
@@ -434,6 +431,11 @@ let lastReturnContext = null;
 let rideCurrentCoords = null;
 let rideStartCoords = null;
 let selectedConfirmScooterName = null;
+let summaryMap = null;
+let summaryRouteLayer = null;
+let summaryRouteStartMarker = null;
+let summaryRouteEndMarker = null;
+let summaryRouteRequestId = 0;
 
 scooters.forEach((scooter, index) => {
   const batteryPercent = getBatteryPercent(scooter.range);
@@ -821,7 +823,7 @@ function closeSummaryScreen() {
   summaryScreen.setAttribute("aria-hidden", "true");
 }
 
-function renderSummaryRoute(startCoords, endCoords, context) {
+async function renderSummaryRoute(startCoords, endCoords, context) {
   if (!startCoords || !endCoords) {
     summaryScreenDistance.textContent = "0,0 km";
     summaryScreenStart.textContent = "Startpunkt";
@@ -834,14 +836,13 @@ function renderSummaryRoute(startCoords, endCoords, context) {
   summaryScreenStart.textContent = getStartLabel(startCoords);
   summaryScreenEnd.textContent = context.nearHub ? `${context.zoneLabel} Ladehub` : `${context.zoneLabel} Stadtgebiet`;
 
-  const routeLayout = getSummaryRouteLayout(startCoords, endCoords, context.nearHub);
-  const path = buildRoutePath(routeLayout.points);
-  summaryScreenRouteLine.setAttribute("d", path);
-  summaryScreenRouteShadow.setAttribute("d", path);
-  summaryScreenRouteStart.style.left = `${routeLayout.start.x}px`;
-  summaryScreenRouteStart.style.top = `${routeLayout.start.y}px`;
-  summaryScreenRouteEnd.style.left = `${routeLayout.end.x}px`;
-  summaryScreenRouteEnd.style.top = `${routeLayout.end.y}px`;
+  const requestId = ++summaryRouteRequestId;
+  const routeCoords = await getStreetRoute(startCoords, endCoords);
+  if (requestId !== summaryRouteRequestId) {
+    return;
+  }
+
+  drawSummaryRoute(routeCoords, startCoords, endCoords);
 }
 
 function getStartLabel(coords) {
@@ -853,32 +854,98 @@ function getStartLabel(coords) {
   return "Scooter-Standort";
 }
 
-function getSummaryRouteLayout(startCoords, endCoords, nearHub) {
-  const latDiff = endCoords[0] - startCoords[0];
-  const lngDiff = endCoords[1] - startCoords[1];
-  const normalizedX = Math.max(0.18, Math.min(0.82, 0.5 + lngDiff * 22));
-  const normalizedY = Math.max(0.18, Math.min(0.8, 0.5 - latDiff * 30));
-  const start = { x: 28, y: 114 };
-  const end = { x: Math.round(320 * normalizedX), y: Math.round(150 * normalizedY) };
-  const mid1 = {
-    x: Math.round(start.x + (end.x - start.x) * 0.34),
-    y: Math.max(18, Math.round(Math.min(start.y, end.y) - (nearHub ? 44 : 28)))
-  };
-  const mid2 = {
-    x: Math.round(start.x + (end.x - start.x) * 0.72),
-    y: Math.min(126, Math.round(Math.max(start.y, end.y) - (nearHub ? 18 : 8)))
-  };
+async function getStreetRoute(startCoords, endCoords) {
+  const fallbackRoute = [startCoords, endCoords];
 
-  return {
-    start,
-    end,
-    points: [start, mid1, mid2, end]
-  };
+  try {
+    const response = await fetch(
+      `https://router.project-osrm.org/route/v1/bicycle/${startCoords[1]},${startCoords[0]};${endCoords[1]},${endCoords[0]}?overview=full&geometries=geojson`,
+      { headers: { Accept: "application/json" } }
+    );
+    if (!response.ok) {
+      return fallbackRoute;
+    }
+
+    const data = await response.json();
+    const coordinates = data.routes?.[0]?.geometry?.coordinates;
+    if (!coordinates?.length) {
+      return fallbackRoute;
+    }
+
+    return coordinates.map(([lng, lat]) => [lat, lng]);
+  } catch {
+    return fallbackRoute;
+  }
 }
 
-function buildRoutePath(points) {
-  const [start, mid1, mid2, end] = points;
-  return `M${start.x} ${start.y} C${mid1.x} ${mid1.y} ${mid2.x} ${mid2.y} ${end.x} ${end.y}`;
+function ensureSummaryMap() {
+  if (summaryMap) {
+    return summaryMap;
+  }
+
+  summaryMap = L.map(summaryScreenRouteMap, {
+    zoomControl: false,
+    attributionControl: false,
+    scrollWheelZoom: false,
+    dragging: false,
+    doubleClickZoom: false,
+    boxZoom: false,
+    keyboard: false,
+    tap: false
+  });
+
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+    subdomains: "abcd",
+    maxZoom: 20
+  }).addTo(summaryMap);
+
+  return summaryMap;
+}
+
+function drawSummaryRoute(routeCoords, startCoords, endCoords) {
+  const routeMap = ensureSummaryMap();
+
+  if (summaryRouteLayer) {
+    summaryRouteLayer.remove();
+  }
+
+  summaryRouteLayer = L.polyline(routeCoords, {
+    color: "#244126",
+    weight: 5,
+    opacity: 0.95,
+    lineCap: "round",
+    lineJoin: "round"
+  }).addTo(routeMap);
+
+  if (summaryRouteStartMarker) {
+    summaryRouteStartMarker.remove();
+  }
+
+  if (summaryRouteEndMarker) {
+    summaryRouteEndMarker.remove();
+  }
+
+  summaryRouteStartMarker = L.marker(startCoords, {
+    icon: L.divIcon({
+      className: "",
+      html: '<span class="summary-route-marker summary-route-marker--start"></span>',
+      iconSize: [18, 18],
+      iconAnchor: [9, 9]
+    })
+  }).addTo(routeMap);
+
+  summaryRouteEndMarker = L.marker(endCoords, {
+    icon: L.divIcon({
+      className: "",
+      html: '<span class="summary-route-marker summary-route-marker--end"></span>',
+      iconSize: [18, 18],
+      iconAnchor: [9, 9]
+    })
+  }).addTo(routeMap);
+
+  const bounds = L.latLngBounds(routeCoords);
+  routeMap.fitBounds(bounds.pad(0.22), { animate: false });
+  window.setTimeout(() => routeMap.invalidateSize(false), 0);
 }
 
 function startBookingCountdown() {
