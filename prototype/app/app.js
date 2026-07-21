@@ -8,21 +8,21 @@ const scooters = [
   },
   {
     name: "E-Scooter AM-102",
-    type: "E-Scooter in der Georgenstrasse",
+    type: "E-Scooter in der Georgenstraße",
     range: "37 km Reichweite",
     price: "1,00 EUR entsperren, 0,19 EUR/Min",
     coords: [49.44488, 11.85922]
   },
   {
     name: "E-Scooter AM-103",
-    type: "E-Scooter in der Bahnhofstrasse",
+    type: "E-Scooter in der Bahnhofstraße",
     range: "33 km Reichweite",
     price: "1,00 EUR entsperren, 0,19 EUR/Min",
     coords: [49.44672, 11.86024]
   },
   {
     name: "E-Scooter AM-104",
-    type: "E-Scooter in der Herrnstrasse",
+    type: "E-Scooter in der Herrnstraße",
     range: "51 km Reichweite",
     price: "1,00 EUR entsperren, 0,19 EUR/Min",
     coords: [49.44431, 11.86058]
@@ -43,21 +43,21 @@ const scooters = [
   },
   {
     name: "E-Scooter AM-107",
-    type: "E-Scooter in der Vilsstrasse",
+    type: "E-Scooter in der Vilsstraße",
     range: "42 km Reichweite",
     price: "1,00 EUR entsperren, 0,19 EUR/Min",
     coords: [49.44384, 11.85588]
   },
   {
     name: "E-Scooter AM-108",
-    type: "E-Scooter in der Regierungsstrasse",
+    type: "E-Scooter in der Regierungsstraße",
     range: "39 km Reichweite",
     price: "1,00 EUR entsperren, 0,19 EUR/Min",
     coords: [49.44566, 11.85746]
   },
   {
     name: "E-Scooter AM-109",
-    type: "E-Scooter in der Zeughausstrasse",
+    type: "E-Scooter in der Zeughausstraße",
     range: "35 km Reichweite",
     price: "1,00 EUR entsperren, 0,19 EUR/Min",
     coords: [49.44602, 11.85884]
@@ -78,7 +78,7 @@ const scooters = [
   },
   {
     name: "E-Scooter AM-112",
-    type: "E-Scooter in der Kasernstrasse",
+    type: "E-Scooter in der Kasernstraße",
     range: "53 km Reichweite",
     price: "1,00 EUR entsperren, 0,19 EUR/Min",
     coords: [49.44645, 11.85695]
@@ -99,7 +99,7 @@ const scooters = [
   },
   {
     name: "E-Scooter AM-115",
-    type: "E-Scooter in der Muehlgasse",
+    type: "E-Scooter in der Mühlgasse",
     range: "47 km Reichweite",
     price: "1,00 EUR entsperren, 0,19 EUR/Min",
     coords: [49.44356, 11.85702]
@@ -127,7 +127,7 @@ const scooters = [
   },
   {
     name: "E-Scooter AM-119",
-    type: "E-Scooter in der Ringtheaterstrasse",
+    type: "E-Scooter in der Ringtheaterstraße",
     range: "34 km Reichweite",
     price: "1,00 EUR entsperren, 0,19 EUR/Min",
     coords: [49.44706, 11.85858]
@@ -162,14 +162,14 @@ const scooters = [
   },
   {
     name: "E-Scooter AM-124",
-    type: "E-Scooter in der Schiessstaette",
+    type: "E-Scooter in der Schießstätte",
     range: "56 km Reichweite",
     price: "1,00 EUR entsperren, 0,19 EUR/Min",
     coords: [49.44742, 11.85564]
   },
   {
     name: "E-Scooter AM-125",
-    type: "E-Scooter an der Georg-Graner-Strasse",
+    type: "E-Scooter an der Georg-Graner-Straße",
     range: "30 km Reichweite",
     price: "1,00 EUR entsperren, 0,19 EUR/Min",
     coords: [49.44552, 11.85092]
@@ -290,6 +290,8 @@ const returnScreenConfirm = document.getElementById("return-screen-confirm");
 const returnScreenHero = document.getElementById("return-screen-hero");
 const returnScreenStatusLabel = document.getElementById("return-screen-status-label");
 const returnScreenStatusTitle = document.getElementById("return-screen-status-title");
+const returnScreenTime = document.getElementById("return-screen-time");
+const returnScreenCost = document.getElementById("return-screen-cost");
 const returnScreenZone = document.getElementById("return-screen-zone");
 const returnScreenBattery = document.getElementById("return-screen-battery");
 const returnScreenHub = document.getElementById("return-screen-hub");
@@ -628,18 +630,20 @@ function openReturnScreen() {
   lastReturnContext = { batteryPercent, zoneLabel, nearHub, returnAllowed };
 
   returnScreenHero.classList.toggle("return-sheet__hero--success", returnAllowed);
-  returnScreenStatusLabel.textContent = returnAllowed ? "Rueckgabe erlaubt" : "Rueckgabe gesperrt";
+  returnScreenTime.textContent = rideScreenTimer.textContent;
+  returnScreenCost.textContent = rideScreenCost.textContent;
+  returnScreenStatusLabel.textContent = returnAllowed ? "Rückgabe erlaubt" : "Rückgabe gesperrt";
   returnScreenStatusTitle.textContent = returnAllowed
-    ? "Du stehst in einer gueltigen Zone."
+    ? "Du stehst in einer gültigen Zone."
     : "Akku zu niedrig. Bitte an einem Ladehub abstellen.";
-  returnScreenZone.textContent = `${zoneLabel} · ${returnAllowed ? "Abstellen moeglich" : "nur Ladehub erlaubt"}`;
-  returnScreenBattery.textContent = `${batteryPercent} % · ${batteryPercent > 30 ? "freie Rueckgabe moeglich" : "unter 30 %, bitte Ladehub nutzen"}`;
+  returnScreenZone.textContent = `${zoneLabel} · ${returnAllowed ? "Abstellen möglich" : "nur Ladehub erlaubt"}`;
+  returnScreenBattery.textContent = `${batteryPercent} % · ${batteryPercent > 30 ? "freie Rückgabe möglich" : "unter 30 %, bitte Ladehub nutzen"}`;
   returnScreenHub.textContent = nearHub
     ? "Bahnhof oder Campus OTH in 2-3 Min Entfernung"
     : "Marktplatz Ladehub in 2 Min Entfernung";
   returnScreenBonus.textContent = nearHub
     ? "Wenn du direkt am Ladehub abstellst, bekommst du 30 Freiminuten gutgeschrieben."
-    : "Zum naechsten Ladehub gibt es 30 Freiminuten. Lohnt sich fuer die Abschlussfolie.";
+    : "Zum nächsten Ladehub gibt es 30 Freiminuten. Lohnt sich für die Abschlussfolie.";
   returnScreenConfirm.disabled = !returnAllowed;
   returnScreen.dataset.open = "true";
   returnScreen.setAttribute("aria-hidden", "false");
@@ -670,7 +674,7 @@ function confirmReturn() {
   summaryScreenZone.textContent = context.nearHub ? `${context.zoneLabel} Ladehub` : `${context.zoneLabel} Stadtgebiet`;
   summaryScreenBonus.textContent = context.nearHub
     ? "30 Freiminuten gutgeschrieben"
-    : "Kein Bonus, aber Rueckgabe war gueltig";
+    : "Kein Bonus, aber Rückgabe war gültig";
   summaryScreen.dataset.open = "true";
   summaryScreen.setAttribute("aria-hidden", "false");
 }
@@ -727,6 +731,8 @@ function updateRideStatus() {
     rideScreenCostDetail.textContent = "0,00 EUR";
     pauseScreenTime.textContent = "00:00";
     pauseScreenCost.textContent = "0,00 EUR";
+    returnScreenTime.textContent = "00:00";
+    returnScreenCost.textContent = "0,00 EUR";
     return;
   }
 
@@ -743,6 +749,8 @@ function updateRideStatus() {
   rideScreenCostDetail.textContent = costLabel;
   pauseScreenTime.textContent = elapsedLabel;
   pauseScreenCost.textContent = costLabel;
+  returnScreenTime.textContent = elapsedLabel;
+  returnScreenCost.textContent = costLabel;
 }
 
 function updateRideZoneUI() {
@@ -752,7 +760,7 @@ function updateRideZoneUI() {
   rideScreenZonePill.textContent = zoneContext.pill;
   rideScreenZoneTitle.textContent = zoneContext.title;
   rideScreenZoneCopy.textContent = zoneContext.copy;
-  rideScreenZoneAction.textContent = zoneContext.nearHub ? "Am Ladehub angekommen" : "Zum naechsten Ladehub bringen";
+  rideScreenZoneAction.textContent = zoneContext.nearHub ? "Am Ladehub angekommen" : "Zum nächsten Ladehub bringen";
   rideScreenZoneAction.disabled = zoneContext.nearHub;
 }
 
@@ -766,14 +774,14 @@ function getAvailabilityLabel(status) {
   }
 
   if (status === "charging") {
-    return "Laedt am Hub";
+    return "Lädt am Hub";
   }
 
   if (status === "low") {
-    return "Verfuegbar mit wenig Akku";
+    return "Verfügbar mit wenig Akku";
   }
 
-  return "Verfuegbar";
+  return "Verfügbar";
 }
 
 function renderConfirmScooterOptions() {
@@ -790,7 +798,7 @@ function renderConfirmScooterOptions() {
   const options = [activeScooter, ...nearbyScooters];
   confirmScreenOptions.innerHTML = options.map((scooter) => {
     const isReserved = scooter.name === activeScooter.name;
-    const meta = isReserved ? "Reserviert fuer dich" : getAvailabilityLabel(scooter.status);
+    const meta = isReserved ? "Reserviert für dich" : getAvailabilityLabel(scooter.status);
     return `
       <button
         class="confirm-sheet__option"
@@ -832,7 +840,7 @@ function updateConfirmSelection(scooterName) {
   confirmScreenUnlock.disabled = !isReservedScooter;
   confirmScreenSelectionNote.textContent = isReservedScooter
     ? "Nummer stimmt. Diesen Scooter kannst du jetzt sicher entsperren."
-    : "Das ist nicht dein reservierter Scooter. Bitte waehle die passende Nummer.";
+    : "Das ist nicht dein reservierter Scooter. Bitte wähle die passende Nummer.";
 }
 
 function getBatteryPercent(rangeText) {
@@ -866,8 +874,8 @@ function getZoneContext(scooter, currentCoords = null) {
       label: "Altstadt",
       nearHub: false,
       state: "default",
-      pill: "Im Rueckgabegebiet",
-      title: "Freie Rueckgabe ist hier moeglich.",
+      pill: "Im Rückgabegebiet",
+      title: "Freie Rückgabe ist hier möglich.",
       copy: "Wenn du an einem markierten Ladehub parkst, bekommst du 30 Freiminuten gutgeschrieben."
     };
   }
@@ -885,7 +893,7 @@ function getZoneContext(scooter, currentCoords = null) {
       state: "hub",
       pill: "Bonus direkt in Reichweite",
       title: `Am ${nearestHub.name}-Ladehub gibt es Extra-Bonus.`,
-      copy: "Wenn du die Fahrt hier beendest, sicherst du dir 30 Freiminuten fuer die naechste Runde."
+      copy: "Wenn du die Fahrt hier beendest, sicherst du dir 30 Freiminuten für die nächste Runde."
     };
   }
 
@@ -894,9 +902,9 @@ function getZoneContext(scooter, currentCoords = null) {
       label: "Stadtgebiet",
       nearHub: false,
       state: "default",
-      pill: "Im Rueckgabegebiet",
-      title: "Freie Rueckgabe ist hier moeglich.",
-      copy: "Die gruene Zone auf der Karte zeigt dir, wo du sauber abstellen kannst. Ein blauer Hub bringt dir zusaetzlich Bonus."
+      pill: "Im Rückgabegebiet",
+      title: "Freie Rückgabe ist hier möglich.",
+      copy: "Die grüne Zone auf der Karte zeigt dir, wo du sauber abstellen kannst. Ein blauer Hub bringt dir zusätzlich Bonus."
     };
   }
 
@@ -905,8 +913,8 @@ function getZoneContext(scooter, currentCoords = null) {
     nearHub: false,
     state: "edge",
     pill: "Am Rand des Gebiets",
-    title: "Rueckgabe klappt, aber ein Hub lohnt sich mehr.",
-    copy: "Du bist nahe am Rand. Fuer die beste Abschlussansicht fährst du noch kurz zu einem markierten Ladehub."
+    title: "Rückgabe klappt, aber ein Hub lohnt sich mehr.",
+    copy: "Du bist nahe am Rand. Für die beste Abschlussansicht fährst du noch kurz zu einem markierten Ladehub."
   };
 }
 
