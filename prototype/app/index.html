@@ -434,6 +434,52 @@
         </div>
       </div>
     </section>
+    <section class="parking-screen" id="parking-screen" aria-hidden="true">
+      <div class="parking-screen__fade" aria-hidden="true"></div>
+      <div class="parking-sheet">
+        <p class="parking-sheet__eyebrow">Park-Check</p>
+        <h2 class="parking-sheet__title">Letzter Blick vorm Abschließen.</h2>
+        <p class="parking-sheet__subline" id="parking-screen-subline">Prüfe kurz, ob der Scooter niemanden blockiert und sauber am Rand steht. Dann geht die Rückgabe fix durch.</p>
+        <div class="parking-sheet__preview">
+          <div class="parking-sheet__preview-top">
+            <span class="parking-sheet__preview-badge">Foto-Vorschau</span>
+            <span class="parking-sheet__preview-status" id="parking-screen-status">Bereit</span>
+          </div>
+          <div class="parking-sheet__preview-scene" aria-hidden="true">
+            <div class="parking-sheet__preview-glow"></div>
+            <div class="parking-sheet__preview-scooter">
+              <img src="escooter-mint.svg" alt="" />
+            </div>
+            <div class="parking-sheet__preview-curb"></div>
+          </div>
+        </div>
+        <div class="parking-sheet__checks">
+          <div class="parking-sheet__check">
+            <span class="parking-sheet__check-title">Weg bleibt frei</span>
+            <span class="parking-sheet__check-copy">Kein Gehweg-Blocker, kein Eingang, keine Treppe.</span>
+          </div>
+          <div class="parking-sheet__check">
+            <span class="parking-sheet__check-title">Scooter steht stabil</span>
+            <span class="parking-sheet__check-copy">Sauber abgestellt und nicht mitten im Laufweg.</span>
+          </div>
+          <div class="parking-sheet__check">
+            <span class="parking-sheet__check-title">Bonus bleibt sichtbar</span>
+            <span class="parking-sheet__check-copy" id="parking-screen-bonus">Bei Ladehub-Rückgabe werden die 30 Freiminuten direkt vorgemerkt.</span>
+          </div>
+        </div>
+        <div class="parking-sheet__summary">
+          <div class="parking-sheet__summary-row">
+            <span class="parking-sheet__summary-label">Rückgabeort</span>
+            <span class="parking-sheet__summary-value" id="parking-screen-zone">Stadtgebiet Amberg</span>
+          </div>
+          <div class="parking-sheet__summary-row">
+            <span class="parking-sheet__summary-label">Status</span>
+            <span class="parking-sheet__summary-value" id="parking-screen-note">Freie Rückgabe geprüft</span>
+          </div>
+        </div>
+        <button class="parking-sheet__action" id="parking-screen-confirm" type="button">Park-Check abschließen</button>
+      </div>
+    </section>
     <section class="summary-screen" id="summary-screen" aria-hidden="true">
       <div class="summary-screen__fade" aria-hidden="true"></div>
       <div class="summary-sheet">

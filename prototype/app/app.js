@@ -1,5 +1,6 @@
 const PRICE_LABEL = "0,10 EUR je 5 Min";
 const RETURN_CONFIRM_DELAY_MS = 420;
+const PARKING_REVIEW_DELAY_MS = 920;
 const SUMMARY_ROUTE_DRAW_DELAY_MS = 360;
 const SUMMARY_ROUTE_DRAW_DURATION_MS = 900;
 
@@ -475,6 +476,13 @@ const returnScreenBattery = document.getElementById("return-screen-battery");
 const returnScreenBatteryIcon = document.getElementById("return-screen-battery-icon");
 const returnScreenHub = document.getElementById("return-screen-hub");
 const returnScreenBonus = document.getElementById("return-screen-bonus");
+const parkingScreen = document.getElementById("parking-screen");
+const parkingScreenSubline = document.getElementById("parking-screen-subline");
+const parkingScreenStatus = document.getElementById("parking-screen-status");
+const parkingScreenBonus = document.getElementById("parking-screen-bonus");
+const parkingScreenZone = document.getElementById("parking-screen-zone");
+const parkingScreenNote = document.getElementById("parking-screen-note");
+const parkingScreenConfirm = document.getElementById("parking-screen-confirm");
 const summaryScreen = document.getElementById("summary-screen");
 const summaryScreenTime = document.getElementById("summary-screen-time");
 const summaryScreenCost = document.getElementById("summary-screen-cost");
@@ -504,7 +512,9 @@ let summaryRouteStartMarker = null;
 let summaryRouteEndMarker = null;
 let summaryRouteRequestId = 0;
 let returnConfirmTimeoutId = null;
+let parkingReviewTimeoutId = null;
 let summaryRouteMarkerTimeoutId = null;
+let pendingSummaryState = null;
 
 document.body.classList.add("splash-active");
 window.setTimeout(() => {
@@ -616,6 +626,7 @@ pauseScreenEnd.addEventListener("click", openReturnScreenFromPause);
 returnScreenBack.addEventListener("click", closeReturnScreen);
 returnScreenContinue.addEventListener("click", closeReturnScreen);
 returnScreenConfirm.addEventListener("click", confirmReturn);
+parkingScreenConfirm.addEventListener("click", completeParkingCheck);
 summaryScreenClose.addEventListener("click", closeSummaryScreen);
 document.addEventListener("keydown", handleGlobalKeydown);
 map.on("click", () => {
@@ -935,11 +946,11 @@ function confirmReturn() {
   }
 
   returnConfirmTimeoutId = window.setTimeout(() => {
-    finalizeReturn(durationLabel, costLabel, context, startCoords, finalCoords);
+    openParkingScreen(durationLabel, costLabel, context, startCoords, finalCoords);
   }, RETURN_CONFIRM_DELAY_MS);
 }
 
-function finalizeReturn(durationLabel, costLabel, context, startCoords, finalCoords) {
+function openParkingScreen(durationLabel, costLabel, context, startCoords, finalCoords) {
   stopRideStatus();
   rideStartedAt = null;
   rideCurrentCoords = null;
@@ -948,6 +959,55 @@ function finalizeReturn(durationLabel, costLabel, context, startCoords, finalCoo
   rideScreen.dataset.open = "false";
   rideScreen.setAttribute("aria-hidden", "true");
   closePauseScreen();
+  pendingSummaryState = {
+    durationLabel,
+    costLabel,
+    context,
+    startCoords,
+    finalCoords
+  };
+  parkingScreenSubline.textContent = context.nearHub
+    ? "Der Scooter steht am Ladehub. Ein letzter kurzer Check, dann werden deine Freiminuten direkt vorgemerkt."
+    : "Prüfe kurz, ob der Scooter niemanden blockiert und sauber am Rand steht. Dann geht die Rückgabe fix durch.";
+  parkingScreenStatus.textContent = "Bereit";
+  parkingScreenBonus.textContent = context.nearHub
+    ? "Ladehub erkannt. Die 30 Freiminuten werden nach dem Abschluss direkt gutgeschrieben."
+    : "Kein Ladehub nötig. Hauptsache der Scooter steht frei und ordentlich am Rand.";
+  parkingScreenZone.textContent = context.nearHub ? `${context.zoneLabel} Ladehub` : `${context.zoneLabel} Stadtgebiet`;
+  parkingScreenNote.textContent = context.nearHub ? "Bonus-Rückgabe geprüft" : "Freie Rückgabe geprüft";
+  parkingScreenConfirm.disabled = false;
+  parkingScreenConfirm.textContent = "Park-Check abschließen";
+  parkingScreen.dataset.state = "ready";
+  parkingScreen.dataset.open = "true";
+  parkingScreen.setAttribute("aria-hidden", "false");
+}
+
+function completeParkingCheck() {
+  if (parkingScreenConfirm.disabled || !pendingSummaryState) {
+    return;
+  }
+
+  parkingScreen.dataset.state = "processing";
+  parkingScreenStatus.textContent = "Wird geprüft";
+  parkingScreenNote.textContent = "Abschluss wird validiert";
+  parkingScreenConfirm.disabled = true;
+  parkingScreenConfirm.textContent = "Abschluss läuft...";
+
+  if (parkingReviewTimeoutId) {
+    window.clearTimeout(parkingReviewTimeoutId);
+  }
+
+  parkingReviewTimeoutId = window.setTimeout(() => {
+    const summaryState = pendingSummaryState;
+    pendingSummaryState = null;
+    closeParkingScreen();
+    if (summaryState) {
+      finalizeReturn(summaryState.durationLabel, summaryState.costLabel, summaryState.context, summaryState.startCoords, summaryState.finalCoords);
+    }
+  }, PARKING_REVIEW_DELAY_MS);
+}
+
+function finalizeReturn(durationLabel, costLabel, context, startCoords, finalCoords) {
   summaryScreenTime.textContent = durationLabel;
   summaryScreenCost.textContent = costLabel;
   summaryScreenZone.textContent = context.nearHub ? `${context.zoneLabel} Ladehub` : `${context.zoneLabel} Stadtgebiet`;
@@ -963,6 +1023,17 @@ function finalizeReturn(durationLabel, costLabel, context, startCoords, finalCoo
       renderSummaryRoute(startCoords, finalCoords, context).catch(() => {});
     }, SUMMARY_ROUTE_DRAW_DELAY_MS);
   });
+}
+
+function closeParkingScreen() {
+  if (parkingReviewTimeoutId) {
+    window.clearTimeout(parkingReviewTimeoutId);
+    parkingReviewTimeoutId = null;
+  }
+
+  parkingScreen.dataset.open = "false";
+  parkingScreen.dataset.state = "ready";
+  parkingScreen.setAttribute("aria-hidden", "true");
 }
 
 function closeSummaryScreen() {
