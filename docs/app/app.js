@@ -624,10 +624,10 @@ function markerIcon(type) {
     html: isScooter
       ? `<span class="map-marker ${type}"><img class="map-marker__scooter-icon" src="${scooterIcon}" alt="" /></span>`
       : isHub
-        ? `<span class="map-marker ${type}"><span class="map-marker__hub-icon" aria-hidden="true"><img class="map-marker__hub-glyph" src="plug-glyph-blue.svg" alt="" /></span></span>`
+        ? `<span class="map-marker ${type}"><span class="map-marker__hub-icon" aria-hidden="true"><img class="map-marker__hub-glyph" src="plug-glyph-white.svg" alt="" /></span></span>`
         : `<span class="map-marker ${type}"></span>`,
-    iconSize: isScooter ? [42, 42] : isHub ? [34, 42] : [24, 24],
-    iconAnchor: isScooter ? [21, 21] : isHub ? [17, 21] : [12, 12]
+    iconSize: isScooter ? [42, 42] : isHub ? [32, 32] : [24, 24],
+    iconAnchor: isScooter ? [21, 21] : isHub ? [16, 16] : [12, 12]
   });
 }
 
