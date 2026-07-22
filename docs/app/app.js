@@ -624,7 +624,7 @@ function markerIcon(type) {
     html: isScooter
       ? `<span class="map-marker ${type}"><img class="map-marker__scooter-icon" src="${scooterIcon}" alt="" /></span>`
       : isHub
-        ? `<span class="map-marker ${type}"><img class="map-marker__hub-icon" src="route-pin-blue.svg" alt="" /></span>`
+        ? `<span class="map-marker ${type}"><img class="map-marker__hub-icon" src="hub-plug-blue.svg" alt="" /></span>`
         : `<span class="map-marker ${type}"></span>`,
     iconSize: isScooter ? [42, 42] : isHub ? [34, 42] : [24, 24],
     iconAnchor: isScooter ? [21, 21] : isHub ? [17, 21] : [12, 12]
