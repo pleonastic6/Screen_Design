@@ -531,12 +531,12 @@ const menuScreenContent = {
   account: {
     eyebrow: "Konto",
     title: "Dein Konto",
-    subline: "Profil, Führerschein und persönliche Angaben auf einen Blick.",
-    heroTitle: "Konto ist bereit für den nächsten Ausbau",
-    heroCopy: "Für den Showcase führt der Menüpunkt jetzt auf einen eigenen Screen statt ins Leere.",
+    subline: "Profil und persönliche Angaben auf einen Blick.",
+    heroTitle: "Kontodaten",
+    heroCopy: "Persönliche Infos und App-Status gebündelt an einem Ort.",
     items: [
       ["Name", "Rainer Winkler"],
-      ["Führerschein", "Verifiziert"],
+      ["E-Mail", "r.winkler@example.com"],
       ["Status", "Premium Ride"]
     ]
   },
@@ -545,7 +545,7 @@ const menuScreenContent = {
     title: "Letzte Fahrten",
     subline: "Deine letzten Fahrten mit Dauer, Preis und Rückgabeort.",
     heroTitle: "Fahrten-Historie",
-    heroCopy: "Hier kann später eine Liste oder Timeline deiner letzten Scooter-Fahrten sitzen.",
+    heroCopy: "Die letzten Fahrten mit Dauer, Preis und kurzem Überblick.",
     items: [
       ["Heute", "8 Min · 0,20 EUR"],
       ["Gestern", "14 Min · 0,30 EUR"],
@@ -557,7 +557,7 @@ const menuScreenContent = {
     title: "Freiminuten",
     subline: "Belohnungen aus Ladehub-Rückgaben und Aktionen.",
     heroTitle: "Bonusstand aktiv",
-    heroCopy: "Der Menüpunkt hat jetzt einen echten Zielscreen und kann später um Details ergänzt werden.",
+    heroCopy: "Dein aktueller Bonusstand und der nächste mögliche Vorteil.",
     items: [
       ["Aktiv", "30 Freiminuten"],
       ["Zuletzt", "Ladehub am Bahnhof"],
@@ -569,7 +569,7 @@ const menuScreenContent = {
     title: "Zahlungsmittel",
     subline: "Hinterlegte Karte, Wallet-Guthaben und Abrechnung.",
     heroTitle: "Bezahlen ohne Umweg",
-    heroCopy: "Für den Flow reicht hier erstmal eine saubere Zielseite mit den wichtigsten Zahlungsinfos.",
+    heroCopy: "Karte, Guthaben und Abrechnung kompakt zusammengefasst.",
     items: [
       ["Karte", "Visa · 2481"],
       ["Wallet", "12,40 EUR"],
@@ -581,7 +581,7 @@ const menuScreenContent = {
     title: "Hilfe & Support",
     subline: "Häufige Fragen, Sperrzonen und Hilfe bei Problemen.",
     heroTitle: "Schnelle Hilfe im Menü",
-    heroCopy: "Auch der Support-Einstieg ist jetzt klickbar und landet nicht mehr in einer Sackgasse.",
+    heroCopy: "Schneller Zugriff auf Hilfe, Regeln und wichtige Antworten.",
     items: [
       ["Thema", "Sperrzonen & Schäden"],
       ["FAQ", "Verfügbar"],
