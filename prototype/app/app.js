@@ -36,7 +36,7 @@ const scooters = [
   {
     name: "E-Scooter AM-105",
     type: "E-Scooter am Hallplatz",
-    range: "29 km Reichweite",
+    range: "16 km Reichweite",
     price: PRICE_LABEL,
     coords: [49.4456190, 11.8592273]
   },
@@ -113,7 +113,7 @@ const scooters = [
   {
     name: "E-Scooter AM-116",
     type: "E-Scooter am Nabburger Torplatz",
-    range: "28 km Reichweite",
+    range: "14 km Reichweite",
     price: PRICE_LABEL,
     coords: [49.4441719, 11.8636934]
   },
@@ -176,7 +176,7 @@ const scooters = [
   {
     name: "E-Scooter AM-125",
     type: "E-Scooter an der Georg-Graner-Straße",
-    range: "30 km Reichweite",
+    range: "15 km Reichweite",
     price: PRICE_LABEL,
     coords: [49.44552, 11.85092]
   },
@@ -602,7 +602,7 @@ scooters.forEach((scooter, index) => {
     scooter.status = "reserved";
   } else if (index === 0 || index === 12 || index === 17) {
     scooter.status = "charging";
-  } else if (batteryPercent <= 35) {
+  } else if (batteryPercent <= 30) {
     scooter.status = "low";
   } else {
     scooter.status = "available";
@@ -1513,6 +1513,10 @@ function getBatteryIconSource(scooter) {
   }
 
   const batteryPercent = getBatteryPercent(scooter.range);
+  if (batteryPercent <= 30) {
+    return "battery-low-coral.svg";
+  }
+
   if (batteryPercent >= 75) {
     return "battery-full-green.svg";
   }
@@ -1542,7 +1546,7 @@ function getAvailabilityLabel(status) {
   }
 
   if (status === "low") {
-    return "Verfügbar mit wenig Akku";
+    return "Unter 30 %, bitte zum Ladehub";
   }
 
   return "Verfügbar";
