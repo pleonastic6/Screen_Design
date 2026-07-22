@@ -556,6 +556,155 @@ body.splash-done .map-screen {
   box-shadow: -1px 11px 0 -1px #18301d;
 }
 
+.menu-detail-screen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 200ms ease;
+  z-index: 440;
+  background:
+    radial-gradient(circle at top right, rgba(126, 232, 146, 0.16), transparent 18rem),
+    linear-gradient(180deg, #f7fbf5 0%, #edf4eb 100%);
+}
+
+.menu-detail-screen[data-open="true"] {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+.menu-detail-screen__fade {
+  display: none;
+}
+
+.menu-detail-sheet {
+  position: relative;
+  display: grid;
+  gap: 16px;
+  align-content: start;
+  min-height: 100dvh;
+  padding: calc(24px + env(safe-area-inset-top, 0px)) 18px var(--bottom-safe-space);
+  transform: translateX(18px);
+  transition: transform 220ms ease;
+}
+
+.menu-detail-screen[data-open="true"] .menu-detail-sheet {
+  transform: translateX(0);
+}
+
+.menu-detail-sheet__back,
+.menu-detail-sheet__primary {
+  border: 0;
+  font: inherit;
+}
+
+.menu-detail-sheet__back {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: rgba(237, 242, 235, 0.92);
+  color: #142017;
+  font-size: 32px;
+  line-height: 1;
+}
+
+.menu-detail-sheet__eyebrow,
+.menu-detail-sheet__title,
+.menu-detail-sheet__subline,
+.menu-detail-sheet__hero-title,
+.menu-detail-sheet__hero-copy,
+.menu-detail-sheet__item-label,
+.menu-detail-sheet__item-value {
+  margin: 0;
+}
+
+.menu-detail-sheet__eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #5c6b60;
+}
+
+.menu-detail-sheet__title {
+  font-size: clamp(1.45rem, 4vw, 1.9rem);
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+}
+
+.menu-detail-sheet__subline {
+  margin-top: -4px;
+  max-width: 28rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: #5b695d;
+}
+
+.menu-detail-sheet__hero {
+  display: grid;
+  gap: 6px;
+  padding: 18px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(148, 237, 143, 0.26), transparent 8rem),
+    rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(20, 32, 23, 0.06);
+  box-shadow: 0 16px 32px rgba(23, 35, 27, 0.08);
+}
+
+.menu-detail-sheet__hero-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #142017;
+}
+
+.menu-detail-sheet__hero-copy {
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: #58675b;
+}
+
+.menu-detail-sheet__list {
+  display: grid;
+  gap: 10px;
+}
+
+.menu-detail-sheet__item {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  padding: 16px 18px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(20, 32, 23, 0.06);
+}
+
+.menu-detail-sheet__item-label {
+  font-size: 0.88rem;
+  color: #627064;
+}
+
+.menu-detail-sheet__item-value {
+  text-align: right;
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: #142017;
+}
+
+.menu-detail-sheet__primary {
+  width: 100%;
+  margin-top: auto;
+  padding: 15px 18px;
+  border-radius: 22px;
+  background: #94ed8f;
+  color: #0d180f;
+  font-weight: 700;
+  box-shadow: 0 12px 24px rgba(127, 214, 106, 0.22);
+}
+
 .leaflet-container {
   font-family: "Sora", system-ui, sans-serif;
   background: #dfe7df;

@@ -399,6 +399,16 @@ const mapMenuButton = document.getElementById("map-menu-button");
 const mapMenuPanel = document.getElementById("map-menu-panel");
 const mapMenuBackdrop = document.getElementById("map-menu-backdrop");
 const mapMenuClose = document.getElementById("map-menu-close");
+const mapMenuItems = Array.from(document.querySelectorAll(".map-menu-panel__item[data-menu-screen]"));
+const menuDetailScreen = document.getElementById("menu-detail-screen");
+const menuDetailBack = document.getElementById("menu-detail-back");
+const menuDetailClose = document.getElementById("menu-detail-close");
+const menuDetailEyebrow = document.getElementById("menu-detail-eyebrow");
+const menuDetailTitle = document.getElementById("menu-detail-title");
+const menuDetailSubline = document.getElementById("menu-detail-subline");
+const menuDetailHeroTitle = document.getElementById("menu-detail-hero-title");
+const menuDetailHeroCopy = document.getElementById("menu-detail-hero-copy");
+const menuDetailList = document.getElementById("menu-detail-list");
 const vehicleCard = document.getElementById("vehicle-card");
 const mapCenterButton = document.getElementById("map-center-button");
 const vehicleCardClose = document.getElementById("vehicle-card-close");
@@ -517,6 +527,69 @@ let summaryRouteMarkerTimeoutId = null;
 let pendingSummaryState = null;
 let ringPlaybackToken = 0;
 
+const menuScreenContent = {
+  account: {
+    eyebrow: "Konto",
+    title: "Dein Konto",
+    subline: "Profil, Führerschein und persönliche Angaben auf einen Blick.",
+    heroTitle: "Konto ist bereit für den nächsten Ausbau",
+    heroCopy: "Für den Showcase führt der Menüpunkt jetzt auf einen eigenen Screen statt ins Leere.",
+    items: [
+      ["Name", "Rainer Winkler"],
+      ["Führerschein", "Verifiziert"],
+      ["Status", "Premium Ride"]
+    ]
+  },
+  rides: {
+    eyebrow: "Historie",
+    title: "Letzte Fahrten",
+    subline: "Deine letzten Fahrten mit Dauer, Preis und Rückgabeort.",
+    heroTitle: "Fahrten-Historie",
+    heroCopy: "Hier kann später eine Liste oder Timeline deiner letzten Scooter-Fahrten sitzen.",
+    items: [
+      ["Heute", "8 Min · 0,20 EUR"],
+      ["Gestern", "14 Min · 0,30 EUR"],
+      ["Woche", "6 Fahrten"]
+    ]
+  },
+  bonus: {
+    eyebrow: "Bonus",
+    title: "Freiminuten",
+    subline: "Belohnungen aus Ladehub-Rückgaben und Aktionen.",
+    heroTitle: "Bonusstand aktiv",
+    heroCopy: "Der Menüpunkt hat jetzt einen echten Zielscreen und kann später um Details ergänzt werden.",
+    items: [
+      ["Aktiv", "30 Freiminuten"],
+      ["Zuletzt", "Ladehub am Bahnhof"],
+      ["Nächster Bonus", "Noch 1 Rückgabe"]
+    ]
+  },
+  payment: {
+    eyebrow: "Wallet",
+    title: "Zahlungsmittel",
+    subline: "Hinterlegte Karte, Wallet-Guthaben und Abrechnung.",
+    heroTitle: "Bezahlen ohne Umweg",
+    heroCopy: "Für den Flow reicht hier erstmal eine saubere Zielseite mit den wichtigsten Zahlungsinfos.",
+    items: [
+      ["Karte", "Visa · 2481"],
+      ["Wallet", "12,40 EUR"],
+      ["Abrechnung", "Automatisch"]
+    ]
+  },
+  help: {
+    eyebrow: "Support",
+    title: "Hilfe & Support",
+    subline: "Häufige Fragen, Sperrzonen und Hilfe bei Problemen.",
+    heroTitle: "Schnelle Hilfe im Menü",
+    heroCopy: "Auch der Support-Einstieg ist jetzt klickbar und landet nicht mehr in einer Sackgasse.",
+    items: [
+      ["Thema", "Sperrzonen & Schäden"],
+      ["FAQ", "Verfügbar"],
+      ["Kontakt", "Im Ausbau"]
+    ]
+  }
+};
+
 document.body.classList.add("splash-active");
 window.setTimeout(() => {
   document.body.classList.add("splash-done");
@@ -604,6 +677,9 @@ hubs.forEach((hub) => {
 mapMenuButton.addEventListener("click", toggleMapMenu);
 mapMenuBackdrop.addEventListener("click", closeMapMenu);
 mapMenuClose.addEventListener("click", closeMapMenu);
+mapMenuItems.forEach((item) => item.addEventListener("click", handleMapMenuItemClick));
+menuDetailBack.addEventListener("click", closeMenuDetailScreen);
+menuDetailClose.addEventListener("click", closeMenuDetailScreen);
 mapCenterButton.addEventListener("click", centerMapOnUser);
 ["pointerdown", "click", "touchstart"].forEach((eventName) => {
   vehicleCard.addEventListener(eventName, stopOverlayEvent, { passive: false });
@@ -639,6 +715,7 @@ summaryScreenClose.addEventListener("click", closeSummaryScreen);
 document.addEventListener("keydown", handleGlobalKeydown);
 map.on("click", () => {
   closeVehicleCard();
+  closeMenuDetailScreen(false);
   closeMapMenu();
 });
 
@@ -666,6 +743,44 @@ function closeMapMenu() {
   mapMenuBackdrop.dataset.open = "false";
   mapMenuBackdrop.setAttribute("aria-hidden", "true");
   mapMenuButton.setAttribute("aria-label", "Menü öffnen");
+}
+
+function handleMapMenuItemClick(event) {
+  const item = event.currentTarget;
+  const screenKey = item.dataset.menuScreen;
+  openMenuDetailScreen(screenKey);
+}
+
+function openMenuDetailScreen(screenKey) {
+  const content = menuScreenContent[screenKey];
+  if (!content) {
+    return;
+  }
+
+  menuDetailEyebrow.textContent = content.eyebrow;
+  menuDetailTitle.textContent = content.title;
+  menuDetailSubline.textContent = content.subline;
+  menuDetailHeroTitle.textContent = content.heroTitle;
+  menuDetailHeroCopy.textContent = content.heroCopy;
+  menuDetailList.innerHTML = content.items.map(([label, value]) => `
+    <div class="menu-detail-sheet__item">
+      <span class="menu-detail-sheet__item-label">${label}</span>
+      <span class="menu-detail-sheet__item-value">${value}</span>
+    </div>
+  `).join("");
+
+  mapMenuPanel.dataset.open = "false";
+  mapMenuPanel.setAttribute("aria-hidden", "true");
+  menuDetailScreen.dataset.open = "true";
+  menuDetailScreen.setAttribute("aria-hidden", "false");
+}
+
+function closeMenuDetailScreen(reopenMenu = true) {
+  menuDetailScreen.dataset.open = "false";
+  menuDetailScreen.setAttribute("aria-hidden", "true");
+  if (reopenMenu) {
+    openMapMenu();
+  }
 }
 
 function centerMapOnUser() {
@@ -728,6 +843,7 @@ function waitForRingAudioEnd(playbackToken) {
 
 function handleGlobalKeydown(event) {
   if (event.key === "Escape") {
+    closeMenuDetailScreen(false);
     closeMapMenu();
   }
 }
