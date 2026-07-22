@@ -608,9 +608,12 @@ mapMenuButton.addEventListener("click", toggleMapMenu);
 mapMenuBackdrop.addEventListener("click", closeMapMenu);
 mapMenuClose.addEventListener("click", closeMapMenu);
 mapCenterButton.addEventListener("click", centerMapOnUser);
+["pointerdown", "click", "touchstart"].forEach((eventName) => {
+  vehicleCard.addEventListener(eventName, stopOverlayEvent, { passive: false });
+});
 vehicleCardClose.addEventListener("click", closeVehicleCard);
 vehicleCardRing.addEventListener("click", playRingSoundTriple);
-vehicleCardReserve.addEventListener("click", openBookingScreen);
+vehicleCardReserve.addEventListener("click", handleReserveButtonClick);
 bookingScreenBack.addEventListener("click", closeBookingScreen);
 bookingScreenCancel.addEventListener("click", closeBookingScreen);
 bookingScreenUnlock.addEventListener("click", openConfirmScreen);
@@ -673,6 +676,10 @@ function centerMapOnUser() {
   });
 }
 
+function stopOverlayEvent(event) {
+  event.stopPropagation();
+}
+
 async function playRingSoundTriple() {
   ringPlaybackToken += 1;
   const playbackToken = ringPlaybackToken;
@@ -724,6 +731,12 @@ function handleGlobalKeydown(event) {
   if (event.key === "Escape") {
     closeMapMenu();
   }
+}
+
+function handleReserveButtonClick(event) {
+  event.preventDefault();
+  event.stopPropagation();
+  openBookingScreen();
 }
 
 function openVehicleCard(scooter, marker) {
