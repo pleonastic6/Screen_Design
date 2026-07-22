@@ -1592,27 +1592,9 @@ body.splash-done .map-screen {
 .ride-sheet__statusbar-top,
 .ride-sheet__statusbar-bottom {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 12px;
   align-items: center;
-}
-
-.ride-sheet__live {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-}
-
-.ride-sheet__live::before {
-  content: "";
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: #94ed8f;
-  box-shadow: 0 0 0 6px rgba(148, 237, 143, 0.18);
 }
 
 .ride-sheet__status-name,
@@ -1655,25 +1637,6 @@ body.splash-done .map-screen {
   font-size: clamp(1.35rem, 4vw, 1.8rem);
   line-height: 1.02;
   letter-spacing: -0.04em;
-}
-
-.ride-sheet__subline {
-  margin: 8px 0 0;
-  max-width: 34rem;
-  font-size: 0.92rem;
-  line-height: 1.5;
-  color: #5a675c;
-}
-
-.ride-sheet__badge {
-  flex: 0 0 auto;
-  padding: 8px 12px;
-  border-radius: 999px;
-  background: #ecf7e8;
-  color: #345733;
-  border: 1px solid rgba(127, 214, 106, 0.22);
-  font-size: 0.8rem;
-  font-weight: 700;
 }
 
 .ride-sheet__hero {
@@ -1809,31 +1772,6 @@ body.splash-done .map-screen {
 .ride-sheet__zone-action:disabled {
   background: #dfe6dc;
   color: #546155;
-}
-
-.ride-sheet__notice {
-  padding: 16px 16px 18px;
-  border-radius: 22px;
-  background:
-    linear-gradient(135deg, rgba(79, 147, 255, 0.09) 0%, rgba(148, 237, 143, 0.18) 100%);
-  border: 1px solid rgba(20, 32, 23, 0.06);
-}
-
-.ride-sheet__notice-title,
-.ride-sheet__notice-copy {
-  margin: 0;
-}
-
-.ride-sheet__notice-title {
-  font-size: 0.92rem;
-  font-weight: 700;
-}
-
-.ride-sheet__notice-copy {
-  margin-top: 6px;
-  font-size: 0.84rem;
-  line-height: 1.5;
-  color: #526253;
 }
 
 .ride-sheet__actions {
@@ -3294,7 +3232,6 @@ body.splash-done .map-screen {
     font-size: 1.22rem;
   }
 
-  .ride-sheet__subline,
   .pause-sheet__subline,
   .return-sheet__subline,
   .summary-sheet__subline {
@@ -3311,8 +3248,7 @@ body.splash-done .map-screen {
   }
 
   .ride-sheet__stat,
-  .ride-sheet__zone-card,
-  .ride-sheet__notice {
+  .ride-sheet__zone-card {
     padding: 12px 14px;
   }
 
