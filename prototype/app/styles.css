@@ -3072,7 +3072,7 @@ body.splash-done .map-screen {
 }
 
 .booking-sheet__eyebrow {
-  margin: 0;
+  margin: 6px 0 0;
   padding-left: 52px;
   font-size: 0.72rem;
   font-weight: 700;
@@ -3147,22 +3147,11 @@ body.splash-done .map-screen {
 }
 
 .booking-sheet__route-icon {
-  position: relative;
   flex: 0 0 auto;
-  width: 34px;
-  height: 34px;
-  border-radius: 12px;
-  background: #dff4d8;
-}
-
-.booking-sheet__route-icon::before {
-  content: "";
-  position: absolute;
-  inset: 8px;
-  border: 2px solid #1b2a1d;
-  border-top: 0;
-  border-right: 0;
-  transform: rotate(-45deg);
+  width: 22px;
+  height: 30px;
+  background: center / contain no-repeat url("./route-pin-mint.svg");
+  filter: drop-shadow(0 6px 10px rgba(70, 120, 72, 0.18));
 }
 
 .booking-sheet__route-copy {
