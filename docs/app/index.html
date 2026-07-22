@@ -26,6 +26,77 @@
   </div>
   <main class="map-screen">
     <div class="map-frame" id="main-map" aria-label="Karte mit Scootern und Ladehubs"></div>
+    <div class="map-menu-backdrop" id="map-menu-backdrop" aria-hidden="true"></div>
+    <div class="map-menu-panel" id="map-menu-panel" aria-hidden="true">
+      <div class="map-menu-panel__header">
+        <div class="map-menu-panel__avatar" aria-hidden="true">A</div>
+        <div class="map-menu-panel__identity">
+          <p class="map-menu-panel__eyebrow">Mein Konto</p>
+          <p class="map-menu-panel__name">Arturo Weber</p>
+          <p class="map-menu-panel__subline">Premium Ride · 30 Freiminuten aktiv</p>
+        </div>
+      </div>
+      <div class="map-menu-panel__stats">
+        <div class="map-menu-panel__stat">
+          <span class="map-menu-panel__stat-label">Wallet</span>
+          <span class="map-menu-panel__stat-value">12,40 EUR</span>
+        </div>
+        <div class="map-menu-panel__stat">
+          <span class="map-menu-panel__stat-label">Letzte Fahrt</span>
+          <span class="map-menu-panel__stat-value">8 Min · 0,20 EUR</span>
+        </div>
+      </div>
+      <div class="map-menu-panel__section">
+        <p class="map-menu-panel__section-title">Schnellzugriff</p>
+        <button class="map-menu-panel__item" type="button">
+          <span class="map-menu-panel__item-icon map-menu-panel__item-icon--account" aria-hidden="true"></span>
+          <span class="map-menu-panel__item-copy">
+            <span class="map-menu-panel__item-title">Konto</span>
+            <span class="map-menu-panel__item-subtitle">Profil, Führerschein und Daten</span>
+          </span>
+        </button>
+        <button class="map-menu-panel__item" type="button">
+          <span class="map-menu-panel__item-icon map-menu-panel__item-icon--rides" aria-hidden="true"></span>
+          <span class="map-menu-panel__item-copy">
+            <span class="map-menu-panel__item-title">Letzte Fahrten</span>
+            <span class="map-menu-panel__item-subtitle">Recaps, Dauer und Kosten</span>
+          </span>
+        </button>
+        <button class="map-menu-panel__item" type="button">
+          <span class="map-menu-panel__item-icon map-menu-panel__item-icon--bonus" aria-hidden="true"></span>
+          <span class="map-menu-panel__item-copy">
+            <span class="map-menu-panel__item-title">Freiminuten</span>
+            <span class="map-menu-panel__item-subtitle">Bonus aus Ladehub-Rückgaben</span>
+          </span>
+        </button>
+        <button class="map-menu-panel__item" type="button">
+          <span class="map-menu-panel__item-icon map-menu-panel__item-icon--payment" aria-hidden="true"></span>
+          <span class="map-menu-panel__item-copy">
+            <span class="map-menu-panel__item-title">Zahlungsmittel</span>
+            <span class="map-menu-panel__item-subtitle">Visa endet auf 2481</span>
+          </span>
+        </button>
+        <button class="map-menu-panel__item" type="button">
+          <span class="map-menu-panel__item-icon map-menu-panel__item-icon--help" aria-hidden="true"></span>
+          <span class="map-menu-panel__item-copy">
+            <span class="map-menu-panel__item-title">Hilfe & Support</span>
+            <span class="map-menu-panel__item-subtitle">Sperrzonen, Schäden und FAQ</span>
+          </span>
+        </button>
+      </div>
+    </div>
+    <div class="map-controls" aria-label="Kartensteuerung">
+      <button class="map-controls__button map-controls__button--menu" id="map-menu-button" type="button" aria-label="Menü öffnen">
+        <span class="map-controls__menu-icon" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </button>
+      <button class="map-controls__button" id="map-center-button" type="button" aria-label="Standort zentrieren und näher heranzoomen">
+        <img class="map-controls__icon" src="center-target-black.svg" alt="" aria-hidden="true" />
+      </button>
+    </div>
     <aside class="vehicle-card" id="vehicle-card" aria-hidden="true">
       <button class="vehicle-card__close" id="vehicle-card-close" type="button" aria-label="Infocard schließen">
         <span aria-hidden="true">×</span>

@@ -16,7 +16,7 @@ const scooters = [
     type: "E-Scooter in der Georgenstraße",
     range: "37 km Reichweite",
     price: PRICE_LABEL,
-    coords: [49.44488, 11.85922]
+    coords: [49.4442883, 11.8533874]
   },
   {
     name: "E-Scooter AM-103",
@@ -30,91 +30,91 @@ const scooters = [
     type: "E-Scooter in der Herrnstraße",
     range: "51 km Reichweite",
     price: PRICE_LABEL,
-    coords: [49.44431, 11.86058]
+    coords: [49.4462362, 11.8582117]
   },
   {
     name: "E-Scooter AM-105",
     type: "E-Scooter am Hallplatz",
     range: "29 km Reichweite",
     price: PRICE_LABEL,
-    coords: [49.44452, 11.85724]
+    coords: [49.4456190, 11.8592273]
   },
   {
     name: "E-Scooter AM-106",
     type: "E-Scooter am Rossmarkt",
     range: "48 km Reichweite",
     price: PRICE_LABEL,
-    coords: [49.44416, 11.85642]
+    coords: [49.4442686, 11.8543188]
   },
   {
     name: "E-Scooter AM-107",
     type: "E-Scooter in der Vilsstraße",
     range: "42 km Reichweite",
     price: PRICE_LABEL,
-    coords: [49.44384, 11.85588]
+    coords: [49.4460961, 11.8534818]
   },
   {
     name: "E-Scooter AM-108",
     type: "E-Scooter in der Regierungsstraße",
     range: "39 km Reichweite",
     price: PRICE_LABEL,
-    coords: [49.44566, 11.85746]
+    coords: [49.4441981, 11.8561860]
   },
   {
     name: "E-Scooter AM-109",
     type: "E-Scooter in der Zeughausstraße",
     range: "35 km Reichweite",
     price: PRICE_LABEL,
-    coords: [49.44602, 11.85884]
+    coords: [49.4440089, 11.8590277]
   },
   {
     name: "E-Scooter AM-110",
     type: "E-Scooter am Schrannenplatz",
     range: "46 km Reichweite",
     price: PRICE_LABEL,
-    coords: [49.44473, 11.85988]
+    coords: [49.4455203, 11.8543261]
   },
   {
     name: "E-Scooter AM-111",
     type: "E-Scooter am Kaiser-Wilhelm-Ring",
     range: "31 km Reichweite",
     price: PRICE_LABEL,
-    coords: [49.44418, 11.86482]
+    coords: [49.4469037, 11.8509327]
   },
   {
     name: "E-Scooter AM-112",
     type: "E-Scooter in der Kasernstraße",
     range: "53 km Reichweite",
     price: PRICE_LABEL,
-    coords: [49.44645, 11.85695]
+    coords: [49.4471227, 11.8583124]
   },
   {
     name: "E-Scooter AM-113",
     type: "E-Scooter an der OTH Amberg-Weiden",
     range: "41 km Reichweite",
     price: PRICE_LABEL,
-    coords: [49.44482, 11.84788]
+    coords: [49.4440975, 11.8473771]
   },
   {
     name: "E-Scooter AM-114",
     type: "E-Scooter in der Paradiesgasse",
     range: "36 km Reichweite",
     price: PRICE_LABEL,
-    coords: [49.44408, 11.85788]
+    coords: [49.4458376, 11.8527523]
   },
   {
     name: "E-Scooter AM-115",
     type: "E-Scooter in der Mühlgasse",
     range: "47 km Reichweite",
     price: PRICE_LABEL,
-    coords: [49.44356, 11.85702]
+    coords: [49.4466248, 11.8544125]
   },
   {
     name: "E-Scooter AM-116",
     type: "E-Scooter am Nabburger Torplatz",
     range: "28 km Reichweite",
     price: PRICE_LABEL,
-    coords: [49.44684, 11.86208]
+    coords: [49.4441719, 11.8636934]
   },
   {
     name: "E-Scooter AM-117",
@@ -128,7 +128,7 @@ const scooters = [
     type: "E-Scooter am Kaiser-Ludwig-Ring",
     range: "43 km Reichweite",
     price: PRICE_LABEL,
-    coords: [49.44624, 11.85486]
+    coords: [49.4452227, 11.8640987]
   },
   {
     name: "E-Scooter AM-119",
@@ -142,7 +142,7 @@ const scooters = [
     type: "E-Scooter in der Schiffgasse",
     range: "49 km Reichweite",
     price: PRICE_LABEL,
-    coords: [49.44438, 11.85862]
+    coords: [49.4445673, 11.8577718]
   },
   {
     name: "E-Scooter AM-121",
@@ -394,7 +394,11 @@ const summaryRouteTemplates = [
 const userLocation = [49.44506, 11.85858];
 const mapCenter = [49.4451, 11.8581];
 const defaultZoom = 15;
+const mapMenuButton = document.getElementById("map-menu-button");
+const mapMenuPanel = document.getElementById("map-menu-panel");
+const mapMenuBackdrop = document.getElementById("map-menu-backdrop");
 const vehicleCard = document.getElementById("vehicle-card");
+const mapCenterButton = document.getElementById("map-center-button");
 const vehicleCardClose = document.getElementById("vehicle-card-close");
 const vehicleCardReserve = document.getElementById("vehicle-card-reserve");
 const vehicleCardReserveTitle = document.getElementById("vehicle-card-reserve-title");
@@ -586,6 +590,9 @@ hubs.forEach((hub) => {
   L.marker(hub.coords, { icon: markerIcon("hub"), zIndexOffset: 1000 }).addTo(map);
 });
 
+mapMenuButton.addEventListener("click", toggleMapMenu);
+mapMenuBackdrop.addEventListener("click", closeMapMenu);
+mapCenterButton.addEventListener("click", centerMapOnUser);
 vehicleCardClose.addEventListener("click", closeVehicleCard);
 vehicleCardReserve.addEventListener("click", openBookingScreen);
 bookingScreenBack.addEventListener("click", closeBookingScreen);
@@ -610,7 +617,50 @@ returnScreenBack.addEventListener("click", closeReturnScreen);
 returnScreenContinue.addEventListener("click", closeReturnScreen);
 returnScreenConfirm.addEventListener("click", confirmReturn);
 summaryScreenClose.addEventListener("click", closeSummaryScreen);
-map.on("click", closeVehicleCard);
+document.addEventListener("keydown", handleGlobalKeydown);
+map.on("click", () => {
+  closeVehicleCard();
+  closeMapMenu();
+});
+
+function toggleMapMenu() {
+  const shouldOpen = mapMenuPanel.dataset.open !== "true";
+  if (shouldOpen) {
+    openMapMenu();
+    return;
+  }
+
+  closeMapMenu();
+}
+
+function openMapMenu() {
+  mapMenuPanel.dataset.open = "true";
+  mapMenuPanel.setAttribute("aria-hidden", "false");
+  mapMenuBackdrop.dataset.open = "true";
+  mapMenuBackdrop.setAttribute("aria-hidden", "false");
+  mapMenuButton.setAttribute("aria-label", "Menü schließen");
+}
+
+function closeMapMenu() {
+  mapMenuPanel.dataset.open = "false";
+  mapMenuPanel.setAttribute("aria-hidden", "true");
+  mapMenuBackdrop.dataset.open = "false";
+  mapMenuBackdrop.setAttribute("aria-hidden", "true");
+  mapMenuButton.setAttribute("aria-label", "Menü öffnen");
+}
+
+function centerMapOnUser() {
+  map.flyTo(userLocation, 17, {
+    animate: true,
+    duration: 0.85
+  });
+}
+
+function handleGlobalKeydown(event) {
+  if (event.key === "Escape") {
+    closeMapMenu();
+  }
+}
 
 function openVehicleCard(scooter, marker) {
   activeScooter = scooter;
