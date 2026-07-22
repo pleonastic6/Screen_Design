@@ -614,10 +614,15 @@ scooters.forEach((scooter, index) => {
 function markerIcon(type) {
   const isScooter = type.includes("scooter");
   const isHub = type.includes("hub");
+  const scooterIcon = type.includes("reserved")
+    ? "escooter-orange.svg"
+    : type.includes("charging")
+      ? "escooter-blue.svg"
+      : "escooter-mint.svg";
   return L.divIcon({
     className: "",
     html: isScooter
-      ? `<span class="map-marker ${type}"><img class="map-marker__scooter-icon" src="escooter-mint.svg" alt="" /></span>`
+      ? `<span class="map-marker ${type}"><img class="map-marker__scooter-icon" src="${scooterIcon}" alt="" /></span>`
       : isHub
         ? `<span class="map-marker ${type}"><img class="map-marker__hub-icon" src="route-pin-blue.svg" alt="" /></span>`
         : `<span class="map-marker ${type}"></span>`,

@@ -736,7 +736,7 @@ body.splash-done .map-screen {
 }
 
 .map-marker.scooter.reserved {
-  background: #ffb347;
+  background: rgba(255, 255, 255, 0.94);
   border-color: #ff9d1f;
   box-shadow:
     0 0 0 4px rgba(255, 195, 107, 0.26),
@@ -749,8 +749,7 @@ body.splash-done .map-screen {
 }
 
 .map-marker.scooter.charging {
-  background:
-    radial-gradient(circle at center, rgba(255, 255, 255, 0.96) 0 62%, rgba(79, 147, 255, 0.36) 63% 100%);
+  background: rgba(255, 255, 255, 0.94);
   border-color: #4f93ff;
   box-shadow:
     0 0 0 4px rgba(120, 176, 255, 0.22),
