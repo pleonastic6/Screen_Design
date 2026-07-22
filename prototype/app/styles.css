@@ -782,11 +782,23 @@ body.splash-done .map-screen {
 .map-marker__hub-icon {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  display: block;
+  position: relative;
+  background: center / contain no-repeat url("./route-pin-blue.svg");
   filter:
     drop-shadow(0 0 8px rgba(141, 228, 255, 0.65))
     drop-shadow(0 0 18px rgba(79, 147, 255, 0.35))
     drop-shadow(0 5px 10px rgba(34, 73, 132, 0.24));
+}
+
+.map-marker__hub-glyph {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  width: 8px;
+  height: 12px;
+  object-fit: contain;
+  transform: translateX(-50%);
 }
 
 .map-marker.user {
