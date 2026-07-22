@@ -403,6 +403,7 @@ const vehicleCard = document.getElementById("vehicle-card");
 const mapCenterButton = document.getElementById("map-center-button");
 const vehicleCardClose = document.getElementById("vehicle-card-close");
 const vehicleCardRing = document.getElementById("vehicle-card-ring");
+const vehicleCardReport = document.getElementById("vehicle-card-report");
 const vehicleCardReserve = document.getElementById("vehicle-card-reserve");
 const vehicleCardReserveTitle = document.getElementById("vehicle-card-reserve-title");
 const vehicleCardType = document.getElementById("vehicle-card-type");
@@ -411,6 +412,7 @@ const vehicleCardStatus = document.getElementById("vehicle-card-status");
 const vehicleCardRange = document.getElementById("vehicle-card-range");
 const vehicleCardPrice = document.getElementById("vehicle-card-price");
 const vehicleCardBatteryIcon = document.getElementById("vehicle-card-battery-icon");
+const vehicleCardSupportToast = document.getElementById("vehicle-card-support-toast");
 const bookingScreen = document.getElementById("booking-screen");
 const bookingScreenBack = document.getElementById("booking-screen-back");
 const bookingScreenCancel = document.getElementById("booking-screen-cancel");
@@ -519,6 +521,7 @@ let parkingReviewTimeoutId = null;
 let summaryRouteMarkerTimeoutId = null;
 let pendingSummaryState = null;
 let ringPlaybackToken = 0;
+let supportToastTimeoutId = null;
 
 document.body.classList.add("splash-active");
 window.setTimeout(() => {
@@ -610,6 +613,7 @@ mapMenuClose.addEventListener("click", closeMapMenu);
 mapCenterButton.addEventListener("click", centerMapOnUser);
 vehicleCardClose.addEventListener("click", closeVehicleCard);
 vehicleCardRing.addEventListener("click", playRingSoundTriple);
+vehicleCardReport.addEventListener("click", showSupportToast);
 vehicleCardReserve.addEventListener("click", openBookingScreen);
 bookingScreenBack.addEventListener("click", closeBookingScreen);
 bookingScreenCancel.addEventListener("click", closeBookingScreen);
@@ -718,6 +722,21 @@ function waitForRingAudioEnd(playbackToken) {
     ringAudio.addEventListener("ended", handleEnded, { once: true });
     ringAudio.addEventListener("pause", handlePause);
   });
+}
+
+function showSupportToast() {
+  if (supportToastTimeoutId) {
+    window.clearTimeout(supportToastTimeoutId);
+  }
+
+  vehicleCardSupportToast.dataset.open = "true";
+  vehicleCardSupportToast.setAttribute("aria-hidden", "false");
+
+  supportToastTimeoutId = window.setTimeout(() => {
+    vehicleCardSupportToast.dataset.open = "false";
+    vehicleCardSupportToast.setAttribute("aria-hidden", "true");
+    supportToastTimeoutId = null;
+  }, 2600);
 }
 
 function handleGlobalKeydown(event) {
