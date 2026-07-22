@@ -613,7 +613,10 @@ vehicleCardRing.addEventListener("click", playRingSoundTriple);
 vehicleCardReserve.addEventListener("click", handleReserveButtonClick);
 bookingScreenBack.addEventListener("click", closeBookingScreen);
 bookingScreenCancel.addEventListener("click", closeBookingScreen);
-bookingScreenUnlock.addEventListener("click", openConfirmScreen);
+["pointerdown", "click", "touchstart"].forEach((eventName) => {
+  bookingScreen.addEventListener(eventName, stopOverlayEvent, { passive: false });
+});
+bookingScreenUnlock.addEventListener("click", handleBookingUnlockClick);
 confirmScreenBack.addEventListener("click", closeConfirmScreen);
 confirmScreenBackAction.addEventListener("click", closeConfirmScreen);
 confirmScreenUnlock.addEventListener("click", openUnlockScreen);
@@ -733,6 +736,12 @@ function handleReserveButtonClick(event) {
   event.preventDefault();
   event.stopPropagation();
   openBookingScreen();
+}
+
+function handleBookingUnlockClick(event) {
+  event.preventDefault();
+  event.stopPropagation();
+  openConfirmScreen();
 }
 
 function openVehicleCard(scooter, marker) {
