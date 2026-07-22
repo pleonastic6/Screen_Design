@@ -793,7 +793,7 @@ body.splash-done .map-screen {
 
 .map-marker__hub-glyph {
   position: absolute;
-  top: 6px;
+  top: 8px;
   left: 50%;
   width: 8px;
   height: 12px;
@@ -802,11 +802,35 @@ body.splash-done .map-screen {
 }
 
 .map-marker.user {
-  width: 14px;
-  height: 14px;
+  position: relative;
+  width: 18px;
+  height: 18px;
   background: #ffffff;
-  border: 3px solid var(--cyan);
-  box-shadow: 0 0 0 8px rgba(79, 147, 255, 0.14);
+  border: 4px solid var(--cyan);
+  border-radius: 999px;
+  box-shadow:
+    0 0 0 6px rgba(79, 147, 255, 0.18),
+    0 8px 18px rgba(34, 73, 132, 0.26);
+}
+
+.map-marker.user::before,
+.map-marker.user::after {
+  content: "";
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(79, 147, 255, 0.5);
+  border-radius: 999px;
+  transform: translate(-50%, -50%);
+}
+
+.map-marker.user::before {
+  animation: user-location-pulse 2.4s ease-out infinite;
+}
+
+.map-marker.user::after {
+  animation: user-location-pulse 2.4s ease-out 1.2s infinite;
 }
 
 .vehicle-card {
@@ -3078,6 +3102,23 @@ body.splash-done .map-screen {
   50% {
     transform: scale(1);
     opacity: 1;
+  }
+}
+
+@keyframes user-location-pulse {
+  0% {
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  70% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(2.9);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(2.9);
   }
 }
 
