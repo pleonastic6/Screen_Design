@@ -429,8 +429,6 @@ const confirmScreenType = document.getElementById("confirm-screen-type");
 const confirmScreenBattery = document.getElementById("confirm-screen-battery");
 const confirmScreenBatteryIcon = document.getElementById("confirm-screen-battery-icon");
 const confirmScreenRange = document.getElementById("confirm-screen-range");
-const confirmScreenOptions = document.getElementById("confirm-screen-options");
-const confirmScreenSelectionNote = document.getElementById("confirm-screen-selection-note");
 const issueScreen = document.getElementById("issue-screen");
 const issueScreenBack = document.getElementById("issue-screen-back");
 const issueScreenReturn = document.getElementById("issue-screen-return");
@@ -508,7 +506,6 @@ let rideStartedAt = null;
 let lastReturnContext = null;
 let rideCurrentCoords = null;
 let rideStartCoords = null;
-let selectedConfirmScooterName = null;
 let summaryMap = null;
 let summaryRouteLayer = null;
 let summaryRouteStartMarker = null;
@@ -620,7 +617,6 @@ bookingScreenUnlock.addEventListener("click", openConfirmScreen);
 confirmScreenBack.addEventListener("click", closeConfirmScreen);
 confirmScreenBackAction.addEventListener("click", closeConfirmScreen);
 confirmScreenUnlock.addEventListener("click", openUnlockScreen);
-confirmScreenOptions.addEventListener("click", handleConfirmOptionClick);
 issueScreenBack.addEventListener("click", closeIssueScreen);
 issueScreenReturn.addEventListener("click", closeIssueScreen);
 issueScreenSearch.addEventListener("click", searchAnotherScooter);
@@ -803,8 +799,6 @@ function openConfirmScreen() {
   confirmScreenBattery.textContent = getBatteryLabel(activeScooter.range);
   setBatteryIcon(confirmScreenBatteryIcon, activeScooter);
   confirmScreenRange.textContent = activeScooter.range;
-  renderConfirmScooterOptions();
-  updateConfirmSelection(activeScooter.name);
   confirmScreen.dataset.open = "true";
   confirmScreen.setAttribute("aria-hidden", "false");
 }
@@ -849,7 +843,7 @@ function searchAnotherScooter() {
 }
 
 function openUnlockScreen() {
-  if (!activeScooter || selectedConfirmScooterName !== activeScooter.name) {
+  if (!activeScooter) {
     return;
   }
 
@@ -1422,65 +1416,6 @@ function getAvailabilityLabel(status) {
   }
 
   return "Verfügbar";
-}
-
-function renderConfirmScooterOptions() {
-  if (!activeScooter) {
-    confirmScreenOptions.innerHTML = "";
-    return;
-  }
-
-  const nearbyScooters = scooters
-    .filter((scooter) => scooter.name !== activeScooter.name)
-    .sort((left, right) => map.distance(activeScooter.coords, left.coords) - map.distance(activeScooter.coords, right.coords))
-    .slice(0, 3);
-
-  const options = [activeScooter, ...nearbyScooters];
-  confirmScreenOptions.innerHTML = options.map((scooter) => {
-    const isReserved = scooter.name === activeScooter.name;
-    const meta = isReserved ? "Reserviert für dich" : getAvailabilityLabel(scooter.status);
-    return `
-      <button
-        class="confirm-sheet__option"
-        type="button"
-        data-scooter-name="${scooter.name}"
-        data-reserved="${isReserved ? "true" : "false"}"
-      >
-        <span class="confirm-sheet__option-top">
-          <span class="confirm-sheet__option-name">${scooter.name}</span>
-          <span class="confirm-sheet__option-badge ${isReserved ? "is-reserved" : ""}">${meta}</span>
-        </span>
-        <span class="confirm-sheet__option-bottom">
-          <span>${getBatteryLabel(scooter.range)}</span>
-          <span>${scooter.range}</span>
-        </span>
-      </button>
-    `;
-  }).join("");
-}
-
-function handleConfirmOptionClick(event) {
-  const option = event.target.closest(".confirm-sheet__option");
-  if (!option) {
-    return;
-  }
-
-  updateConfirmSelection(option.dataset.scooterName);
-}
-
-function updateConfirmSelection(scooterName) {
-  selectedConfirmScooterName = scooterName;
-  const options = confirmScreenOptions.querySelectorAll(".confirm-sheet__option");
-  options.forEach((option) => {
-    const isSelected = option.dataset.scooterName === scooterName;
-    option.dataset.selected = isSelected ? "true" : "false";
-  });
-
-  const isReservedScooter = scooterName === activeScooter?.name;
-  confirmScreenUnlock.disabled = !isReservedScooter;
-  confirmScreenSelectionNote.textContent = isReservedScooter
-    ? "Nummer stimmt. Diesen Scooter kannst du jetzt sicher entsperren."
-    : "Das ist nicht dein reservierter Scooter. Bitte wähle die passende Nummer.";
 }
 
 function getBatteryPercent(rangeText) {
