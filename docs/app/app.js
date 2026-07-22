@@ -402,6 +402,7 @@ const mapMenuClose = document.getElementById("map-menu-close");
 const vehicleCard = document.getElementById("vehicle-card");
 const mapCenterButton = document.getElementById("map-center-button");
 const vehicleCardClose = document.getElementById("vehicle-card-close");
+const vehicleCardRing = document.getElementById("vehicle-card-ring");
 const vehicleCardReserve = document.getElementById("vehicle-card-reserve");
 const vehicleCardReserveTitle = document.getElementById("vehicle-card-reserve-title");
 const vehicleCardType = document.getElementById("vehicle-card-type");
@@ -495,6 +496,7 @@ const summaryScreenEnd = document.getElementById("summary-screen-end");
 const summaryScreenRouteMap = document.getElementById("summary-screen-route-map");
 const summaryScreenClose = document.getElementById("summary-screen-close");
 const splashScreen = document.getElementById("splash-screen");
+const ringAudio = new Audio("icq-old-sound.mp3");
 
 let activeScooterMarker = null;
 let activeScooter = null;
@@ -516,6 +518,7 @@ let returnConfirmTimeoutId = null;
 let parkingReviewTimeoutId = null;
 let summaryRouteMarkerTimeoutId = null;
 let pendingSummaryState = null;
+let ringPlaybackToken = 0;
 
 document.body.classList.add("splash-active");
 window.setTimeout(() => {
@@ -606,6 +609,7 @@ mapMenuBackdrop.addEventListener("click", closeMapMenu);
 mapMenuClose.addEventListener("click", closeMapMenu);
 mapCenterButton.addEventListener("click", centerMapOnUser);
 vehicleCardClose.addEventListener("click", closeVehicleCard);
+vehicleCardRing.addEventListener("click", playRingSoundTriple);
 vehicleCardReserve.addEventListener("click", openBookingScreen);
 bookingScreenBack.addEventListener("click", closeBookingScreen);
 bookingScreenCancel.addEventListener("click", closeBookingScreen);
@@ -666,6 +670,53 @@ function centerMapOnUser() {
   map.flyTo(userLocation, 17, {
     animate: true,
     duration: 0.85
+  });
+}
+
+async function playRingSoundTriple() {
+  ringPlaybackToken += 1;
+  const playbackToken = ringPlaybackToken;
+  ringAudio.pause();
+  ringAudio.currentTime = 0;
+
+  for (let count = 0; count < 3; count += 1) {
+    if (playbackToken !== ringPlaybackToken) {
+      return;
+    }
+
+    ringAudio.currentTime = 0;
+
+    try {
+      await ringAudio.play();
+    } catch {
+      return;
+    }
+
+    await waitForRingAudioEnd(playbackToken);
+  }
+}
+
+function waitForRingAudioEnd(playbackToken) {
+  return new Promise((resolve) => {
+    const cleanup = () => {
+      ringAudio.removeEventListener("ended", handleEnded);
+      ringAudio.removeEventListener("pause", handlePause);
+    };
+
+    const handleEnded = () => {
+      cleanup();
+      resolve();
+    };
+
+    const handlePause = () => {
+      if (playbackToken !== ringPlaybackToken) {
+        cleanup();
+        resolve();
+      }
+    };
+
+    ringAudio.addEventListener("ended", handleEnded, { once: true });
+    ringAudio.addEventListener("pause", handlePause);
   });
 }
 

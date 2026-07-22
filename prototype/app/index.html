@@ -28,15 +28,21 @@
     <div class="map-frame" id="main-map" aria-label="Karte mit Scootern und Ladehubs"></div>
     <div class="map-menu-backdrop" id="map-menu-backdrop" aria-hidden="true"></div>
     <div class="map-menu-panel" id="map-menu-panel" aria-hidden="true">
-      <button class="map-menu-panel__close" id="map-menu-close" type="button" aria-label="Zurück zur Karte">
-        <span aria-hidden="true">×</span>
-      </button>
+      <div class="map-menu-panel__topbar">
+        <div>
+          <p class="map-menu-panel__eyebrow">Konto</p>
+          <p class="map-menu-panel__topline">Dein Bereich</p>
+        </div>
+        <button class="map-menu-panel__close" id="map-menu-close" type="button" aria-label="Zurück zur Karte">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
       <div class="map-menu-panel__header">
         <div class="map-menu-panel__avatar" aria-hidden="true">R</div>
         <div class="map-menu-panel__identity">
-          <p class="map-menu-panel__eyebrow">Mein Konto</p>
           <p class="map-menu-panel__name">Rainer Winkler</p>
           <p class="map-menu-panel__subline">Premium Ride · 30 Freiminuten aktiv</p>
+          <p class="map-menu-panel__microcopy">Alles Wichtige zu Fahrten, Wallet und Bonus an einem Ort.</p>
         </div>
       </div>
       <div class="map-menu-panel__stats">
@@ -55,14 +61,14 @@
           <span class="map-menu-panel__item-icon map-menu-panel__item-icon--account" aria-hidden="true"></span>
           <span class="map-menu-panel__item-copy">
             <span class="map-menu-panel__item-title">Konto</span>
-            <span class="map-menu-panel__item-subtitle">Profil, Führerschein und Daten</span>
+            <span class="map-menu-panel__item-subtitle">Profil, Führerschein, Daten</span>
           </span>
         </button>
         <button class="map-menu-panel__item" type="button">
           <span class="map-menu-panel__item-icon map-menu-panel__item-icon--rides" aria-hidden="true"></span>
           <span class="map-menu-panel__item-copy">
             <span class="map-menu-panel__item-title">Letzte Fahrten</span>
-            <span class="map-menu-panel__item-subtitle">Recaps, Dauer und Kosten</span>
+            <span class="map-menu-panel__item-subtitle">Dauer, Preis und Verlauf</span>
           </span>
         </button>
         <button class="map-menu-panel__item" type="button">
@@ -76,14 +82,14 @@
           <span class="map-menu-panel__item-icon map-menu-panel__item-icon--payment" aria-hidden="true"></span>
           <span class="map-menu-panel__item-copy">
             <span class="map-menu-panel__item-title">Zahlungsmittel</span>
-            <span class="map-menu-panel__item-subtitle">Visa endet auf 2481</span>
+            <span class="map-menu-panel__item-subtitle">Visa · endet auf 2481</span>
           </span>
         </button>
         <button class="map-menu-panel__item" type="button">
           <span class="map-menu-panel__item-icon map-menu-panel__item-icon--help" aria-hidden="true"></span>
           <span class="map-menu-panel__item-copy">
             <span class="map-menu-panel__item-title">Hilfe & Support</span>
-            <span class="map-menu-panel__item-subtitle">Sperrzonen, Schäden und FAQ</span>
+            <span class="map-menu-panel__item-subtitle">Sperrzonen, Schäden, FAQ</span>
           </span>
         </button>
       </div>
@@ -130,7 +136,7 @@
         </div>
       </div>
       <div class="vehicle-card__actions">
-        <button class="vehicle-card__pill" type="button">Klingeln</button>
+        <button class="vehicle-card__pill" id="vehicle-card-ring" type="button">Klingeln</button>
         <button class="vehicle-card__pill" type="button">Problem melden</button>
       </div>
       <button class="vehicle-card__reserve" id="vehicle-card-reserve" type="button">
