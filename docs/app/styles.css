@@ -744,8 +744,11 @@ body.splash-done .map-screen {
 }
 
 .map-marker.scooter.low {
-  background:
-    radial-gradient(circle at center, rgba(255, 255, 255, 0.96) 0 62%, rgba(255, 142, 107, 0.42) 63% 100%);
+  background: rgba(255, 255, 255, 0.94);
+  border-color: #ff8277;
+  box-shadow:
+    0 0 0 4px rgba(255, 130, 119, 0.24),
+    0 10px 22px rgba(163, 79, 69, 0.22);
 }
 
 .map-marker.scooter.charging {

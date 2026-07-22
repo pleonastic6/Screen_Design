@@ -616,6 +616,8 @@ function markerIcon(type) {
   const isHub = type.includes("hub");
   const scooterIcon = type.includes("reserved")
     ? "escooter-orange.svg"
+    : type.includes("low")
+      ? "escooter-coral.svg"
     : type.includes("charging")
       ? "escooter-blue.svg"
       : "escooter-mint.svg";
