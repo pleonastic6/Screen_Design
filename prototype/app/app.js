@@ -398,6 +398,7 @@ const defaultZoom = 15;
 const mapMenuButton = document.getElementById("map-menu-button");
 const mapMenuPanel = document.getElementById("map-menu-panel");
 const mapMenuBackdrop = document.getElementById("map-menu-backdrop");
+const mapMenuClose = document.getElementById("map-menu-close");
 const vehicleCard = document.getElementById("vehicle-card");
 const mapCenterButton = document.getElementById("map-center-button");
 const vehicleCardClose = document.getElementById("vehicle-card-close");
@@ -602,6 +603,7 @@ hubs.forEach((hub) => {
 
 mapMenuButton.addEventListener("click", toggleMapMenu);
 mapMenuBackdrop.addEventListener("click", closeMapMenu);
+mapMenuClose.addEventListener("click", closeMapMenu);
 mapCenterButton.addEventListener("click", centerMapOnUser);
 vehicleCardClose.addEventListener("click", closeVehicleCard);
 vehicleCardReserve.addEventListener("click", openBookingScreen);

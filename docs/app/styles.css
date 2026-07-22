@@ -249,6 +249,45 @@ body.splash-done .map-screen {
   pointer-events: auto;
 }
 
+.map-menu-panel__close {
+  position: absolute;
+  top: calc(18px + env(safe-area-inset-top, 0px));
+  right: 18px;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border: 0;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.94);
+  color: #142017;
+  font-size: 2rem;
+  line-height: 1;
+  box-shadow:
+    0 12px 26px rgba(23, 32, 26, 0.14),
+    0 0 0 1px rgba(20, 32, 23, 0.05);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+
+.map-menu-panel__close:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 16px 30px rgba(23, 32, 26, 0.18),
+    0 0 0 1px rgba(20, 32, 23, 0.06);
+}
+
+.map-menu-panel__close:active {
+  transform: scale(0.96);
+}
+
+.map-menu-panel__close:focus-visible {
+  outline: 3px solid rgba(126, 232, 146, 0.52);
+  outline-offset: 3px;
+}
+
 .map-menu-panel__header {
   display: grid;
   grid-template-columns: 72px minmax(0, 1fr);
