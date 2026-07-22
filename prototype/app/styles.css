@@ -843,25 +843,6 @@ body.splash-done .map-screen {
   font-size: 0.95rem;
 }
 
-.vehicle-card__support-toast {
-  margin: -2px 0 2px;
-  padding: 11px 14px;
-  border-radius: 16px;
-  background: rgba(20, 32, 23, 0.92);
-  color: #f7fbf5;
-  font-size: 0.88rem;
-  line-height: 1.4;
-  opacity: 0;
-  transform: translateY(8px);
-  pointer-events: none;
-  transition: opacity 180ms ease, transform 220ms ease;
-}
-
-.vehicle-card__support-toast[data-open="true"] {
-  opacity: 1;
-  transform: translateY(0);
-}
-
 .vehicle-card__reserve {
   display: flex;
   align-items: center;
