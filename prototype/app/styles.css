@@ -736,8 +736,11 @@ body.splash-done .map-screen {
 }
 
 .map-marker.scooter.reserved {
-  background:
-    radial-gradient(circle at center, rgba(255, 255, 255, 0.96) 0 62%, rgba(240, 198, 74, 0.46) 63% 100%);
+  background: #ffb347;
+  border-color: #ff9d1f;
+  box-shadow:
+    0 0 0 4px rgba(255, 195, 107, 0.26),
+    0 10px 22px rgba(150, 96, 18, 0.24);
 }
 
 .map-marker.scooter.low {
@@ -748,6 +751,10 @@ body.splash-done .map-screen {
 .map-marker.scooter.charging {
   background:
     radial-gradient(circle at center, rgba(255, 255, 255, 0.96) 0 62%, rgba(79, 147, 255, 0.36) 63% 100%);
+  border-color: #4f93ff;
+  box-shadow:
+    0 0 0 4px rgba(120, 176, 255, 0.22),
+    0 10px 22px rgba(33, 76, 140, 0.2);
 }
 
 .map-marker.scooter.is-active {
