@@ -58,7 +58,8 @@ body::before {
 
 .hero-card {
   display: grid;
-  gap: 22px;
+  grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.8fr);
+  gap: 26px;
   padding: 30px;
   border: 1px solid var(--line);
   border-radius: 34px;
@@ -71,6 +72,7 @@ body::before {
 
 .hero-kicker,
 .hero-subline,
+.hero-note p,
 .portal-card__eyebrow,
 .portal-card__copy p {
   margin: 0;
@@ -114,6 +116,42 @@ body::before {
   color: var(--muted);
 }
 
+.hero-side {
+  display: grid;
+  gap: 16px;
+  align-content: start;
+}
+
+.hero-note {
+  padding: 18px;
+  border-radius: 24px;
+  border: 1px solid rgba(231, 247, 236, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.hero-note span {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--lime-soft);
+}
+
+.hero-note strong {
+  display: block;
+  margin-top: 12px;
+  font-size: 1.35rem;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.hero-note p {
+  margin-top: 10px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
 .hero-status {
   display: flex;
   flex-wrap: wrap;
@@ -142,7 +180,8 @@ body::before {
 
 .portal-card {
   display: grid;
-  gap: 18px;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 16px;
   padding: 20px;
   border: 1px solid var(--line);
   border-radius: 30px;
@@ -163,7 +202,7 @@ body::before {
 
 .portal-card__visual {
   position: relative;
-  min-height: 316px;
+  min-height: 276px;
   overflow: hidden;
   border-radius: 24px;
   border: 1px solid rgba(231, 247, 236, 0.08);
@@ -191,8 +230,10 @@ body::before {
 }
 
 .portal-card__visual--wireframes {
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
   padding: 18px;
   background:
     radial-gradient(circle at top right, rgba(126, 232, 146, 0.14), transparent 12rem),
@@ -200,9 +241,10 @@ body::before {
 }
 
 .wireframe-phone {
-  position: absolute;
-  width: 176px;
-  height: 276px;
+  position: relative;
+  flex: 0 0 156px;
+  width: 156px;
+  height: 248px;
   padding: 12px;
   border: 2px solid #c8cfcb;
   border-radius: 28px;
@@ -211,11 +253,7 @@ body::before {
 }
 
 .wireframe-phone--offset {
-  transform: translate(84px, 22px) rotate(5deg);
-}
-
-.wireframe-phone:first-child {
-  transform: translate(-52px, -10px) rotate(-6deg);
+  transform: translateY(16px);
 }
 
 .wireframe-phone__status,
@@ -365,7 +403,25 @@ body::before {
   line-height: 1.6;
 }
 
+.portal-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--lime-soft);
+}
+
+.portal-card__link::after {
+  content: "->";
+}
+
 @media (max-width: 1100px) {
+  .hero-card {
+    grid-template-columns: 1fr;
+  }
+
   .portal-grid {
     grid-template-columns: 1fr;
   }
@@ -395,20 +451,13 @@ body::before {
   }
 
   .portal-card__visual {
-    min-height: 236px;
+    min-height: 224px;
     border-radius: 20px;
   }
 
   .wireframe-phone {
-    width: 138px;
-    height: 222px;
-  }
-
-  .wireframe-phone:first-child {
-    transform: translate(-34px, -4px) rotate(-6deg);
-  }
-
-  .wireframe-phone--offset {
-    transform: translate(52px, 14px) rotate(5deg);
+    flex-basis: 128px;
+    width: 128px;
+    height: 208px;
   }
 }
