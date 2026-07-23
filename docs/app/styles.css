@@ -459,8 +459,9 @@ body.splash-done .map-screen {
 
 .map-theme-toggle {
   position: absolute;
-  left: 18px;
-  bottom: calc(104px + env(safe-area-inset-bottom, 0px));
+  top: calc(18px + env(safe-area-inset-top, 0px));
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 410;
   display: inline-flex;
   align-items: center;
@@ -480,11 +481,11 @@ body.splash-done .map-screen {
 }
 
 .map-theme-toggle:hover {
-  transform: translateY(-1px);
+  transform: translateX(-50%) translateY(-1px);
 }
 
 .map-theme-toggle:active {
-  transform: scale(0.97);
+  transform: translateX(-50%) scale(0.97);
 }
 
 .map-theme-toggle:focus-visible {
