@@ -4,6 +4,16 @@ Projektarbeit für **Screendesign SS26**.
 
 Abgeschlossener Design- und Prototyp-Stand für eine Smartphone-App eines fiktiven E-Scooter-Sharingdienstes in Amberg.
 
+## Dokumentation
+
+- [docs/02_personas.md](docs/02_personas.md) – Persona-Entwürfe
+- [docs/03_user-story-map.md](docs/03_user-story-map.md) – User Stories und Kernflüsse
+
+## Links
+
+- Hub: [https://pleonastic6.github.io/Screen_Design/](https://pleonastic6.github.io/Screen_Design/)
+- Repo: [https://github.com/pleonastic6/Screen_Design.git](https://github.com/pleonastic6/Screen_Design.git)
+
 ## Repo-Struktur
 
 - `docs/01_briefing-summary.md` – verdichtete Aufgabenanalyse
