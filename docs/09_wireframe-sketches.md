@@ -349,20 +349,47 @@ Notation:
 
 ---
 
+## Aktueller Wireframe-Umfang
+
+Der HTML-Wireframe-Stand bildet jetzt den aktuellen App-Prototyp deutlich vollständiger ab. Zusätzlich zu den klassischen Kernscreens sind auch die Begleit- und Zustandsflows enthalten:
+
+1. Registrierung / Einstieg
+2. Home / Karte
+3. Menü / Dein Bereich
+4. Menü-Detail / Hilfe
+5. Scooter-Detail
+6. Reservierung bestätigt
+7. Scooter-Bestätigung vor Ort
+8. Scooter-Zuordnung
+9. Issue / Problem vor Ort
+10. Unlock / Startstatus
+11. Unlock Error
+12. Aktive Fahrt
+13. Temporäres Parken
+14. Return / Entscheidungsscreen
+15. Rückgabeprüfung – erlaubt
+16. Rückgabeprüfung – gesperrt
+17. Parking Check
+18. Ride Summary
+
+Damit decken die Low-Fi-Wireframes jetzt nicht mehr nur fast, sondern praktisch den kompletten präsentierten Servicefluss des aktuellen Web-Prototyps ab.
+
 ## Priorisierte Wireframe-Reihenfolge
 
-Wenn ihr wenig Zeit habt, baut zuerst genau diese 8 Screens:
+Wenn ihr wenig Zeit habt, baut zuerst genau diese 10 Screens:
 
-1. Home / Karte
-2. Scooter-Detail
-3. Reservierung bestätigt
-4. Scooter-Zuordnung
-5. Aktive Fahrt
-6. Temporäres Parken
-7. Rückgabeprüfung
-8. Ride Summary
+1. Registrierung / Einstieg
+2. Home / Karte
+3. Scooter-Detail
+4. Reservierung bestätigt
+5. Scooter-Bestätigung vor Ort
+6. Aktive Fahrt
+7. Temporäres Parken
+8. Return / Entscheidungsscreen
+9. Rückgabeprüfung
+10. Ride Summary
 
-Damit deckt ihr fast die komplette Kernfunktionalität ab.
+Die übrigen Screens sichern Sonderfälle, Navigationslogik und Fehlerzustände ab.
 
 ---
 
@@ -376,15 +403,17 @@ Damit deckt ihr fast die komplette Kernfunktionalität ab.
 - Marker
 
 ### Page 2 – Low-Fi Wireframes
-- alle Hauptscreens in Grau / Schwarzweiß
+- alle Hauptscreens und relevanten Zustandsflows in Grau / Schwarzweiß
 
 ### Page 3 – Mid/Hi-Fi
 - visuelle Ausarbeitung der finalen Kernscreens
 
 ### Page 4 – Prototype Flow
-- Start → Reservieren
-- Start → Direkt entsperren
+- Einstieg → Registrierung / Demo
+- Start → Reservieren → Bestätigen → Unlock
+- Start → Scooter prüfen / Issue / anderer Scooter
 - Fahrt → Parken → Weiterfahren
-- Fahrt → Rückgabe → Summary
+- Fahrt → Return → Parking Check → Summary
+- Fehlerpfad: Unlock Error
 
 So bleibt das Projekt sauber strukturiert statt chaotisch zu wachsen.
