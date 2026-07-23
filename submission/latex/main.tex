@@ -7,6 +7,7 @@
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{hyperref}
+\usepackage{xurl}
 \usepackage{enumitem}
 \usepackage{parskip}
 \usepackage{array}
@@ -30,11 +31,11 @@
 \titleformat{\subsection}{\large\bfseries\color{accent}}{\thesubsection}{0.6em}{}
 \renewcommand{\arraystretch}{1.2}
 
-\newcommand{\projecthuburl}{https://pleonastic6.github.io/Screen_Design/}
-\newcommand{\wireframesurl}{https://pleonastic6.github.io/Screen_Design/wireframes/}
-\newcommand{\moodboardurl}{https://pleonastic6.github.io/Screen_Design/moodboard/}
-\newcommand{\prototypeurl}{https://pleonastic6.github.io/Screen_Design/app/}
-\newcommand{\repourl}{https://github.com/pleonastic6/Screen_Design}
+\newcommand{\projecthuburl}{https://pleonastic6.github.io/Screen\_Design/}
+\newcommand{\wireframesurl}{https://pleonastic6.github.io/Screen\_Design/wireframes/}
+\newcommand{\moodboardurl}{https://pleonastic6.github.io/Screen\_Design/moodboard/}
+\newcommand{\prototypeurl}{https://pleonastic6.github.io/Screen\_Design/app/}
+\newcommand{\repourl}{https://github.com/pleonastic6/Screen\_Design/tree/main}
 
 \begin{document}
 \pagestyle{empty}
@@ -66,7 +67,7 @@
     \fbox{\includegraphics[width=0.2\textwidth]{assets/hub-qr.png}}
 
     \vspace{0.4cm}
-    {\small Projekt-Hub: \href{\projecthuburl}{\projecthuburl}\par}
+    {\small Projekt-Hub: \url{\projecthuburl}\par}
   \end{center}
 \end{titlepage}
 
@@ -253,7 +254,7 @@
 \section{Wireframes}
 
 \noindent
-Onlineversion: \href{\wireframesurl}{\wireframesurl}
+Onlineversion: \url{\wireframesurl}
 
 \begin{center}
   \includegraphics[width=0.26\textwidth]{assets/wireframes-qr.png}
@@ -262,7 +263,7 @@ Onlineversion: \href{\wireframesurl}{\wireframesurl}
 \section{Moodboard}
 
 \noindent
-Onlineversion: \href{\moodboardurl}{\moodboardurl}
+Onlineversion: \url{\moodboardurl}
 
 \begin{center}
   \includegraphics[width=0.26\textwidth]{assets/moodboard-qr.png}
@@ -271,7 +272,7 @@ Onlineversion: \href{\moodboardurl}{\moodboardurl}
 \section{Interaktiver Prototyp}
 
 \noindent
-Onlineversion: \href{\prototypeurl}{\prototypeurl}
+Onlineversion: \url{\prototypeurl}
 
 \begin{center}
   \includegraphics[width=0.26\textwidth]{assets/prototype-qr.png}
@@ -280,8 +281,8 @@ Onlineversion: \href{\prototypeurl}{\prototypeurl}
 \section{Repository und weitere Links}
 
 \begin{itemize}
-  \item Projekt-Hub: \href{\projecthuburl}{\projecthuburl}
-  \item Repository: \href{\repourl}{\repourl}
+  \item Projekt-Hub: \url{\projecthuburl}
+  \item Repository: \url{\repourl}
 \end{itemize}
 
 \end{document}
