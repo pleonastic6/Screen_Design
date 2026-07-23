@@ -1,0 +1,287 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[a4paper,margin=24mm]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{parskip}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{titlesec}
+
+\definecolor{accent}{HTML}{18301D}
+\definecolor{soft}{HTML}{5E6C62}
+\definecolor{line}{HTML}{D9E1DC}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=accent,
+  urlcolor=accent,
+  pdftitle={Share-A-Scooter Amberg},
+  pdfauthor={David Budulak, Daniela Hudich, Artur Renner}
+}
+
+\setlist[itemize]{leftmargin=18pt, topsep=4pt, itemsep=3pt}
+\titleformat{\section}{\Large\bfseries\color{accent}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\large\bfseries\color{accent}}{\thesubsection}{0.6em}{}
+\renewcommand{\arraystretch}{1.2}
+
+\newcommand{\projecthuburl}{https://pleonastic6.github.io/Screen_Design/}
+\newcommand{\wireframesurl}{https://pleonastic6.github.io/Screen_Design/wireframes/}
+\newcommand{\moodboardurl}{https://pleonastic6.github.io/Screen_Design/moodboard/}
+\newcommand{\prototypeurl}{https://pleonastic6.github.io/Screen_Design/app/}
+\newcommand{\repourl}{https://github.com/pleonastic6/Screen_Design}
+
+\begin{document}
+\pagestyle{empty}
+
+\begin{titlepage}
+  \vspace*{1.8cm}
+  {\large Lehrveranstaltung\par}
+  \vspace{0.2cm}
+  {\LARGE\bfseries Screendesign -- SS'26\par}
+
+  \vspace{2.4cm}
+  {\Huge\bfseries Share-A-Scooter Amberg\par}
+  \vspace{0.35cm}
+  {\Large Konzept, Wireframes und Verweise auf die digitalen Artefakte\par}
+
+  \vspace{1.2cm}
+  \noindent\color{line}\rule{\textwidth}{1pt}
+
+  \vspace{0.9cm}
+  \begin{tabularx}{\textwidth}{>{\bfseries}l X}
+    Verfasser & David Budulak, Daniela Hudich, Artur Renner \\
+    Projektart & Projektarbeit Screendesign \\
+    Thema & Verwaltungsapp eines E-Scooter-Sharingdienstes f\"ur Amberg \\
+  \end{tabularx}
+
+  \vfill
+
+  \begin{center}
+    \fbox{\includegraphics[width=0.2\textwidth]{assets/hub-qr.png}}
+
+    \vspace{0.4cm}
+    {\small Projekt-Hub: \href{\projecthuburl}{\projecthuburl}\par}
+  \end{center}
+\end{titlepage}
+
+\pagestyle{plain}
+
+\section{Personas}
+
+\subsection{Persona 1 -- Lena, 22, Studentin}
+\textbf{Profil}
+\begin{itemize}
+  \item studiert an der OTH Amberg-Weiden
+  \item wohnt nicht direkt am Campus
+  \item nutzt meist \"OPNV und Fahrrad
+  \item braucht flexible L\"osungen f\"ur kurze Wege und spontane Wechsel
+\end{itemize}
+
+\textbf{Ziele}
+\begin{itemize}
+  \item schnell vom Bahnhof oder von der Innenstadt zum Campus kommen
+  \item keinen eigenen Roller besitzen oder warten m\"ussen
+  \item Fahrtkosten vorab grob einsch\"atzen k\"onnen
+\end{itemize}
+
+\textbf{Pain Points}
+\begin{itemize}
+  \item versp\"atete Busse
+  \item unklare Verf\"ugbarkeit von Mobilit\"atsangeboten
+  \item keine Lust auf komplizierte Registrierung oder viele Zwischenschritte
+\end{itemize}
+
+\textbf{Relevante Funktionen}
+\begin{itemize}
+  \item Karten\"ubersicht mit verf\"ugbaren Scootern
+  \item Reservierung kurz vor Vorlesungsbeginn
+  \item klarer Preis- und Akkustand vor Fahrtstart
+\end{itemize}
+
+\subsection{Persona 2 -- Markus, 34, Berufspendler}
+\textbf{Profil}
+\begin{itemize}
+  \item arbeitet in der Innenstadt
+  \item kommt regelm\"a{\ss}ig mit dem Zug nach Amberg
+  \item ist zeitkritisch und will die letzte Meile effizient l\"osen
+\end{itemize}
+
+\textbf{Ziele}
+\begin{itemize}
+  \item direkt nach Ankunft am Bahnhof einen Scooter finden
+  \item zuverl\"assige R\"uckgabe an einem Ladepunkt
+  \item Nutzung ohne unn\"otige Ablenkung oder Spielerei
+\end{itemize}
+
+\textbf{Pain Points}
+\begin{itemize}
+  \item un\"ubersichtliche Apps
+  \item zu viele Klicks vor der Ausleihe
+  \item Unsicherheit, ob R\"uckgabe korrekt abgeschlossen wurde
+\end{itemize}
+
+\textbf{Relevante Funktionen}
+\begin{itemize}
+  \item Bahnhof als klarer Einstiegspunkt
+  \item schneller Unlock-Flow
+  \item saubere Best\"atigung von Parken und R\"uckgabe
+  \item Kosten\"ubersicht nach jeder Fahrt
+\end{itemize}
+
+\subsection{Persona 3 -- Sarah, 28, Gelegenheitsnutzerin / Freizeit}
+\textbf{Profil}
+\begin{itemize}
+  \item lebt in Amberg
+  \item nutzt E-Scooter nicht t\"aglich, aber situativ mit Freunden oder in der Freizeit
+  \item achtet auf einfache Bedienbarkeit und Fairness im System
+\end{itemize}
+
+\textbf{Ziele}
+\begin{itemize}
+  \item spontan einen Scooter f\"ur kurze Innenstadtwege nutzen
+  \item unkompliziert pausieren und sp\"ater weiterfahren
+  \item Bonus f\"ur R\"uckgabe am Ladepunkt verstehen und nutzen
+\end{itemize}
+
+\textbf{Pain Points}
+\begin{itemize}
+  \item unsicher bei Regeln im \"offentlichen Raum
+  \item wei{\ss} oft nicht, wo R\"uckgabe erlaubt ist
+  \item will nicht versehentlich weiter zahlen
+\end{itemize}
+
+\textbf{Relevante Funktionen}
+\begin{itemize}
+  \item verst\"andliche Hinweise zu Parken vs. R\"uckgabe
+  \item gut sichtbarer Bonus f\"ur Ladepunkt-R\"uckgabe
+  \item deutliche Statusanzeige w\"ahrend der Fahrt
+\end{itemize}
+
+\section{User Story Map}
+
+\subsection{Backbone}
+\begin{enumerate}
+  \item Registrieren / Einloggen
+  \item Scooter finden
+  \item Reservieren
+  \item Entsperren
+  \item Fahren
+  \item Parken oder Zur\"uckgeben
+  \item Bezahlen / Fahrt abschlie{\ss}en
+\end{enumerate}
+
+\subsection{User Stories nach Phase}
+
+\textbf{1. Registrieren / Einloggen}
+\begin{itemize}
+  \item Als neuer Nutzer m\"ochte ich mich einmalig registrieren, damit ich den Dienst verwenden kann.
+  \item Als Nutzer m\"ochte ich direkt sehen, welche Angaben wirklich n\"otig sind, damit der Einstieg nicht unn\"otig lang wirkt.
+\end{itemize}
+
+\textbf{2. Scooter finden}
+\begin{itemize}
+  \item Als Nutzer m\"ochte ich eine Karten\"ubersicht mit Scootern sehen, damit ich schnell ein verf\"ugbares Fahrzeug in meiner N\"ahe finde.
+  \item Als Nutzer m\"ochte ich Akkustand und Status sehen, damit ich keinen ungeeigneten Scooter ausw\"ahle.
+  \item Als Nutzer m\"ochte ich Ladehubs erkennen, damit ich meine R\"uckgabe besser planen kann.
+\end{itemize}
+
+\textbf{3. Reservieren}
+\begin{itemize}
+  \item Als Nutzer m\"ochte ich einen Scooter bis zu 30 Minuten im Voraus reservieren, damit er bei meiner Ankunft noch verf\"ugbar ist.
+  \item Als Nutzer m\"ochte ich klar sehen, wie lange die Reservierung gilt, damit ich sie nicht verliere.
+\end{itemize}
+
+\textbf{4. Entsperren}
+\begin{itemize}
+  \item Als Nutzer m\"ochte ich vor Ort eindeutig den richtigen Scooter ausw\"ahlen, damit ich nicht versehentlich den falschen entsperre.
+  \item Als Nutzer m\"ochte ich den Scooter per App entsperren, damit der Start schnell funktioniert.
+\end{itemize}
+
+\textbf{5. Fahren}
+\begin{itemize}
+  \item Als Nutzer m\"ochte ich w\"ahrend der Fahrt Kosten, Zeit und Akku nachvollziehen, damit ich den \"Uberblick behalte.
+  \item Als Nutzer m\"ochte ich die Option zum Zwischenstopp sehen, damit ich kurz anhalten kann ohne die Miete zu beenden.
+\end{itemize}
+
+\textbf{6. Parken oder Zur\"uckgeben}
+\begin{itemize}
+  \item Als Nutzer m\"ochte ich zwischen tempor\"arem Parken und finaler R\"uckgabe unterscheiden k\"onnen, damit ich keine falsche Aktion ausf\"uhre.
+  \item Als Nutzer m\"ochte ich wissen, ob der aktuelle Standort als R\"uckgabeort erlaubt ist.
+  \item Als Nutzer m\"ochte ich einen Bonus f\"ur die R\"uckgabe am Ladehub sehen, damit der Anreiz verst\"andlich ist.
+\end{itemize}
+
+\textbf{7. Bezahlen / Fahrt abschlie{\ss}en}
+\begin{itemize}
+  \item Als Nutzer m\"ochte ich direkt sehen, dass die Fahrt beendet wurde, damit keine Unsicherheit \"uber Folgekosten bleibt.
+  \item Als Nutzer m\"ochte ich die Kosten und m\"ogliche Freiminuten nachvollziehen, damit die Abrechnung transparent ist.
+\end{itemize}
+
+\subsection{Kernfl\"usse f\"ur den Prototypen}
+\textbf{Flow A -- Scooter finden und direkt fahren}
+\begin{itemize}
+  \item Home / Karte
+  \item Scooter-Detail
+  \item Entsperren
+  \item Fahrstatus
+  \item R\"uckgabe
+  \item Abschluss
+\end{itemize}
+
+\textbf{Flow B -- Reservierung vor Ankunft}
+\begin{itemize}
+  \item Home / Karte
+  \item Scooter ausw\"ahlen
+  \item Reservieren
+  \item Countdown
+  \item Vor Ort entsperren
+\end{itemize}
+
+\textbf{Flow C -- Zwischenstopp und Weiterfahrt}
+\begin{itemize}
+  \item Fahrstatus
+  \item Tempor\"ar parken
+  \item Wieder entsperren
+  \item R\"uckgabe
+\end{itemize}
+
+\section{Wireframes}
+
+\noindent
+Onlineversion: \href{\wireframesurl}{\wireframesurl}
+
+\begin{center}
+  \includegraphics[width=0.26\textwidth]{assets/wireframes-qr.png}
+\end{center}
+
+\section{Moodboard}
+
+\noindent
+Onlineversion: \href{\moodboardurl}{\moodboardurl}
+
+\begin{center}
+  \includegraphics[width=0.26\textwidth]{assets/moodboard-qr.png}
+\end{center}
+
+\section{Interaktiver Prototyp}
+
+\noindent
+Onlineversion: \href{\prototypeurl}{\prototypeurl}
+
+\begin{center}
+  \includegraphics[width=0.26\textwidth]{assets/prototype-qr.png}
+\end{center}
+
+\section{Repository und weitere Links}
+
+\begin{itemize}
+  \item Projekt-Hub: \href{\projecthuburl}{\projecthuburl}
+  \item Repository: \href{\repourl}{\repourl}
+\end{itemize}
+
+\end{document}
