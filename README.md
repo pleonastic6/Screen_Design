@@ -2,7 +2,7 @@
 
 Projektarbeit für **Screendesign SS26**.
 
-Ziel ist die Konzeption und Gestaltung einer Smartphone-App für einen fiktiven E-Scooter-Sharingdienst in Amberg.
+Abgeschlossener Design- und Prototyp-Stand für eine Smartphone-App eines fiktiven E-Scooter-Sharingdienstes in Amberg.
 
 ## Repo-Struktur
 
@@ -35,11 +35,17 @@ Wichtige Pfade:
 - `docs/index.html` – Startseite / Projekt-Landing-Page
 - `docs/app/index.html` – aktueller klickbarer HTML-Prototyp
 
-Arbeitslogik:
+Publish-Logik:
 
 - Du entwickelst weiter in `prototype/app/`
 - Für den Publish-Stand wird `prototype/app/` nach `docs/app/` gespiegelt
 - GitHub Pages zieht dann automatisch den Stand aus `docs/`
+
+Aktueller Abschlussstand:
+
+- `prototype/app/` und `docs/app/` sind synchron
+- `docs/app/index.html` ist der finale klickbare Showcase-Stand
+- `docs/index.html` ist die Projekt-Landing-Page für Präsentation und Pages
 
 ## Kernanforderungen aus dem Briefing
 
@@ -54,19 +60,21 @@ Arbeitslogik:
 - Abstellen im Stadtgebiet bei Akkustand >30% möglich
 - Abrechnung im 5-Minuten-Takt zu 0,10 €
 
-## Arbeitslogik
+## Finaler Umfang
 
-1. Personas schärfen
-2. User Story Map definieren
-3. Informationsarchitektur festziehen
-4. Wireframes erstellen
-5. Moodboard / Visual Richtung festlegen
-6. Interaktiven Prototyp umsetzen
+- klickbarer HTML/CSS/JS-Prototyp mit echter Kartenbasis in `prototype/app/` und `docs/app/`
+- Dokumentation von Briefing, Personas, User Story Map, IA, Wireframes, Microcopy und Verfeinerungen in `docs/`
+- Showcase-Fluss für:
+  - Kartenansicht / Vehicle Card
+  - Reservierung / Bestätigung / Entsperren
+  - Ride / Pause / Return / Parking Check / Summary
+- ergänzende Menu- und Detailansichten für Konto, Fahrten, Bonus, Payment und Hilfe
 
-## Offene Entscheidungen
+## Showcase-Hinweis
 
-- Tooling für den interaktiven Prototypen:
-  - Figma
-  - oder HTML/CSS/JS
-- finale visuelle Richtung
-- Teamaufteilung der sechs Teilabschnitte
+Bewusst nicht im Fokus des finalen Showcases:
+
+- `Issue`
+- `Unlock Error`
+
+Die Screens sind im Prototyp vorhanden, wurden für die gemeinsame Abnahme aber nicht als Kernpfad priorisiert.
