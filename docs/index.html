@@ -3,339 +3,86 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Share-A-Scooter Amberg – Projektübersicht</title>
+  <title>Share-A-Scooter Amberg - Project Hub</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="page">
-    <section class="hero panel">
+  <main class="hub-shell">
+    <section class="hero-card">
       <div class="hero-copy">
-        <span class="eyebrow">Finaler Stand</span>
-        <h1>Share-A-Scooter Amberg</h1>
-        <p class="lead">Abgeschlossener Screendesign-Prototyp für einen E-Scooter-Sharingdienst in Amberg: dunkle Kartenlogik, klare Statussprache und ein durchgängiger Flow vom Finden bis zur Rückgabe.</p>
+        <p class="hero-kicker">Share-A-Scooter Amberg</p>
+        <h1 class="hero-wordmark">escooter</h1>
+        <p class="hero-subline">Projekt-Hub fuer Moodboard, Wireframes und klickbaren App-Prototyp.</p>
       </div>
-      <div class="hero-stack">
-        <div class="note-card panel-soft">
-          <span class="mini-label">Projektstatus</span>
-          <strong>bereit für Showcase</strong>
-          <p>Der klickbare HTML-Prototyp deckt den finalen Kernfluss inklusive Rückgabe und Summary ab.</p>
-        </div>
-        <div class="note-card panel-soft">
-          <span class="mini-label">Kernidee</span>
-          <strong>urban, technisch, zugänglich</strong>
-          <p>Kein Lifestyle-Gedöns. Ein klares Werkzeug für Bewegung durch die Stadt.</p>
-        </div>
-        <a class="launch-card panel-soft" href="app/">
-          <span class="mini-label">Prototyp</span>
-          <strong>Zum finalen App-Showcase</strong>
-          <p>Öffnet den interaktiven Kernfluss mit Karte, Reservierung, Fahrt, Rückgabe und Summary.</p>
-        </a>
+      <div class="hero-status" aria-label="Projektbereiche">
+        <span>Moodboard</span>
+        <span>Wireframes</span>
+        <span>App-Prototyp</span>
       </div>
     </section>
 
-    <section class="grid three-col">
-      <article class="panel mini-panel">
-        <span class="eyebrow">Kernscreens</span>
-        <h3>Vom Finden bis zur Fahrt</h3>
-        <p>Map, Vehicle Card, Booking, Confirm und Unlock bilden den schnellen Einstiegsfluss ohne unnötige Umwege.</p>
-      </article>
-      <article class="panel mini-panel">
-        <span class="eyebrow">Rückgabe</span>
-        <h3>Logik mit Zonen</h3>
-        <p>Ride, Pause, Return und Parking Check zeigen Servicegebiet, Sperrzonen und Ladehub-Bonus als klare Entscheidungslogik.</p>
-      </article>
-      <article class="panel mini-panel">
-        <span class="eyebrow">Abschluss</span>
-        <h3>Summary statt Leerraum</h3>
-        <p>Die finale Zusammenfassung zeigt Route, Dauer, Kosten und den Bonus-Hinweis als sauberen Endpunkt des Showcases.</p>
-      </article>
+    <section class="portal-grid" aria-label="Projektbereiche">
+      <a class="portal-card" href="moodboard/">
+        <div class="portal-card__visual portal-card__visual--moodboard">
+          <img src="moodboard/assets/farbe/farbe-11.jpg" alt="" aria-hidden="true" />
+          <img src="moodboard/assets/frames/frames-04.jpg" alt="" aria-hidden="true" />
+          <img src="moodboard/assets/logos/logos-16.png" alt="" aria-hidden="true" />
+          <img src="moodboard/assets/typo/typo-03.jpg" alt="" aria-hidden="true" />
+        </div>
+        <div class="portal-card__copy">
+          <p class="portal-card__eyebrow">01</p>
+          <h2>Moodboard</h2>
+          <p>Farbe, Frames, Logos und Typo als kuratierte Wand.</p>
+        </div>
+      </a>
+
+      <a class="portal-card" href="wireframes/">
+        <div class="portal-card__visual portal-card__visual--wireframes" aria-hidden="true">
+          <div class="wireframe-phone">
+            <div class="wireframe-phone__status"></div>
+            <div class="wireframe-phone__header"></div>
+            <div class="wireframe-phone__map"></div>
+            <div class="wireframe-phone__sheet"></div>
+          </div>
+          <div class="wireframe-phone wireframe-phone--offset">
+            <div class="wireframe-phone__status"></div>
+            <div class="wireframe-phone__header"></div>
+            <div class="wireframe-phone__list"></div>
+            <div class="wireframe-phone__cta"></div>
+          </div>
+        </div>
+        <div class="portal-card__copy">
+          <p class="portal-card__eyebrow">02</p>
+          <h2>Wireframes</h2>
+          <p>Der komplette Flow als reduzierte Low-Fi-Screens.</p>
+        </div>
+      </a>
+
+      <a class="portal-card portal-card--prototype" href="app/">
+        <div class="portal-card__visual portal-card__visual--prototype" aria-hidden="true">
+          <div class="proto-map">
+            <span class="proto-marker proto-marker--hub" style="left:20%;top:28%"></span>
+            <span class="proto-marker" style="left:52%;top:40%"></span>
+            <span class="proto-marker proto-marker--active" style="left:40%;top:62%"></span>
+            <span class="proto-marker proto-marker--hub" style="left:76%;top:24%"></span>
+            <div class="proto-sheet">
+              <div class="proto-sheet__handle"></div>
+              <div class="proto-sheet__line proto-sheet__line--wide"></div>
+              <div class="proto-sheet__line"></div>
+              <div class="proto-sheet__cta"></div>
+            </div>
+          </div>
+        </div>
+        <div class="portal-card__copy">
+          <p class="portal-card__eyebrow">03</p>
+          <h2>App-Prototyp</h2>
+          <p>Interaktiver Showcase von Einstieg bis Rueckgabe.</p>
+        </div>
+      </a>
     </section>
-
-    <section class="panel">
-      <div class="section-head">
-        <span class="eyebrow">Designgrundlage</span>
-        <h2>Bild- und Interface-Referenzen hinter dem Finalstil</h2>
-      </div>
-      <div class="reference-grid">
-        <article class="reference-card">
-          <img src="assets/references/image---ec3a564b-1fc0-4a93-ae60-7ed1f6d55ce4.png" alt="Mobile route tracking with soft green path and contact tray" />
-          <div class="reference-copy">
-            <span class="reference-tag">Map Motion</span>
-            <h3>Fahrt als sichtbare Route</h3>
-            <p>Gut für den Gedanken, dass Bewegung nicht nur Status ist, sondern als weiche, klare Spur auf der Karte lesbar wird.</p>
-          </div>
-        </article>
-        <article class="reference-card">
-          <img src="assets/references/image---519bc1c4-f9a1-4a7c-aca1-23b49e4c675e.png" alt="Dark map interface with drawing helper and circular focus area" />
-          <div class="reference-copy">
-            <span class="reference-tag">Map Density</span>
-            <h3>Dunkle Karte mit Arbeitscharakter</h3>
-            <p>Stark als Referenz für Tiefe, Fokus und reduzierte Kontraste. Die Karte fühlt sich funktional an, nicht touristisch.</p>
-          </div>
-        </article>
-        <article class="reference-card">
-          <img src="assets/references/image---43505366-dae0-4944-b52b-64bd4e9cdd86.png" alt="Purple city map with glowing point markers and route network" />
-          <div class="reference-copy">
-            <span class="reference-tag">Node Logic</span>
-            <h3>Marker als Leuchtpunkte</h3>
-            <p>Die Farbwelt ist nicht final, aber die Logik aus Netz, Glow und Knoten passt gut für Scooter, Hubs und Auswahlzustände.</p>
-          </div>
-        </article>
-        <article class="reference-card">
-          <img src="assets/references/image---bc8098ba-8a5f-4c93-965c-7dd3c07690ad.png" alt="Button state examples with subtle hover glow and segmented icon button" />
-          <div class="reference-copy">
-            <span class="reference-tag">Primary Actions</span>
-            <h3>Buttons mit klarer Zustandsänderung</h3>
-            <p>Relevant ist hier nicht das Blau, sondern die saubere Lesbarkeit von Hover, Pressed und geteilten Aktionen.</p>
-          </div>
-        </article>
-        <article class="reference-card">
-          <img src="assets/references/image---4c84ca78-9187-48eb-9bc3-fa497def3c0c.png" alt="Gradient button animation examples with soft magenta glow" />
-          <div class="reference-copy">
-            <span class="reference-tag">Accent Glow</span>
-            <h3>Kontrollierter Glow statt billiger Neonshow</h3>
-            <p>Das hilft für CTA-Energie. Wenn wir Glow nutzen, dann punktuell an Unlock, Reserve und ausgewählten Markern.</p>
-          </div>
-        </article>
-        <article class="reference-card">
-          <img src="assets/references/image---d3b16f9c-b5a3-4d78-bb59-d4e1d25576ce.png" alt="Toggle switch states in bright green and gray" />
-          <div class="reference-copy">
-            <span class="reference-tag">Micro States</span>
-            <h3>Binäre Zustände müssen brutal klar sein</h3>
-            <p>Temporär parken, Fahrt aktiv, Rückgabe erlaubt: solche Logik braucht keine Interpretation, sondern eindeutige Schalterstates.</p>
-          </div>
-        </article>
-        <article class="reference-card">
-          <img src="assets/references/image---831d28fc-f518-4ade-a775-7682612dc70f.png" alt="Battery icons from full green to low red charge" />
-          <div class="reference-copy">
-            <span class="reference-tag">Status Language</span>
-            <h3>Akku als sofortiges Ampelsignal</h3>
-            <p>Die Darstellungslogik ist gut: nicht verstecken, sondern mit Form und Farbe direkt in die Auswahlentscheidung ziehen.</p>
-          </div>
-        </article>
-        <article class="reference-card">
-          <img src="assets/references/image---fbc72397-2691-478f-92d6-fe8eabd457d0.png" alt="NType 82 Mono type specimen" />
-          <div class="reference-copy">
-            <span class="reference-tag">Type Accent</span>
-            <h3>Mono-Akzent für Daten, nicht für Fließtext</h3>
-            <p>Die Richtung taugt für Timer, Scooter-IDs und Preis-KPIs. Für Haupttexte wäre das zu sperrig.</p>
-          </div>
-        </article>
-        <article class="reference-card caution">
-          <img src="assets/references/image---d28afb61-4333-4093-8b36-5b4dbfdd9640.png" alt="Green matrix style code rain on black background" />
-          <div class="reference-copy">
-            <span class="reference-tag">Boundary</span>
-            <h3>Zu cyber, aber als Warnung nützlich</h3>
-            <p>Das zeigt die Grenze ziemlich gut: technisch ja, Sci-Fi-Hackerfilm nein. Share-A-Scooter braucht Urbanität, keine Matrix-Parodie.</p>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section class="grid two-col">
-      <article class="panel">
-        <div class="section-head">
-          <span class="eyebrow">Color System</span>
-          <h2>Petrol + Lime als feste Basis</h2>
-        </div>
-        <div class="palette-grid">
-          <div class="swatch-card">
-            <div class="swatch deep-1"></div>
-            <div class="swatch-meta">
-              <strong>Deep Petrol</strong>
-              <span>#071116</span>
-            </div>
-          </div>
-          <div class="swatch-card">
-            <div class="swatch deep-2"></div>
-            <div class="swatch-meta">
-              <strong>Transit Teal</strong>
-              <span>#0c1b22</span>
-            </div>
-          </div>
-          <div class="swatch-card">
-            <div class="swatch lime-1"></div>
-            <div class="swatch-meta">
-              <strong>Electric Mint</strong>
-              <span>#acf1ba</span>
-            </div>
-          </div>
-          <div class="swatch-card">
-            <div class="swatch lime-2"></div>
-            <div class="swatch-meta">
-              <strong>Active Lime</strong>
-              <span>#7ee892</span>
-            </div>
-          </div>
-          <div class="swatch-card">
-            <div class="swatch cyan-1"></div>
-            <div class="swatch-meta">
-              <strong>Hub Cyan</strong>
-              <span>#8de4ff</span>
-            </div>
-          </div>
-          <div class="swatch-card">
-            <div class="swatch orange-1"></div>
-            <div class="swatch-meta">
-              <strong>Battery Warning</strong>
-              <span>#ffb36b</span>
-            </div>
-          </div>
-          <div class="swatch-card">
-            <div class="swatch red-1"></div>
-            <div class="swatch-meta">
-              <strong>Blocked State</strong>
-              <span>#ff8277</span>
-            </div>
-          </div>
-          <div class="swatch-card">
-            <div class="swatch text-1"></div>
-            <div class="swatch-meta">
-              <strong>Off-White Text</strong>
-              <span>#eff8f2</span>
-            </div>
-          </div>
-        </div>
-        <p class="body-note">Regel: nur eine echte Akzentfarbe pro Screen. Lime treibt Aktion und Verfügbarkeit, Orange und Rot bleiben reine Zustandsfarben.</p>
-      </article>
-
-      <article class="panel">
-        <div class="section-head">
-          <span class="eyebrow">Tone & Shape</span>
-          <h2>Ruhig, präzise, nicht verspielt</h2>
-        </div>
-        <div class="keywords">
-          <span>urban</span>
-          <span>mobil</span>
-          <span>technisch</span>
-          <span>klar</span>
-          <span>schnell lesbar</span>
-          <span>vertrauenswürdig</span>
-        </div>
-        <div class="do-dont">
-          <div class="list-card ok">
-            <h3>Do</h3>
-            <ul>
-              <li>ruhige Kartenflächen</li>
-              <li>feine Borders und kontrollierter Glow</li>
-              <li>kompakte KPI-Karten</li>
-              <li>klare Bottom-Sheet-Logik</li>
-            </ul>
-          </div>
-          <div class="list-card bad">
-            <h3>Don't</h3>
-            <ul>
-              <li>UI-Spielerei und zu viel Glassmorphism</li>
-              <li>zu viele gleich starke Buttons</li>
-              <li>überladene Karten</li>
-              <li>Stockfoto-Branding ohne Funktion</li>
-            </ul>
-          </div>
-        </div>
-      </article>
-    </section>
-
-    <section class="grid two-col">
-      <article class="panel">
-        <div class="section-head">
-          <span class="eyebrow">Typography</span>
-          <h2>Schnell lesbar auf kleinen Screens</h2>
-        </div>
-        <div class="type-stack">
-          <div class="type-sample">
-            <span class="type-label">KPI / Countdown</span>
-            <div class="type-kpi">27:34</div>
-            <div class="type-mono">SCOOTER A-17 / HUB-03 / 0,30 €</div>
-          </div>
-          <div class="type-sample">
-            <span class="type-label">Screen Title</span>
-            <div class="type-title">Reservierung aktiv</div>
-          </div>
-          <div class="type-sample">
-            <span class="type-label">Body / Guidance</span>
-            <p>Nach Ablauf wird der Scooter wieder freigegeben. Die App muss hier Klarheit erzeugen, nicht Dekoration.</p>
-          </div>
-        </div>
-      </article>
-
-      <article class="panel">
-        <div class="section-head">
-          <span class="eyebrow">UI System</span>
-          <h2>Komponentenstil</h2>
-        </div>
-        <div class="component-demo">
-          <div class="chip-row">
-            <span class="chip available">Verfügbar</span>
-            <span class="chip reserved">Reserviert</span>
-            <span class="chip loading">Lädt</span>
-            <span class="chip low">Niedriger Akku</span>
-          </div>
-          <div class="button-row">
-            <button class="btn ghost" type="button">30 Min. reservieren</button>
-            <button class="btn primary" type="button">Jetzt entsperren</button>
-          </div>
-          <div class="metric-row">
-            <div class="metric-card">
-              <span>Akku</span>
-              <strong>82 %</strong>
-            </div>
-            <div class="metric-card">
-              <span>Kosten</span>
-              <strong>0,30 €</strong>
-            </div>
-            <div class="metric-card">
-              <span>Dauer</span>
-              <strong>12:10</strong>
-            </div>
-          </div>
-        </div>
-      </article>
-    </section>
-
-    <section class="panel">
-      <div class="section-head">
-        <span class="eyebrow">Map Language</span>
-        <h2>Karte als stärkstes Interface-Element</h2>
-      </div>
-      <div class="map-board">
-        <div class="map-demo">
-          <div class="hub" style="left: 22%; top: 34%;"></div>
-          <div class="hub" style="left: 72%; top: 24%;"></div>
-          <div class="marker available" style="left: 34%; top: 62%;"></div>
-          <div class="marker selected" style="left: 48%; top: 54%;"></div>
-          <div class="marker low" style="left: 67%; top: 58%;"></div>
-          <div class="marker available" style="left: 79%; top: 72%;"></div>
-        </div>
-        <div class="map-notes">
-          <div class="legend-item"><span class="dot available"></span> Scooter verfügbar</div>
-          <div class="legend-item"><span class="dot selected"></span> ausgewählter Scooter</div>
-          <div class="legend-item"><span class="dot low"></span> niedriger Akku</div>
-          <div class="legend-item"><span class="dot hub"></span> Ladehub</div>
-          <p>Die Karte darf Atmosphäre haben, aber niemals Priorität vor der Statuslogik gewinnen. Erst Lesbarkeit, dann Look.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="grid three-col">
-      <article class="panel mini-panel">
-        <span class="eyebrow">Look</span>
-        <h3>Nachtkarte mit Ruhe</h3>
-        <p>Bewegung durch die Stadt, leichte Leuchtdichte, ruhige Tiefe statt Effekthascherei.</p>
-      </article>
-      <article class="panel mini-panel">
-        <span class="eyebrow">Motion</span>
-        <h3>Kurz und funktional</h3>
-        <p>Bottom Sheet, Marker-Selection, Return-Confirm und Summary-Route bewegen sich gezielt. Mehr braucht das Ding nicht.</p>
-      </article>
-      <article class="panel mini-panel">
-        <span class="eyebrow">Result</span>
-        <h3>Abgeschlossener Showcase</h3>
-        <p>Kein Techno-Gimmick und kein White-Label-Einerlei, sondern ein lesbares Mobilitätswerkzeug mit sauberem Endpunkt.</p>
-      </article>
-    </section>
-  </div>
+  </main>
 </body>
 </html>

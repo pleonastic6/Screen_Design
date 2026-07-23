@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Share-A-Scooter Amberg – Low-Fi Wireframes</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page">
+    <h1>Share-A-Scooter Amberg – Low-Fi Wireframes</h1>
+    <p class="lead">Visuelle Low-Fidelity-Screens für den aktuellen Gesamtfluss. Alles, was im klickbaren App-Prototyp vorkommt, ist hier als reduzierte Wireframe-Version abgebildet.</p>
+
+    <div class="grid">
+      <div>
+        <div class="phone">
+          <div class="statusbar"></div>
+          <div class="screen">
+            <div class="card" style="padding:18px;background:#f9fafb">
+              <div class="meta">Neu in Amberg</div>
+              <h3 style="margin-top:8px;font-size:26px;line-height:1.05">Konto erstellen und direkt losfahren</h3>
+              <p class="meta" style="margin-top:10px">Registrierung als Einstieg, bevor der Nutzer in Karte und Fahrzeugfluss springt.</p>
+            </div>
+            <div class="list" style="margin-top:14px">
+              <div class="list-item"><strong>Vor- und Nachname</strong><span class="meta">Textfeld</span></div>
+              <div class="list-item"><strong>E-Mail</strong><span class="meta">Textfeld</span></div>
+              <div class="list-item"><strong>Passwort</strong><span class="meta">Textfeld</span></div>
+              <div class="list-item"><strong>Geburtsdatum</strong><span class="meta">Textfeld</span></div>
+            </div>
+            <div class="info-list">
+              <div class="info-item">Checkbox: AGB / Datenschutz / Rückgabe-Regeln</div>
+              <div class="info-item">Trust-Hinweis: Kosten starten erst beim Entsperren</div>
+            </div>
+          </div>
+          <div class="sticky-actions">
+            <div class="btn-row">
+              <div class="btn primary">Konto erstellen</div>
+            </div>
+            <div class="btn-row" style="margin-top:10px">
+              <div class="btn ghost">Mit Demo-Profil fortfahren</div>
+            </div>
+          </div>
+        </div>
+        <div class="screen-label">Registrierung / Einstieg</div>
+      </div>
+
+      <div>
+        <div class="phone">
+          <div class="statusbar"></div>
+          <div class="screen">
+            <div class="header">
+              <div>
+                <div class="title">Amberg</div>
+                <span class="sub">Scooter in deiner Nähe</span>
+              </div>
+              <button class="icon-btn"></button>
+            </div>
+            <div class="chips">
+              <span class="chip">Verfügbar</span>
+              <span class="chip">Reserviert</span>
+              <span class="chip">Lädt</span>
+              <span class="chip">Niedriger Akku</span>
+            </div>
+            <div class="map">
+              <div class="hub" style="left:16%;top:24%"></div>
+              <div class="hub" style="left:52%;top:42%"></div>
+              <div class="hub" style="left:78%;top:18%"></div>
+              <div class="marker" style="left:28%;top:55%"></div>
+              <div class="marker sel" style="left:48%;top:60%"></div>
+              <div class="marker low" style="left:65%;top:48%"></div>
+              <div class="marker" style="left:72%;top:70%"></div>
+              <div class="floating-controls">
+                <button class="circle-btn"></button>
+                <button class="circle-btn"></button>
+              </div>
+            </div>
+            <div class="bottom-sheet">
+              <div class="handle"></div>
+              <div class="meta">Scooter A-07</div>
+              <h3>120 m entfernt · Akku 82 %</h3>
+              <div class="chips"><span class="chip">Verfügbar</span></div>
+              <div class="btn-row">
+                <div class="btn ghost">Reservieren</div>
+                <div class="btn primary">Jetzt entsperren</div>
+              </div>
+            </div>
+          </div>
+          <div class="bottom-nav">
+            <div class="nav-item active">Karte</div>
+            <div class="nav-item">Fahrt</div>
+            <div class="nav-item">Buchungen</div>
+            <div class="nav-item">Profil</div>
+          </div>
+        </div>
+        <div class="screen-label">Home / Karte</div>
+      </div>
+
+      <div>
+        <div class="phone">
+          <div class="statusbar"></div>
+          <div class="screen">
+            <div class="header">
+              <div>
+                <div class="title">Dein Bereich</div>
+                <span class="sub">Fullscreen-Menü über der Karte</span>
+              </div>
+              <button class="icon-btn"></button>
+            </div>
+            <div class="card">
+              <div class="meta">Rainer Winkler</div>
+              <h3 style="margin-top:6px">Premium Ride · 30 Freiminuten aktiv</h3>
+              <div class="metric-row">
+                <div class="metric"><div class="label">Wallet</div><div class="value">12,40 €</div></div>
+                <div class="metric"><div class="label">Letzte Fahrt</div><div class="value">8 Min</div></div>
+                <div class="metric"><div class="label">Status</div><div class="value">Aktiv</div></div>
+              </div>
+            </div>
+            <div class="list" style="margin-top:12px">
+              <div class="list-item"><strong>Konto</strong><span class="meta">Profil und persönliche Daten</span></div>
+              <div class="list-item"><strong>Letzte Fahrten</strong><span class="meta">Dauer, Preis und Verlauf</span></div>
+              <div class="list-item"><strong>Freiminuten</strong><span class="meta">Bonus aus Ladehub-Rückgaben</span></div>
+              <div class="list-item"><strong>Zahlungsmittel</strong><span class="meta">Wallet und Karte</span></div>
+              <div class="list-item"><strong>Hilfe &amp; Support</strong><span class="meta">FAQ, Schäden, Sperrzonen</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="screen-label">Menü / Dein Bereich</div>
+      </div>
+
+      <div>
+        <div class="phone">
+          <div class="statusbar"></div>
+          <div class="screen">
+            <div class="header">
+              <button class="icon-btn"></button>
+              <div class="title">Detailansicht</div>
+              <div style="width:32px"></div>
+            </div>
+            <div class="card">
+              <div class="meta">Support</div>
+              <h3 style="margin-top:6px">Hilfe &amp; Support</h3>
+              <p class="meta" style="margin-top:8px">Sekundärscreen aus dem Menü mit kompakten Stichpunkten statt Kartenlogik.</p>
+            </div>
+            <div class="info-list">
+              <div class="info-item">Thema: Sperrzonen &amp; Schäden</div>
+              <div class="info-item">FAQ verfügbar</div>
+              <div class="info-item">Kontakt im Ausbau</div>
+            </div>
+            <div class="card" style="margin-top:12px">
+              <strong>Wireframe-Regel</strong>
+              <p class="meta" style="margin-top:8px">Alle Menü-Unterseiten folgen demselben Layoutmuster: Header, Hero-Block, kurze Info-Liste, ein CTA zurück.</p>
+            </div>
+          </div>
+          <div class="sticky-actions">
+            <div class="btn primary">Zurück zum Menü</div>
+          </div>
+        </div>
+        <div class="screen-label">Menü-Detail / Hilfe</div>
+      </div>
+
+      <div>
+        <div class="phone">
+          <div class="statusbar"></div>
+          <div class="screen">
+            <div class="header">
+              <button class="icon-btn"></button>
+              <div class="title">Scooter-Details</div>
+              <div style="width:32px"></div>
+            </div>
+            <div class="card">
+              <div class="meta">Scooter A-07</div>
+              <h3 style="margin-top:6px">Verfügbar</h3>
+              <div class="metric-row">
+                <div class="metric"><div class="label">Akku</div><div class="value">82 %</div></div>
+                <div class="metric"><div class="label">Reichweite</div><div class="value">18 km</div></div>
+                <div class="metric"><div class="label">Distanz</div><div class="value">120 m</div></div>
+              </div>
+            </div>
+            <div class="map small" style="margin-top:12px">
+              <div class="marker sel" style="left:50%;top:48%"></div>
+              <div class="hub" style="left:74%;top:35%"></div>
+            </div>
+            <div class="info-list">
+              <div class="info-item">0,10 € pro 5 Minuten</div>
+              <div class="info-item">Rückgabe im Stadtgebiet möglich</div>
+              <div class="info-item">Rückgabe am Ladehub: +30 Freiminuten</div>
+            </div>
+          </div>
+          <div class="sticky-actions">
+            <div class="btn-row">
+              <div class="btn ghost">30 Min. reservieren</div>
+              <div class="btn primary">Jetzt entsperren</div>
+            </div>
+          </div>
+        </div>
+        <div class="screen-label">Scooter-Detail</div>
+      </div>
+
+      <div>
+        <div class="phone">
+          <div class="statusbar"></div>
+          <div class="screen">
+            <div class="header">
+              <button class="icon-btn"></button>
+              <div class="title">Reservierung aktiv</div>
+              <div style="width:32px"></div>
+            </div>
+            <div class="card">
+              <div class="meta">Scooter A-07</div>
+              <h3 style="margin-top:10px;font-size:34px">27:34</h3>
+              <p class="meta" style="margin-top:8px">Reservierung endet in 27 Minuten</p>
+            </div>
+            <div class="map small" style="margin-top:12px">
+              <div class="marker sel" style="left:54%;top:40%"></div>
+            </div>
+            <div class="btn-row">
+              <div class="btn primary">Navigation starten</div>
+            </div>
+            <div class="btn-row" style="margin-top:10px">
+              <div class="btn ghost">Reservierung aufheben</div>
+            </div>
+            <p class="meta" style="margin-top:12px">Nach Ablauf wird der Scooter wieder freigegeben.</p>
+          </div>
+        </div>
+        <div class="screen-label">Reservierung bestätigt</div>
+      </div>
+
+      <div>
+        <div class="phone">
+          <div class="statusbar"></div>
+          <div class="screen">
+            <div class="header">
+              <button class="icon-btn"></button>
+              <div class="title">Vor Ort prüfen</div>
+              <div style="width:32px"></div>
+            </div>
+            <div class="card">
+              <div class="meta">Reserviert für dich</div>
+              <h3 style="margin-top:6px">Ist das dein Scooter?</h3>
+            </div>
+            <div class="info-list">
+              <div class="info-item">Standort: Nähe OTH Amberg</div>
+              <div class="info-item">Akku: 74 %</div>
+              <div class="info-item">Reichweite: 54 km</div>
+            </div>
+            <div class="card" style="margin-top:12px">
+              <strong>Ziel dieses Screens</strong>
+              <p class="meta" style="margin-top:8px">Vor dem Unlock wird der reservierte Scooter noch einmal eindeutig bestätigt.</p>
+            </div>
+          </div>
+          <div class="sticky-actions">
+            <div class="btn-row">
+              <div class="btn ghost">Noch mal prüfen</div>
+              <div class="btn primary">Diesen Scooter entsperren</div>
+            </div>
+          </div>
+        </div>
+        <div class="screen-label">Scooter-Bestätigung vor Ort</div>
+      </div>
+
+      <div>
+        <div class="phone">
+          <div class="statusbar"></div>
+          <div class="screen">
+            <div class="header">
+              <button class="icon-btn"></button>
+              <div class="title">Scooter auswählen</div>
+              <div style="width:32px"></div>
+            </div>
+            <div class="card">
+              <p>Prüfe die Nummer am Lenker oder Schloss.</p>
+            </div>
+            <div class="list" style="margin-top:12px">
+              <div class="list-item selected">
+                <strong>Scooter A-07</strong>
+                <span class="meta">Akku 64 % · direkt vor dir</span>
+              </div>
+              <div class="list-item">
+                <strong>Scooter A-09</strong>
+                <span class="meta">Akku 58 % · 8 m entfernt</span>
+              </div>
+              <div class="list-item">
+                <strong>Scooter A-11</strong>
+                <span class="meta">Akku 31 % · 11 m entfernt</span>
+              </div>
+            </div>
+          </div>
+          <div class="sticky-actions">
+            <div class="btn primary">Diesen Scooter entsperren</div>
+          </div>
+        </div>
+        <div class="screen-label">Scooter-Zuordnung vor Ort</div>
+      </div>
+
+      <div>
+        <div class="phone">
+          <div class="statusbar"></div>
+          <div class="screen">
+            <div class="header">
+              <button class="icon-btn"></button>
+              <div class="title">Problem vor Ort</div>
+              <div style="width:32px"></div>
+            </div>
+            <div class="card rule-card warn">
+              <strong>Scooter nicht passend?</strong>
+              <p class="meta" style="margin-top:6px">Abbruch-Screen, falls Nummer oder Zustand nicht zum reservierten Scooter passt.</p>
+            </div>
+            <div class="list" style="margin-top:12px">
+              <div class="list-item"><strong>Falsche Nummer</strong><span class="meta">Lenker / Schloss passt nicht</span></div>
+              <div class="list-item"><strong>Scooter blockiert</strong><span class="meta">Nicht direkt zugänglich</span></div>
+              <div class="list-item"><strong>Beschädigt</strong><span class="meta">Besser anderen Scooter wählen</span></div>
+            </div>
+          </div>
+          <div class="sticky-actions">
+            <div class="btn-row">
+              <div class="btn ghost">Zurück zur Bestätigung</div>
+              <div class="btn primary">Anderen Scooter suchen</div>
+            </div>
+          </div>
+        </div>
+        <div class="screen-label">Issue / Problem vor Ort</div>
+      </div>
+
+      <div>
+        <div class="phone">
+          <div class="statusbar"></div>
+          <div class="screen">
+            <div class="center-block">
+              <div class="lock">🔓</div>
+              <div class="title">Scooter erfolgreich entsperrt</div>
+              <p class="meta" style="max-width:220px">Fahre vorsichtig und beachte die Verkehrsregeln.</p>
+              <div class="btn primary" style="width:100%">Fahrt starten</div>
+            </div>
+          </div>
+        </div>
+        <div class="screen-label">Unlock / Startstatus</div>
+      </div>
+
+      <div>
+        <div class="phone">
+          <div class="statusbar"></div>
+          <div class="screen">
+            <div class="center-block">
+              <div class="lock">!</div>
+              <div class="title">Entsperren fehlgeschlagen</div>
+              <p class="meta" style="max-width:230px">Fehlerzustand als eigener Wireframe-State, damit Retry und Fallback klar getrennt sind.</p>
+            </div>
+          </div>
+          <div class="sticky-actions">
+            <div class="btn-row">
+              <div class="btn ghost">Erneut versuchen</div>
+              <div class="btn primary">Anderen Scooter wählen</div>
+            </div>
+          </div>
+        </div>
+        <div class="screen-label">Unlock Error</div>
+      </div>
+
+      <div>
+        <div class="phone">
+          <div class="statusbar"></div>
+          <div class="screen">
+            <div class="card">
+              <div class="metric-row">
+                <div class="metric"><div class="label">Fahrtdauer</div><div class="value">12:10</div></div>
+                <div class="metric"><div class="label">Kosten</div><div class="value">0,30 €</div></div>
+                <div class="metric"><div class="label">Akku</div><div class="value">71 %</div></div>
+              </div>
+            </div>
+            <div class="map" style="margin-top:12px;height:330px">
+              <div class="hub" style="left:72%;top:32%"></div>
+              <div class="marker sel" style="left:46%;top:58%"></div>
+            </div>
+            <div class="card" style="margin-top:12px">
+              <p>Rückgabe am Ladehub bringt 30 Freiminuten.</p>
+            </div>
+          </div>
+          <div class="sticky-actions">
+            <div class="btn-row">
+              <div class="btn ghost">Temporär parken</div>
+              <div class="btn primary">Fahrt beenden</div>
+            </div>
+          </div>
+        </div>
+        <div class="screen-label">Aktive Fahrt</div>
+      </div>
+
+      <div>
+        <div class="phone">
+          <div class="statusbar"></div>
+          <div class="screen">
+            <div class="card">
+              <div class="title">Scooter temporär geparkt</div>
+              <p class="meta" style="margin-top:8px">Dein Scooter ist gesichert.</p>
+            </div>
+            <div class="card" style="margin-top:12px">
+              <div class="metric-row">
+                <div class="metric"><div class="label">Zeit</div><div class="value">14:25</div></div>
+                <div class="metric"><div class="label">Kosten</div><div class="value">0,40 €</div></div>
+                <div class="metric"><div class="label">Status</div><div class="value">Pause</div></div>
+              </div>
+            </div>
+            <div class="card" style="margin-top:12px">
+              <strong>Die Abrechnung läuft weiter</strong>
+              <p class="meta" style="margin-top:8px">Beende die Fahrt erst, wenn du den Scooter endgültig zurückgeben willst.</p>
+            </div>
+          </div>
+          <div class="sticky-actions">
+            <div class="btn-row">
+              <div class="btn primary">Weiterfahren</div>
+              <div class="btn ghost">Jetzt zurückgeben</div>
+            </div>
+          </div>
+        </div>
+        <div class="screen-label">Temporäres Parken</div>
+      </div>
+
+      <div>
+        <div class="phone">
+          <div class="statusbar"></div>
+          <div class="screen">
+            <div class="header">
+              <button class="icon-btn"></button>
+              <div class="title">Fahrt beenden</div>
+              <div style="width:32px"></div>
+            </div>
+            <div class="metric-row">
+              <div class="metric"><div class="label">Zeit</div><div class="value">12:10</div></div>
+              <div class="metric"><div class="label">Kosten</div><div class="value">0,30 €</div></div>
+              <div class="metric"><div class="label">Akku</div><div class="value">71 %</div></div>
+            </div>
+            <div class="card rule-card ok" style="margin-top:12px">
+              <strong>Rückgabe erlaubt</strong>
+              <p class="meta" style="margin-top:6px">Im Rückgabegebiet. Ladehub in Reichweite für Bonus.</p>
+            </div>
+            <div class="info-list">
+              <div class="info-item">Zone: Stadtgebiet · Abstellen möglich</div>
+              <div class="info-item">Akku über 30 %</div>
+              <div class="info-item">Bonus-Hinweis: 30 Freiminuten am Ladehub</div>
+            </div>
+          </div>
+          <div class="sticky-actions">
+            <div class="btn-row">
+              <div class="btn ghost">Weiterfahren</div>
+              <div class="btn primary">Hier zurückgeben</div>
+            </div>
+          </div>
+        </div>
+        <div class="screen-label">Return / Entscheidungsscreen</div>
+      </div>
+
+      <div>
+        <div class="phone">
+          <div class="statusbar"></div>
+          <div class="screen">
+            <div class="header">
+              <button class="icon-btn"></button>
+              <div class="title">Rückgabe prüfen</div>
+              <div style="width:32px"></div>
+            </div>
+            <div class="card rule-card ok">
+              <strong>Rückgabe hier möglich</strong>
+              <p class="meta" style="margin-top:6px">Ladehub erkannt · 30 Freiminuten verfügbar</p>
+            </div>
+            <div class="info-list">
+              <div class="info-item">Standortregel erfüllt</div>
+              <div class="info-item">Akku über 30 %</div>
+              <div class="info-item">Bonus bei Rückgabe an diesem Ladehub</div>
+            </div>
+            <div class="map small" style="margin-top:12px">
+              <div class="hub" style="left:52%;top:52%"></div>
+              <div class="marker sel" style="left:48%;top:58%"></div>
+            </div>
+            <div class="btn-row">
+              <div class="btn primary">Rückgabe bestätigen</div>
+            </div>
+          </div>
+        </div>
+        <div class="screen-label">Rückgabeprüfung – erlaubt</div>
+      </div>
+
+      <div>
+        <div class="phone">
+          <div class="statusbar"></div>
+          <div class="screen">
+            <div class="header">
+              <button class="icon-btn"></button>
+              <div class="title">Rückgabe prüfen</div>
+              <div style="width:32px"></div>
+            </div>
+            <div class="card rule-card warn">
+              <strong>Rückgabe hier nicht möglich</strong>
+              <p class="meta" style="margin-top:6px">Bitte nutze einen erlaubten Abstellort oder einen Ladehub.</p>
+            </div>
+            <div class="info-list">
+              <div class="info-item">Standortregel nicht erfüllt</div>
+              <div class="info-item">Nächster Ladehub: 240 m</div>
+              <div class="info-item">Akku 62 %</div>
+            </div>
+            <div class="map small" style="margin-top:12px">
+              <div class="hub" style="left:70%;top:30%"></div>
+              <div class="marker sel" style="left:36%;top:62%"></div>
+            </div>
+            <div class="btn-row">
+              <div class="btn disabled">Rückgabe nicht möglich</div>
+            </div>
+          </div>
+        </div>
+        <div class="screen-label">Rückgabeprüfung – gesperrt</div>
+      </div>
+
+      <div>
+        <div class="phone">
+          <div class="statusbar"></div>
+          <div class="screen">
+            <div class="header">
+              <div class="title">Park-Check</div>
+              <div style="width:32px"></div>
+            </div>
+            <div class="card">
+              <div class="meta">Letzter Schritt</div>
+              <h3 style="margin-top:6px">Steht der Scooter frei und ordentlich?</h3>
+              <p class="meta" style="margin-top:8px">Zwischenschritt zwischen Return und finalem Abschluss, damit die Rückgabe bewusst bestätigt wird.</p>
+            </div>
+            <div class="info-list">
+              <div class="info-item">Niemand wird blockiert</div>
+              <div class="info-item">Bonus bei Ladehub wird direkt vorgemerkt</div>
+              <div class="info-item">Rückgabeort: Stadtgebiet Amberg</div>
+            </div>
+          </div>
+          <div class="sticky-actions">
+            <div class="btn primary">Park-Check abschließen</div>
+          </div>
+        </div>
+        <div class="screen-label">Parking Check</div>
+      </div>
+
+      <div>
+        <div class="phone">
+          <div class="statusbar"></div>
+          <div class="screen">
+            <div class="center-block" style="min-height:180px;padding-top:18px">
+              <div class="success">✓</div>
+              <div class="title">Fahrt erfolgreich beendet</div>
+            </div>
+            <div class="card">
+              <div class="metric-row">
+                <div class="metric"><div class="label">Dauer</div><div class="value">18:25</div></div>
+                <div class="metric"><div class="label">Kosten</div><div class="value">0,40 €</div></div>
+                <div class="metric"><div class="label">Bonus</div><div class="value">30 Min</div></div>
+              </div>
+            </div>
+            <div class="map small" style="margin-top:12px">
+              <div class="marker" style="left:30%;top:62%"></div>
+              <div class="hub" style="left:68%;top:36%"></div>
+              <div style="position:absolute;left:30%;top:62%;width:38%;height:2px;background:#111827;transform:rotate(-24deg);transform-origin:left center"></div>
+            </div>
+            <div class="info-list" style="margin-top:12px">
+              <div class="info-item">Route-Recap: Start Marktplatz → Ziel Ladehub</div>
+              <div class="info-item">Rückgabeort: Marktplatz Ladehub</div>
+              <div class="info-item">Keine weiteren Kosten offen</div>
+            </div>
+            <div class="btn-row">
+              <div class="btn primary">Zur Karte</div>
+            </div>
+          </div>
+        </div>
+        <div class="screen-label">Ride Summary</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
