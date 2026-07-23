@@ -501,21 +501,15 @@ body.splash-done .map-screen {
 }
 
 .map-menu-panel__item-icon--bonus::before {
-  top: 10px;
-  left: 10px;
-  width: 22px;
-  height: 22px;
-  border-radius: 999px;
-  border: 2px solid #18301d;
+  top: 8px;
+  left: 8px;
+  width: 28px;
+  height: 28px;
+  background: center / contain no-repeat url("./bonus-clock.svg");
 }
 
 .map-menu-panel__item-icon--bonus::after {
-  top: 16px;
-  left: 20px;
-  width: 2px;
-  height: 10px;
-  background: #18301d;
-  box-shadow: -5px -4px 0 0 #18301d, 5px 4px 0 0 #18301d;
+  display: none;
 }
 
 .map-menu-panel__item-icon--payment::before {
@@ -536,24 +530,15 @@ body.splash-done .map-screen {
 }
 
 .map-menu-panel__item-icon--help::before {
-  top: 9px;
-  left: 10px;
-  width: 22px;
-  height: 22px;
-  border-radius: 999px;
-  border: 2px solid #18301d;
+  top: 8px;
+  left: 8px;
+  width: 28px;
+  height: 28px;
+  background: center / contain no-repeat url("./help-support-magnifier.svg");
 }
 
 .map-menu-panel__item-icon--help::after {
-  top: 13px;
-  left: 18px;
-  width: 6px;
-  height: 12px;
-  border-right: 2px solid #18301d;
-  border-top: 2px solid #18301d;
-  border-radius: 0 8px 0 0;
-  transform: rotate(25deg);
-  box-shadow: -1px 11px 0 -1px #18301d;
+  display: none;
 }
 
 .menu-detail-screen {
