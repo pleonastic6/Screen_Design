@@ -3,9 +3,6 @@ const RETURN_CONFIRM_DELAY_MS = 420;
 const PARKING_REVIEW_DELAY_MS = 920;
 const SUMMARY_ROUTE_DRAW_DELAY_MS = 360;
 const SUMMARY_ROUTE_DRAW_DURATION_MS = 900;
-const THEME_STORAGE_KEY = "screen-design-theme";
-const THEME_LIGHT = "light";
-const THEME_DARK = "dark";
 
 const scooters = [
   {
@@ -511,7 +508,6 @@ const registrationScreen = document.getElementById("registration-screen");
 const registrationForm = document.getElementById("registration-form");
 const registrationSubmit = document.getElementById("registration-submit");
 const registrationSkip = document.getElementById("registration-skip");
-const mapThemeToggle = document.getElementById("map-theme-toggle");
 const ringAudio = new Audio("icq-old-sound.mp3");
 
 let activeScooterMarker = null;
@@ -534,9 +530,6 @@ let parkingReviewTimeoutId = null;
 let summaryRouteMarkerTimeoutId = null;
 let pendingSummaryState = null;
 let ringPlaybackToken = 0;
-let currentTheme = getInitialTheme();
-let mainTileLayer = null;
-let summaryTileLayer = null;
 let map = null;
 
 const menuScreenContent = {
@@ -603,7 +596,6 @@ const menuScreenContent = {
 };
 
 document.body.classList.add("splash-active");
-applyTheme(currentTheme, { persist: false });
 window.setTimeout(() => {
   document.body.classList.add("splash-done");
   splashScreen?.classList.add("is-hidden");
@@ -657,8 +649,10 @@ map = L.map("main-map", {
   keyboard: false
 });
 
-mainTileLayer = createTileLayer("map");
-mainTileLayer.addTo(map);
+L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png", {
+  subdomains: "abcd",
+  maxZoom: 20
+}).addTo(map);
 
 map.setView(mapCenter, defaultZoom);
 
@@ -733,7 +727,6 @@ parkingScreenConfirm.addEventListener("click", completeParkingCheck);
 summaryScreenClose.addEventListener("click", closeSummaryScreen);
 registrationForm.addEventListener("submit", handleRegistrationSubmit);
 registrationSkip.addEventListener("click", closeRegistrationScreen);
-mapThemeToggle.addEventListener("click", toggleTheme);
 document.addEventListener("keydown", handleGlobalKeydown);
 map.on("click", () => {
   closeVehicleCard();
@@ -749,68 +742,6 @@ function toggleMapMenu() {
   }
 
   closeMapMenu();
-}
-
-function getInitialTheme() {
-  const storedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
-  return storedTheme === THEME_DARK ? THEME_DARK : THEME_LIGHT;
-}
-
-function createTileLayer(target) {
-  const isDark = currentTheme === THEME_DARK;
-  const url = target === "summary"
-    ? isDark
-      ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-      : "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-    : isDark
-      ? "https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png"
-      : "https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png";
-
-  return L.tileLayer(url, {
-    subdomains: "abcd",
-    maxZoom: 20
-  });
-}
-
-function setThemeToggleState() {
-  const isDark = currentTheme === THEME_DARK;
-  mapThemeToggle.setAttribute("aria-pressed", String(isDark));
-  mapThemeToggle.setAttribute("aria-label", isDark ? "Darkmode deaktivieren" : "Darkmode aktivieren");
-  mapThemeToggle.querySelector(".map-theme-toggle__label").textContent = isDark ? "Light" : "Dark";
-}
-
-function refreshMapTheme() {
-  if (mainTileLayer) {
-    map.removeLayer(mainTileLayer);
-  }
-  mainTileLayer = createTileLayer("map");
-  mainTileLayer.addTo(map);
-
-  if (summaryMap) {
-    if (summaryTileLayer) {
-      summaryMap.removeLayer(summaryTileLayer);
-    }
-    summaryTileLayer = createTileLayer("summary");
-    summaryTileLayer.addTo(summaryMap);
-  }
-}
-
-function applyTheme(theme, { persist = true } = {}) {
-  currentTheme = theme === THEME_DARK ? THEME_DARK : THEME_LIGHT;
-  document.body.dataset.theme = currentTheme;
-  setThemeToggleState();
-
-  if (persist) {
-    window.localStorage.setItem(THEME_STORAGE_KEY, currentTheme);
-  }
-
-  if (map) {
-    refreshMapTheme();
-  }
-}
-
-function toggleTheme() {
-  applyTheme(currentTheme === THEME_DARK ? THEME_LIGHT : THEME_DARK);
 }
 
 function openRegistrationScreen() {
@@ -1433,8 +1364,10 @@ function ensureSummaryMap() {
     tap: false
   });
 
-  summaryTileLayer = createTileLayer("summary");
-  summaryTileLayer.addTo(summaryMap);
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+    subdomains: "abcd",
+    maxZoom: 20
+  }).addTo(summaryMap);
 
   return summaryMap;
 }
