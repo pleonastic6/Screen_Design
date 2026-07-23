@@ -8,6 +8,13 @@
   --cyan: #4f93ff;
   --shadow: 0 18px 40px rgba(31, 42, 34, 0.12);
   --bottom-safe-space: calc(28px + env(safe-area-inset-bottom, 0px));
+  --map-control-bg: rgba(255, 255, 255, 0.96);
+  --map-control-icon: #111a14;
+  --theme-toggle-glow: rgba(127, 214, 106, 0.22);
+  --card-surface: rgba(255, 255, 255, 0.94);
+  --card-text: #142017;
+  --card-muted: #5e6c62;
+  --card-border: rgba(20, 32, 23, 0.08);
 }
 
 @font-face {
@@ -35,6 +42,27 @@ body {
   background:
     radial-gradient(circle at top left, rgba(127, 214, 106, 0.14), transparent 24%),
     linear-gradient(180deg, #edf3ec 0%, var(--bg) 100%);
+}
+
+body[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0c1412;
+  --panel: rgba(16, 24, 22, 0.92);
+  --line: rgba(222, 242, 229, 0.08);
+  --text: #eef7f0;
+  --muted: #9fb0a5;
+  --shadow: 0 24px 52px rgba(0, 0, 0, 0.34);
+  --map-control-bg: rgba(15, 23, 21, 0.9);
+  --map-control-icon: #eef7f0;
+  --theme-toggle-glow: rgba(79, 147, 255, 0.24);
+  --card-surface: rgba(16, 24, 22, 0.94);
+  --card-text: #eef7f0;
+  --card-muted: #a7bbb0;
+  --card-border: rgba(222, 242, 229, 0.1);
+  background:
+    radial-gradient(circle at top left, rgba(126, 232, 146, 0.08), transparent 24%),
+    radial-gradient(circle at bottom right, rgba(79, 147, 255, 0.12), transparent 30%),
+    linear-gradient(180deg, #101916 0%, var(--bg) 100%);
 }
 
 body.splash-active .map-screen {
@@ -381,10 +409,10 @@ body.splash-done .map-screen {
   padding: 0;
   border: 0;
   border-radius: 18px;
-  background: rgba(255, 255, 255, 0.96);
+  background: var(--map-control-bg);
   box-shadow:
     0 12px 26px rgba(23, 32, 26, 0.16),
-    0 0 0 1px rgba(20, 32, 23, 0.05);
+    0 0 0 1px var(--card-border);
   backdrop-filter: blur(14px);
   cursor: pointer;
   transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
@@ -426,7 +454,144 @@ body.splash-done .map-screen {
   width: 22px;
   height: 2.5px;
   border-radius: 999px;
-  background: #111a14;
+  background: var(--map-control-icon);
+}
+
+.map-theme-toggle {
+  position: absolute;
+  left: 18px;
+  bottom: calc(104px + env(safe-area-inset-bottom, 0px));
+  z-index: 410;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 16px 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--map-control-bg);
+  color: var(--map-control-icon);
+  box-shadow:
+    0 12px 26px rgba(23, 32, 26, 0.16),
+    0 0 0 1px var(--card-border);
+  backdrop-filter: blur(14px);
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+
+.map-theme-toggle:hover {
+  transform: translateY(-1px);
+}
+
+.map-theme-toggle:active {
+  transform: scale(0.97);
+}
+
+.map-theme-toggle:focus-visible {
+  outline: 3px solid rgba(126, 232, 146, 0.52);
+  outline-offset: 3px;
+}
+
+.map-theme-toggle__icon {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 35% 35%, #fff7bf 0 20%, #ffe17c 32%, #ffc84b 68%, #f2a233 100%);
+  box-shadow:
+    inset -6px -6px 0 rgba(20, 32, 23, 0.14),
+    0 0 0 6px var(--theme-toggle-glow);
+  transition: transform 220ms ease, background 220ms ease, box-shadow 220ms ease;
+}
+
+.map-theme-toggle__label {
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+body[data-theme="dark"] .map-theme-toggle__icon {
+  background:
+    radial-gradient(circle at 34% 34%, #f3f7ff 0 18%, #d6e4ff 32%, #98b8ff 70%, #6a86d8 100%);
+  box-shadow:
+    inset -8px -8px 0 rgba(7, 15, 27, 0.46),
+    0 0 0 6px var(--theme-toggle-glow);
+  transform: rotate(-18deg);
+}
+
+body[data-theme="dark"] .vehicle-card,
+body[data-theme="dark"] .map-menu-panel,
+body[data-theme="dark"] .menu-detail-sheet,
+body[data-theme="dark"] .booking-sheet,
+body[data-theme="dark"] .confirm-sheet,
+body[data-theme="dark"] .issue-sheet,
+body[data-theme="dark"] .unlock-sheet,
+body[data-theme="dark"] .unlock-error-sheet,
+body[data-theme="dark"] .ride-sheet,
+body[data-theme="dark"] .pause-sheet,
+body[data-theme="dark"] .return-sheet,
+body[data-theme="dark"] .parking-sheet,
+body[data-theme="dark"] .summary-sheet,
+body[data-theme="dark"] .registration-card {
+  background: linear-gradient(180deg, rgba(22, 31, 29, 0.98) 0%, rgba(14, 22, 20, 0.98) 100%);
+  color: var(--card-text);
+  border-color: var(--card-border);
+  box-shadow:
+    0 24px 52px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+body[data-theme="dark"] .vehicle-card *,
+body[data-theme="dark"] .map-menu-panel *,
+body[data-theme="dark"] .menu-detail-sheet *,
+body[data-theme="dark"] .booking-sheet *,
+body[data-theme="dark"] .confirm-sheet *,
+body[data-theme="dark"] .issue-sheet *,
+body[data-theme="dark"] .unlock-sheet *,
+body[data-theme="dark"] .unlock-error-sheet *,
+body[data-theme="dark"] .ride-sheet *,
+body[data-theme="dark"] .pause-sheet *,
+body[data-theme="dark"] .return-sheet *,
+body[data-theme="dark"] .parking-sheet *,
+body[data-theme="dark"] .summary-sheet *,
+body[data-theme="dark"] .registration-card * {
+  color: inherit;
+}
+
+body[data-theme="dark"] .map-menu-panel__microcopy,
+body[data-theme="dark"] .menu-detail-sheet__subline,
+body[data-theme="dark"] .registration-card__copy,
+body[data-theme="dark"] .registration-form__check,
+body[data-theme="dark"] .registration-form__label,
+body[data-theme="dark"] .registration-card__eyebrow,
+body[data-theme="dark"] .registration-card__status,
+body[data-theme="dark"] .vehicle-card__eyebrow,
+body[data-theme="dark"] .booking-sheet__hint,
+body[data-theme="dark"] .booking-sheet__row-label,
+body[data-theme="dark"] .confirm-sheet__subline,
+body[data-theme="dark"] .ride-sheet__meta-label,
+body[data-theme="dark"] .return-sheet__status-label,
+body[data-theme="dark"] .summary-sheet__meta-label {
+  color: var(--card-muted);
+}
+
+body[data-theme="dark"] .registration-form__input,
+body[data-theme="dark"] .registration-form__secondary,
+body[data-theme="dark"] .map-menu-panel__item,
+body[data-theme="dark"] .menu-detail-sheet__item,
+body[data-theme="dark"] .booking-sheet__row,
+body[data-theme="dark"] .summary-sheet__route-stop {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+body[data-theme="dark"] .registration-form__input {
+  color: #eef7f0;
+}
+
+body[data-theme="dark"] .map-controls__icon {
+  filter: invert(1);
 }
 
 .map-menu-backdrop {
