@@ -24,6 +24,60 @@
       <p class="splash-screen__wordmark">escooter</p>
     </div>
   </div>
+  <section class="registration-screen" id="registration-screen" aria-hidden="true">
+    <div class="registration-screen__backdrop" aria-hidden="true"></div>
+    <div class="registration-card">
+      <p class="registration-card__eyebrow">Neu in Amberg</p>
+      <h1 class="registration-card__title">Erstell dein Konto und fahr in 2 Minuten los.</h1>
+      <p class="registration-card__copy">Registrierung, Zahlungsmittel und Bonus greifen direkt ineinander. Für den Showcase kannst du aber auch mit dem Demo-Profil weitermachen.</p>
+      <div class="registration-card__hero">
+        <div class="registration-card__hero-badge">30 Freiminuten für den ersten Ladehub</div>
+        <div class="registration-card__hero-grid">
+          <div class="registration-card__hero-item">
+            <span class="registration-card__hero-label">Startklar</span>
+            <strong class="registration-card__hero-value">5 Schritte</strong>
+          </div>
+          <div class="registration-card__hero-item">
+            <span class="registration-card__hero-label">Tarif</span>
+            <strong class="registration-card__hero-value">0,10 EUR / 5 Min</strong>
+          </div>
+        </div>
+      </div>
+      <form class="registration-form" id="registration-form">
+        <label class="registration-form__field">
+          <span class="registration-form__label">Vor- und Nachname</span>
+          <input class="registration-form__input" type="text" name="name" placeholder="z. B. Lara Neumann" />
+        </label>
+        <label class="registration-form__field">
+          <span class="registration-form__label">E-Mail</span>
+          <input class="registration-form__input" type="email" name="email" placeholder="name@example.com" />
+        </label>
+        <div class="registration-form__row">
+          <label class="registration-form__field">
+            <span class="registration-form__label">Passwort</span>
+            <input class="registration-form__input" type="password" name="password" placeholder="Mind. 8 Zeichen" />
+          </label>
+          <label class="registration-form__field">
+            <span class="registration-form__label">Geburtsdatum</span>
+            <input class="registration-form__input" type="text" name="birthday" placeholder="TT.MM.JJJJ" />
+          </label>
+        </div>
+        <div class="registration-form__chips" aria-label="Optionale Interessen">
+          <span class="registration-form__chip">Campus</span>
+          <span class="registration-form__chip">Innenstadt</span>
+          <span class="registration-form__chip">Ladehub-Bonus</span>
+        </div>
+        <label class="registration-form__check">
+          <input class="registration-form__checkbox" type="checkbox" checked />
+          <span>Ich akzeptiere AGB, Datenschutzhinweise und die Rückgabe-Regeln im Stadtgebiet.</span>
+        </label>
+        <div class="registration-form__actions">
+          <button class="registration-form__primary" id="registration-submit" type="submit">Konto erstellen</button>
+          <button class="registration-form__secondary" id="registration-skip" type="button">Mit Demo-Profil fortfahren</button>
+        </div>
+      </form>
+    </div>
+  </section>
   <main class="map-screen">
     <div class="map-frame" id="main-map" aria-label="Karte mit Scootern und Ladehubs"></div>
     <div class="map-menu-backdrop" id="map-menu-backdrop" aria-hidden="true"></div>

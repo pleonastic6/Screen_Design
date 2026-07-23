@@ -504,6 +504,10 @@ const summaryScreenEnd = document.getElementById("summary-screen-end");
 const summaryScreenRouteMap = document.getElementById("summary-screen-route-map");
 const summaryScreenClose = document.getElementById("summary-screen-close");
 const splashScreen = document.getElementById("splash-screen");
+const registrationScreen = document.getElementById("registration-screen");
+const registrationForm = document.getElementById("registration-form");
+const registrationSubmit = document.getElementById("registration-submit");
+const registrationSkip = document.getElementById("registration-skip");
 const ringAudio = new Audio("icq-old-sound.mp3");
 
 let activeScooterMarker = null;
@@ -594,6 +598,7 @@ document.body.classList.add("splash-active");
 window.setTimeout(() => {
   document.body.classList.add("splash-done");
   splashScreen?.classList.add("is-hidden");
+  openRegistrationScreen();
 }, 1550);
 
 scooters.forEach((scooter, index) => {
@@ -719,6 +724,8 @@ returnScreenContinue.addEventListener("click", closeReturnScreen);
 returnScreenConfirm.addEventListener("click", confirmReturn);
 parkingScreenConfirm.addEventListener("click", completeParkingCheck);
 summaryScreenClose.addEventListener("click", closeSummaryScreen);
+registrationForm.addEventListener("submit", handleRegistrationSubmit);
+registrationSkip.addEventListener("click", closeRegistrationScreen);
 document.addEventListener("keydown", handleGlobalKeydown);
 map.on("click", () => {
   closeVehicleCard();
@@ -734,6 +741,28 @@ function toggleMapMenu() {
   }
 
   closeMapMenu();
+}
+
+function openRegistrationScreen() {
+  registrationScreen.dataset.open = "true";
+  registrationScreen.setAttribute("aria-hidden", "false");
+}
+
+function closeRegistrationScreen() {
+  registrationScreen.dataset.open = "false";
+  registrationScreen.setAttribute("aria-hidden", "true");
+}
+
+function handleRegistrationSubmit(event) {
+  event.preventDefault();
+  registrationSubmit.disabled = true;
+  registrationSubmit.textContent = "Konto wird vorbereitet...";
+
+  window.setTimeout(() => {
+    registrationSubmit.disabled = false;
+    registrationSubmit.textContent = "Konto erstellen";
+    closeRegistrationScreen();
+  }, 640);
 }
 
 function openMapMenu() {
@@ -850,6 +879,7 @@ function waitForRingAudioEnd(playbackToken) {
 
 function handleGlobalKeydown(event) {
   if (event.key === "Escape") {
+    closeRegistrationScreen();
     closeMenuDetailScreen(false);
     closeMapMenu();
   }
