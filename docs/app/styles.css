@@ -595,6 +595,107 @@ body[data-theme="dark"] .map-controls__icon {
   filter: invert(1);
 }
 
+body[data-theme="dark"] .menu-detail-screen,
+body[data-theme="dark"] .confirm-screen,
+body[data-theme="dark"] .issue-screen,
+body[data-theme="dark"] .unlock-screen,
+body[data-theme="dark"] .unlock-error-screen,
+body[data-theme="dark"] .ride-screen,
+body[data-theme="dark"] .pause-screen,
+body[data-theme="dark"] .return-screen,
+body[data-theme="dark"] .parking-screen,
+body[data-theme="dark"] .summary-screen {
+  background:
+    radial-gradient(circle at top left, rgba(126, 232, 146, 0.08), transparent 18rem),
+    radial-gradient(circle at bottom right, rgba(79, 147, 255, 0.1), transparent 20rem),
+    linear-gradient(180deg, #101916 0%, #0c1412 100%);
+}
+
+body[data-theme="dark"] .map-menu-panel__close,
+body[data-theme="dark"] .menu-detail-sheet__back,
+body[data-theme="dark"] .confirm-sheet__back,
+body[data-theme="dark"] .vehicle-card__close {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--card-text);
+  box-shadow:
+    0 10px 22px rgba(0, 0, 0, 0.22),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+body[data-theme="dark"] .map-menu-panel__header,
+body[data-theme="dark"] .map-menu-panel__stat,
+body[data-theme="dark"] .menu-detail-sheet__hero,
+body[data-theme="dark"] .confirm-sheet__hero,
+body[data-theme="dark"] .confirm-sheet__check,
+body[data-theme="dark"] .vehicle-card__vehicle {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.03) 100%);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+body[data-theme="dark"] .map-menu-panel__topline,
+body[data-theme="dark"] .map-menu-panel__name,
+body[data-theme="dark"] .map-menu-panel__stat-value,
+body[data-theme="dark"] .map-menu-panel__item-title,
+body[data-theme="dark"] .menu-detail-sheet__title,
+body[data-theme="dark"] .menu-detail-sheet__hero-title,
+body[data-theme="dark"] .menu-detail-sheet__item-value,
+body[data-theme="dark"] .confirm-sheet__title,
+body[data-theme="dark"] .confirm-sheet__hero-name,
+body[data-theme="dark"] .confirm-sheet__check-value,
+body[data-theme="dark"] .vehicle-card__title,
+body[data-theme="dark"] .vehicle-card__meta-item,
+body[data-theme="dark"] .vehicle-card__meta-icon--price::after {
+  color: var(--card-text);
+}
+
+body[data-theme="dark"] .map-menu-panel__eyebrow,
+body[data-theme="dark"] .map-menu-panel__subline,
+body[data-theme="dark"] .map-menu-panel__section-title,
+body[data-theme="dark"] .map-menu-panel__stat-label,
+body[data-theme="dark"] .map-menu-panel__item-subtitle,
+body[data-theme="dark"] .menu-detail-sheet__eyebrow,
+body[data-theme="dark"] .menu-detail-sheet__hero-copy,
+body[data-theme="dark"] .menu-detail-sheet__item-label,
+body[data-theme="dark"] .confirm-sheet__eyebrow,
+body[data-theme="dark"] .confirm-sheet__hero-label,
+body[data-theme="dark"] .confirm-sheet__check-label,
+body[data-theme="dark"] .confirm-sheet__text-action,
+body[data-theme="dark"] .vehicle-card__meta-item--price,
+body[data-theme="dark"] .vehicle-card__eyebrow {
+  color: var(--card-muted);
+}
+
+body[data-theme="dark"] .confirm-sheet__hero-badge,
+body[data-theme="dark"] .vehicle-card__pill,
+body[data-theme="dark"] .confirm-sheet__secondary,
+body[data-theme="dark"] .registration-form__secondary {
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--card-text);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+body[data-theme="dark"] .confirm-sheet__actions {
+  background: linear-gradient(180deg, rgba(12, 20, 18, 0) 0%, rgba(12, 20, 18, 0.94) 18%, rgba(12, 20, 18, 0.98) 100%);
+}
+
+body[data-theme="dark"] .map-menu-panel__item-icon {
+  background: linear-gradient(180deg, rgba(126, 232, 146, 0.18) 0%, rgba(79, 147, 255, 0.08) 100%);
+}
+
+body[data-theme="dark"] .map-menu-panel__item-icon--account::before,
+body[data-theme="dark"] .map-menu-panel__item-icon--account::after,
+body[data-theme="dark"] .map-menu-panel__item-icon--rides::before,
+body[data-theme="dark"] .map-menu-panel__item-icon--rides::after,
+body[data-theme="dark"] .map-menu-panel__item-icon--payment::before,
+body[data-theme="dark"] .map-menu-panel__item-icon--payment::after {
+  border-color: #dbe9de;
+  background: #dbe9de;
+}
+
 .map-menu-backdrop {
   position: absolute;
   inset: 0;
