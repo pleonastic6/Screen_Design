@@ -27,11 +27,22 @@
   <section class="registration-screen" id="registration-screen" aria-hidden="true">
     <div class="registration-screen__backdrop" aria-hidden="true"></div>
     <div class="registration-card">
-      <p class="registration-card__eyebrow">Neu in Amberg</p>
+      <div class="registration-card__topline">
+        <p class="registration-card__eyebrow">Neu in Amberg</p>
+        <span class="registration-card__status">Kosten starten erst beim Entsperren</span>
+      </div>
       <h1 class="registration-card__title">Erstell dein Konto und fahr in 2 Minuten los.</h1>
       <p class="registration-card__copy">Registrierung, Zahlungsmittel und Bonus greifen direkt ineinander. Für den Showcase kannst du aber auch mit dem Demo-Profil weitermachen.</p>
       <div class="registration-card__hero">
-        <div class="registration-card__hero-badge">30 Freiminuten für den ersten Ladehub</div>
+        <div class="registration-card__hero-main">
+          <div>
+            <div class="registration-card__hero-badge">30 Freiminuten für den ersten Ladehub</div>
+            <p class="registration-card__hero-title">Einmal registrieren, danach nur noch Scooter wählen und losfahren.</p>
+          </div>
+          <div class="registration-card__hero-scooter" aria-hidden="true">
+            <img src="escooter-mint.svg" alt="" />
+          </div>
+        </div>
         <div class="registration-card__hero-grid">
           <div class="registration-card__hero-item">
             <span class="registration-card__hero-label">Startklar</span>
@@ -40,6 +51,14 @@
           <div class="registration-card__hero-item">
             <span class="registration-card__hero-label">Tarif</span>
             <strong class="registration-card__hero-value">0,10 EUR / 5 Min</strong>
+          </div>
+          <div class="registration-card__hero-item">
+            <span class="registration-card__hero-label">Rückgabe</span>
+            <strong class="registration-card__hero-value">Stadtgebiet + Ladehubs</strong>
+          </div>
+          <div class="registration-card__hero-item">
+            <span class="registration-card__hero-label">Vertrauen</span>
+            <strong class="registration-card__hero-value">Remote-Schloss + Live-Status</strong>
           </div>
         </div>
       </div>
@@ -71,6 +90,10 @@
           <input class="registration-form__checkbox" type="checkbox" checked />
           <span>Ich akzeptiere AGB, Datenschutzhinweise und die Rückgabe-Regeln im Stadtgebiet.</span>
         </label>
+        <div class="registration-form__trust">
+          <span class="registration-form__trust-item">Verifizierte Zahlung erst beim Setup</span>
+          <span class="registration-form__trust-item">Reservieren bis 30 Minuten im Voraus</span>
+        </div>
         <div class="registration-form__actions">
           <button class="registration-form__primary" id="registration-submit" type="submit">Konto erstellen</button>
           <button class="registration-form__secondary" id="registration-skip" type="button">Mit Demo-Profil fortfahren</button>
