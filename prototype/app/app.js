@@ -3,6 +3,7 @@ const RETURN_CONFIRM_DELAY_MS = 420;
 const PARKING_REVIEW_DELAY_MS = 920;
 const SUMMARY_ROUTE_DRAW_DELAY_MS = 360;
 const SUMMARY_ROUTE_DRAW_DURATION_MS = 900;
+const CLUSTER_DISABLE_ZOOM = 18;
 
 const scooters = [
   {
@@ -512,6 +513,7 @@ const ringAudio = new Audio("icq-old-sound.mp3");
 
 let activeScooterMarker = null;
 let activeScooter = null;
+let scooterClusterGroup = null;
 let bookingCountdownId = null;
 let bookingEndsAt = null;
 let unlockTimeoutId = null;
@@ -639,12 +641,92 @@ function markerIcon(type) {
   });
 }
 
+function getScooterMarkerVisualState(scooter) {
+  if (!scooter) {
+    return "high";
+  }
+
+  if (scooter.status === "reserved") {
+    return "reserved";
+  }
+
+  if (scooter.status === "charging") {
+    return "charging";
+  }
+
+  const batteryPercent = getBatteryPercent(scooter.range);
+  if (batteryPercent <= 30) {
+    return "low";
+  }
+
+  if (batteryPercent <= 60) {
+    return "medium";
+  }
+
+  return "high";
+}
+
+function getScooterMarkerIconSource(scooter) {
+  const visualState = getScooterMarkerVisualState(scooter);
+
+  if (visualState === "charging") {
+    return "escooter-blue.svg";
+  }
+
+  if (visualState === "low") {
+    return "escooter-coral.svg";
+  }
+
+  if (visualState === "medium") {
+    return "escooter-orange.svg";
+  }
+
+  return "escooter-mint.svg";
+}
+
+function createScooterMarker(scooter) {
+  const visualState = getScooterMarkerVisualState(scooter);
+
+  return L.marker(scooter.coords, {
+    icon: L.divIcon({
+      className: "",
+      html: `<span class="map-marker scooter ${visualState}"><img class="map-marker__scooter-icon" src="${getScooterMarkerIconSource(scooter)}" alt="" /></span>`,
+      iconSize: [42, 42],
+      iconAnchor: [21, 21]
+    })
+  });
+}
+
+function createScooterClusterGroup() {
+  if (typeof L.markerClusterGroup !== "function") {
+    return null;
+  }
+
+  return L.markerClusterGroup({
+    showCoverageOnHover: false,
+    spiderfyOnMaxZoom: true,
+    zoomToBoundsOnClick: true,
+    disableClusteringAtZoom: CLUSTER_DISABLE_ZOOM,
+    maxClusterRadius: 42,
+    iconCreateFunction(cluster) {
+      const count = cluster.getChildCount();
+      const sizeClass = count >= 8 ? "large" : count >= 4 ? "medium" : "small";
+      return L.divIcon({
+        className: "",
+        html: `<span class="scooter-cluster scooter-cluster--${sizeClass}"><span class="scooter-cluster__count">${count}</span></span>`,
+        iconSize: [50, 50],
+        iconAnchor: [25, 25]
+      });
+    }
+  });
+}
+
 map = L.map("main-map", {
   zoomControl: false,
   attributionControl: false,
-  scrollWheelZoom: false,
+  scrollWheelZoom: true,
   dragging: true,
-  doubleClickZoom: false,
+  doubleClickZoom: true,
   boxZoom: false,
   keyboard: false
 });
@@ -676,11 +758,22 @@ restrictedZones.forEach((zone) => {
 
 L.marker(userLocation, { icon: markerIcon("user") }).addTo(map);
 
+scooterClusterGroup = createScooterClusterGroup();
+if (scooterClusterGroup) {
+  map.addLayer(scooterClusterGroup);
+}
+
 scooters.forEach((scooter) => {
-  const marker = L.marker(scooter.coords, { icon: markerIcon(`scooter ${scooter.status}`) }).addTo(map);
+  const marker = createScooterMarker(scooter);
+  scooter.marker = marker;
   marker.on("click", () => {
     openVehicleCard(scooter, marker);
   });
+  if (scooterClusterGroup) {
+    scooterClusterGroup.addLayer(marker);
+  } else {
+    marker.addTo(map);
+  }
 });
 
 hubs.forEach((hub) => {
