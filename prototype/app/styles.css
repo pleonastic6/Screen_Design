@@ -4087,3 +4087,112 @@ body.splash-done .map-screen {
     line-height: 1.05;
   }
 }
+
+/* Final button hierarchy override: keep this at EOF so old per-screen rules cannot drift apart again. */
+.registration-form__primary,
+.vehicle-card__reserve,
+.booking-sheet__primary,
+.confirm-sheet__primary,
+.unlock-card__action,
+.ride-sheet__primary,
+.pause-sheet__primary,
+.return-sheet__primary,
+.parking-sheet__action,
+.summary-sheet__action,
+.menu-detail-sheet__primary {
+  border: 1px solid rgba(100, 199, 95, 0.34);
+  background: linear-gradient(180deg, #a3f39b 0%, #87e97f 100%);
+  color: #0d180f;
+  box-shadow:
+    0 8px 18px rgba(91, 171, 89, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.46);
+}
+
+.registration-form__secondary,
+.booking-sheet__secondary,
+.confirm-sheet__secondary,
+.issue-sheet__secondary,
+.unlock-error-card__secondary,
+.ride-sheet__secondary,
+.pause-sheet__secondary,
+.return-sheet__secondary {
+  border: 1px solid rgba(79, 147, 255, 0.24);
+  background: linear-gradient(180deg, rgba(244, 249, 255, 0.98) 0%, rgba(230, 239, 251, 0.98) 100%);
+  color: #18457f;
+  box-shadow:
+    0 7px 16px rgba(70, 112, 181, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.84);
+}
+
+.issue-sheet__primary,
+.unlock-error-card__primary,
+.ride-sheet__zone-action {
+  border: 1px solid rgba(18, 31, 39, 0.32);
+  background: linear-gradient(180deg, #294151 0%, #15211a 100%);
+  color: #f4fbff;
+  box-shadow:
+    0 8px 18px rgba(21, 33, 26, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.vehicle-card__pill {
+  border: 1px solid rgba(20, 32, 23, 0.08);
+  background: linear-gradient(180deg, rgba(248, 250, 248, 0.98) 0%, rgba(235, 240, 234, 0.96) 100%);
+  color: #1f2d22;
+  box-shadow:
+    0 5px 12px rgba(28, 40, 32, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.82);
+}
+
+.registration-form__primary:hover,
+.vehicle-card__reserve:hover,
+.booking-sheet__primary:hover,
+.confirm-sheet__primary:hover,
+.unlock-card__action:hover,
+.ride-sheet__primary:hover,
+.pause-sheet__primary:hover,
+.return-sheet__primary:hover,
+.parking-sheet__action:hover,
+.summary-sheet__action:hover,
+.menu-detail-sheet__primary:hover {
+  box-shadow:
+    0 10px 20px rgba(91, 171, 89, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.registration-form__secondary:hover,
+.booking-sheet__secondary:hover,
+.confirm-sheet__secondary:hover,
+.issue-sheet__secondary:hover,
+.unlock-error-card__secondary:hover,
+.ride-sheet__secondary:hover,
+.pause-sheet__secondary:hover,
+.return-sheet__secondary:hover {
+  box-shadow:
+    0 9px 18px rgba(70, 112, 181, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.issue-sheet__primary:hover,
+.unlock-error-card__primary:hover,
+.ride-sheet__zone-action:hover {
+  box-shadow:
+    0 10px 20px rgba(21, 33, 26, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.vehicle-card__pill:hover {
+  box-shadow:
+    0 7px 14px rgba(28, 40, 32, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.88);
+}
+
+.registration-form__primary:disabled,
+.vehicle-card__reserve:disabled,
+.confirm-sheet__primary:disabled,
+.unlock-card__action:disabled,
+.ride-sheet__zone-action:disabled,
+.return-sheet__primary:disabled,
+.parking-sheet__action:disabled {
+  box-shadow: none;
+}
